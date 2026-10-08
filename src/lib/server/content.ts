@@ -354,3 +354,25 @@ export async function setDifficultyLock(q: Queryable, versionId: string, locked:
   );
   await audit(q, actorId, locked ? 'question.lock_difficulty' : 'question.unlock_difficulty', 'question_version', versionId);
 }
+
+/** Commit validated CSV rows as new questions (all-or-nothing). */
+export async function importQuestions(
+  q: Queryable,
+  rows: { input: QuestionInput }[],
+  actorId: string,
+  state: 'draft' | 'review',
+  meta: { filename: string | null; totalRows: number; skipped: number },
+): Promise<{ created: number; importId: string }> {
+  let created = 0;
+  for (const r of rows) {
+    await createQuestion(q, r.input, actorId, { initialState: state });
+    created++;
+  }
+  const [imp] = await q.query<{ id: string }>(
+    `insert into public.content_imports(actor_id, filename, row_count, created_count, skipped_count, status)
+     values ($1, $2, $3, $4, $5, 'committed') returning id`,
+    [actorId, meta.filename, meta.totalRows, created, meta.skipped],
+  );
+  await audit(q, actorId, 'content.import', 'import', imp.id, { created, skipped: meta.skipped, state });
+  return { created, importId: imp.id };
+}
