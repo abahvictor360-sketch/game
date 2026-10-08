@@ -142,7 +142,7 @@ describe('Ask the Audience', () => {
   });
 
   it('live voting pauses the timer, counts one vote per helper, then resumes remaining time', async () => {
-    const helpers = [];
+    const helpers: { id: string }[] = [];
     for (let i = 0; i < 5; i++) {
       const h = await account(db);
       await db.tx((q) => updateProfile(q, h.id, { displayName: `Helper ${i}`, avatarKey: 'sun', countryCode: null, settings: { helpOthers: true } }));
