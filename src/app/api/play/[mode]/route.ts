@@ -3,6 +3,7 @@ import { assertSameOrigin, jsonError, redirect303 } from '@/lib/server/api';
 import { track } from '@/lib/server/analytics';
 import { ensureReady } from '@/lib/server/bootstrap';
 import { AppError } from '@/lib/server/errors';
+import { captureException } from '@/lib/server/monitoring';
 import { startOrResumeDaily } from '@/lib/server/game/daily';
 import { startGhostGame } from '@/lib/server/game/phase2';
 import { startClassic } from '@/lib/server/game/sessions';
@@ -30,6 +31,7 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ mode: stri
     if (isForm) return redirect303(req, `/play/${sessionId}`);
     return NextResponse.json({ sessionId });
   } catch (err) {
+    if (!(err instanceof AppError)) captureException(err, { where: 'play.start', mode });
     if (isForm) {
       const code = err instanceof AppError ? (err.reason ?? err.code) : 'internal';
       const back = mode === 'daily' ? '/daily' : mode === 'ghost' ? '/versus' : '/play/classic';

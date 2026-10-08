@@ -1,5 +1,5 @@
 import 'server-only';
-import { readdir, readFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 
 /**
@@ -72,6 +72,7 @@ async function createPostgresDb(url: string): Promise<Db> {
 
 async function createPgliteDb(dataDir: string): Promise<Db> {
   const { PGlite } = await import('@electric-sql/pglite');
+  if (!dataDir.includes('://')) await mkdir(dataDir, { recursive: true });
   const pg = new PGlite(dataDir);
   await pg.waitReady;
   const run = async <T>(target: { query: typeof pg.query }, text: string, params: unknown[] = []) => {

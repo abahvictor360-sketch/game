@@ -370,13 +370,13 @@ export function GameClient({ initial }: { initial: SessionView }) {
           ) : null}
 
           {view.phase === 'question' ? (
-            <div className="mt-auto pt-6">
+            <div className="mt-auto pt-6 lg:mt-8 lg:pt-0">
               <Lifelines states={view.lifelines} loading={lifelineLoading} disabled={!!pending || q.paused} onUse={lifeline} />
             </div>
           ) : null}
         </main>
 
-        <aside className="hidden lg:block">
+        <aside className="relative z-10 hidden lg:block [&>ol]:bg-stage-950">
           <Ladder vertical ladder={view.ladder} history={view.history} position={view.position} />
         </aside>
       </div>
