@@ -1,0 +1,391 @@
+@import 'tailwindcss';
+
+/* ==========================================================================
+   Fastora design system — "quiz-show stage"
+   Deep-blue stage with spotlight beams, angled (hexagonal) question and
+   answer bars joined by rails, a circular emblem/timer, gold highlights,
+   emerald = correct, coral = wrong. Ivory surfaces for reading/admin.
+   Brand tokens live here so final branding can replace them in one place.
+   ========================================================================== */
+
+@theme {
+  --color-stage-950: #04103a;
+  --color-stage-900: #0a1d5e;
+  --color-stage-800: #0d3a92;
+  --color-stage-700: #1253b8;
+  --color-stage-600: #1a6ad9;
+  --color-stage-500: #3d8bf2;
+  --color-rail: #e6edff;
+  --color-rail-soft: #7fa2e6;
+  --color-bar: #1e1b38;
+  --color-bar-hi: #2b2850;
+
+  --color-gold-300: #ffe27a;
+  --color-gold-400: #fcc81a;
+  --color-gold-500: #f0b400;
+  --color-gold-600: #c98d00;
+
+  /* Accents taken from the reference screens: orange call-out pill, purple floor glow */
+  --color-flame-400: #ff9a3c;
+  --color-flame-500: #ee7418;
+  --color-flame-600: #c95a08;
+  --color-violet-500: #5b34b8;
+  --color-violet-700: #321a74;
+
+  --color-emerald-400: #2fdc8f;
+  --color-emerald-500: #12b76a;
+  --color-emerald-700: #087443;
+  --color-coral-400: #ff8a70;
+  --color-coral-500: #f2603f;
+  --color-coral-700: #b93815;
+
+  --color-ivory-50: #fffdf7;
+  --color-ivory-100: #fbf6e9;
+  --color-ivory-200: #f1e8d2;
+  --color-ink-900: #1a1a2e;
+  --color-ink-700: #3f4060;
+  --color-ink-500: #6b6d8a;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-display: ui-rounded, 'SF Pro Rounded', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --radius-pill: 999px;
+  --shadow-glow: 0 0 24px rgb(44 99 214 / 0.55);
+  --shadow-gold: 0 0 22px rgb(255 201 61 / 0.45);
+}
+
+:root {
+  color-scheme: dark;
+  --hex: 18px; /* point depth of hexagonal bars */
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: var(--font-sans);
+  color: #f3f6ff;
+  background-color: var(--color-stage-950);
+  background-image:
+    radial-gradient(ellipse 55% 45% at 50% 18%, rgb(61 139 242 / 0.55), transparent 70%),
+    radial-gradient(ellipse 90% 45% at 50% 105%, rgb(91 52 184 / 0.65), transparent 70%),
+    linear-gradient(180deg, var(--color-stage-700) 0%, var(--color-stage-800) 35%, var(--color-stage-950) 80%);
+  background-attachment: fixed;
+}
+
+/* Spotlight beams — pure CSS, very light on low-end devices */
+.stage-beams {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    conic-gradient(from 200deg at 20% -10%, transparent 0deg, rgb(140 180 255 / 0.10) 8deg, transparent 18deg),
+    conic-gradient(from 150deg at 80% -10%, transparent 0deg, rgb(140 180 255 / 0.10) 8deg, transparent 18deg),
+    conic-gradient(from 176deg at 50% -20%, transparent 0deg, rgb(255 255 255 / 0.06) 6deg, transparent 12deg);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-gold-400);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.01em;
+}
+
+/* ---------- Hexagonal bars ------------------------------------------------ */
+
+.hex {
+  --hex-border: linear-gradient(180deg, #ffffff, var(--color-rail) 45%, #b9c8ec);
+  --hex-fill: linear-gradient(180deg, var(--color-bar-hi), var(--color-bar) 60%, #070f30);
+  position: relative;
+  isolation: isolate;
+  clip-path: polygon(var(--hex) 0, calc(100% - var(--hex)) 0, 100% 50%, calc(100% - var(--hex)) 100%, var(--hex) 100%, 0 50%);
+  background: var(--hex-border);
+  padding: 2px;
+}
+.hex > .hex-inner {
+  clip-path: polygon(calc(var(--hex) - 1px) 0, calc(100% - var(--hex) + 1px) 0, 100% 50%, calc(100% - var(--hex) + 1px) 100%, calc(var(--hex) - 1px) 100%, 0 50%);
+  background: var(--hex-fill);
+  width: 100%;
+  height: 100%;
+}
+
+/* Rails that extend from a bar to the screen edges */
+.railed {
+  position: relative;
+}
+.railed::before,
+.railed::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  height: 2px;
+  width: 100vw;
+  background: linear-gradient(90deg, transparent, var(--color-rail-soft) 60%, var(--color-rail));
+  z-index: -1;
+}
+.railed::before {
+  right: 100%;
+}
+.railed::after {
+  left: 100%;
+  transform: scaleX(-1);
+}
+
+/* Answer states */
+.answer {
+  transition: transform 120ms ease, filter 120ms ease;
+}
+.answer:not(:disabled):hover .hex,
+.answer:not(:disabled):focus-visible .hex {
+  --hex-border: linear-gradient(180deg, #fff3c4, var(--color-gold-400) 50%, var(--color-gold-600));
+}
+.answer:not(:disabled):active {
+  transform: scale(0.985);
+}
+.answer[data-state='selected'] .hex {
+  --hex-border: linear-gradient(180deg, #fff3c4, var(--color-gold-400) 50%, var(--color-gold-600));
+  --hex-fill: linear-gradient(180deg, #ffd45c, var(--color-gold-500) 55%, var(--color-gold-600));
+  color: #1b1300;
+}
+.answer[data-state='correct'] .hex {
+  --hex-border: linear-gradient(180deg, #c9ffe3, var(--color-emerald-400));
+  --hex-fill: linear-gradient(180deg, #2fdc8f, var(--color-emerald-500) 55%, var(--color-emerald-700));
+  color: #01170c;
+}
+.answer[data-state='wrong'] .hex {
+  --hex-border: linear-gradient(180deg, #ffd9cf, var(--color-coral-400));
+  --hex-fill: linear-gradient(180deg, #ff8a70, var(--color-coral-500) 55%, var(--color-coral-700));
+  color: #2a0800;
+}
+.answer[data-state='removed'] {
+  opacity: 0.25;
+}
+.answer[data-state='dim'] {
+  opacity: 0.55;
+}
+.answer[data-state='correct'] .answer-letter,
+.answer[data-state='wrong'] .answer-letter,
+.answer[data-state='selected'] .answer-letter {
+  color: inherit;
+}
+
+/* ---------- Emblem / timer ring ------------------------------------------- */
+.emblem {
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 50% 35%, #1f3d96, var(--color-stage-900) 70%);
+  box-shadow:
+    inset 0 0 0 3px #c9dbff,
+    inset 0 0 0 6px var(--color-stage-700),
+    inset 0 0 0 8px var(--color-gold-500),
+    var(--shadow-glow);
+}
+
+/* ---------- Round lifeline buttons ---------------------------------------- */
+.lifeline {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 64px;
+  height: 52px;
+  border-radius: 999px;
+  background: radial-gradient(ellipse at 50% 30%, var(--color-bar-hi), var(--color-bar) 75%);
+  box-shadow: inset 0 0 0 2px var(--color-rail), 0 4px 14px rgb(0 0 0 / 0.35);
+  color: var(--color-gold-400);
+  font-weight: 800;
+  transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
+}
+.lifeline:not(:disabled):hover {
+  box-shadow: inset 0 0 0 2px var(--color-gold-400), var(--shadow-gold);
+}
+.lifeline:not(:disabled):active {
+  transform: scale(0.95);
+}
+.lifeline[data-state='used'] {
+  opacity: 0.4;
+}
+.lifeline[data-state='used']::after {
+  content: '';
+  position: absolute;
+  inset: 8px 10px;
+  background: linear-gradient(135deg, transparent 46%, var(--color-coral-500) 47%, var(--color-coral-500) 53%, transparent 54%);
+}
+.lifeline[data-state='loading'] {
+  animation: pulse-ring 1s ease-in-out infinite;
+}
+
+/* ---------- Points ribbon -------------------------------------------------- */
+.ribbon {
+  clip-path: polygon(12px 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 12px 100%, 0 50%);
+  background: linear-gradient(180deg, #ffe7a3, var(--color-gold-400) 45%, var(--color-gold-600));
+  color: #2b1d00;
+}
+
+/* ---------- Surfaces ----------------------------------------------------- */
+.panel {
+  background: linear-gradient(180deg, rgb(22 37 94 / 0.85), rgb(7 15 48 / 0.9));
+  border: 1px solid rgb(143 179 255 / 0.35);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.35);
+  backdrop-filter: blur(6px);
+}
+.ivory {
+  background: var(--color-ivory-50);
+  color: var(--color-ink-900);
+}
+
+/* ---------- Buttons ------------------------------------------------------ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  padding: 0 1.4rem;
+  border-radius: var(--radius-pill);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn:active {
+  transform: scale(0.97);
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn-gold {
+  background: linear-gradient(180deg, #ffe08a, var(--color-gold-400) 45%, var(--color-gold-600));
+  color: #251800;
+  box-shadow: inset 0 -3px 0 rgb(0 0 0 / 0.18), var(--shadow-gold);
+}
+.btn-blue {
+  background: linear-gradient(180deg, #3b74ec, var(--color-stage-600) 50%, var(--color-stage-700));
+  color: #fff;
+  box-shadow: inset 0 0 0 2px var(--color-rail), inset 0 -3px 0 rgb(0 0 0 / 0.2);
+}
+.btn-ghost {
+  background: transparent;
+  color: #dce6ff;
+  box-shadow: inset 0 0 0 2px rgb(143 179 255 / 0.55);
+}
+.btn-flame {
+  background: linear-gradient(180deg, var(--color-flame-400), var(--color-flame-500) 55%, var(--color-flame-600));
+  color: #fff;
+  box-shadow: inset 0 0 0 2px #fff, inset 0 -3px 0 rgb(0 0 0 / 0.18);
+}
+.btn-danger {
+  background: var(--color-coral-500);
+  color: #fff;
+}
+.btn-sm {
+  min-height: 44px;
+  padding: 0 1rem;
+  font-size: 0.9rem;
+}
+
+/* ---------- Forms (ivory context) ------------------------------------------ */
+.field {
+  width: 100%;
+  min-height: 44px;
+  border-radius: 12px;
+  border: 1.5px solid #cdd3e6;
+  background: #fff;
+  color: var(--color-ink-900);
+  padding: 0.5rem 0.8rem;
+}
+.field:focus {
+  border-color: var(--color-stage-600);
+  outline: 3px solid rgb(44 99 214 / 0.25);
+}
+.field-dark {
+  background: rgb(5 12 40 / 0.7);
+  color: #fff;
+  border-color: rgb(143 179 255 / 0.5);
+}
+
+/* ---------- Skeletons, toasts --------------------------------------------- */
+.skeleton {
+  border-radius: 12px;
+  background: linear-gradient(90deg, rgb(255 255 255 / 0.06), rgb(255 255 255 / 0.14), rgb(255 255 255 / 0.06));
+  background-size: 200% 100%;
+  animation: shimmer 1.2s linear infinite;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+@keyframes pulse-ring {
+  50% {
+    box-shadow: inset 0 0 0 2px var(--color-gold-400), 0 0 0 6px rgb(255 201 61 / 0.25);
+  }
+}
+@keyframes pop {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes rise {
+  from {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes confetti-fall {
+  to {
+    transform: translateY(110vh) rotate(720deg);
+  }
+}
+.anim-pop {
+  animation: pop 220ms ease-out both;
+}
+.anim-rise {
+  animation: rise 260ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .stage-beams {
+    display: none;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
