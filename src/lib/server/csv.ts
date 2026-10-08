@@ -1,6 +1,6 @@
 import 'server-only';
 import Papa from 'papaparse';
-import { QuestionInputSchema, normaliseForHash, type QuestionInput } from '@/lib/shared/question-input';
+import { QuestionInputSchema, duplicateOptions, normaliseForHash, type QuestionInput } from '@/lib/shared/question-input';
 import { contentHash } from './content';
 import { pgArray, type Queryable } from './db';
 
@@ -72,7 +72,8 @@ function parseSources(v: string | undefined) {
 /** Parse and validate a CSV upload. Nothing is written. */
 export async function validateCsv(q: Queryable, text: string): Promise<{ rows: ImportRow[]; fatal: string | null }> {
   if (Buffer.byteLength(text, 'utf8') > MAX_BYTES) return { rows: [], fatal: 'The file is larger than 2 MB. Split it into smaller files.' };
-  const parsed = Papa.parse<Record<string, string>>(text.replace(/^﻿/, ''), { header: true, skipEmptyLines: 'greedy', transformHeader: (h) => h.trim().toLowerCase() });
+  const clean = text.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n');
+  const parsed = Papa.parse<Record<string, string>>(clean, { newline: '\n', header: true, skipEmptyLines: 'greedy', transformHeader: (h) => h.trim().toLowerCase() });
   const missing = CSV_COLUMNS.filter((c) => !['country_scope', 'age_rating', 'tags', 'language', 'sources', 'verified_at', 'sponsor_ref'].includes(c) && !parsed.meta.fields?.includes(c));
   if (missing.length) return { rows: [], fatal: `Missing required columns: ${missing.join(', ')}. Download the template for the expected format.` };
   if (parsed.data.length === 0) return { rows: [], fatal: 'The file has no question rows.' };
@@ -101,6 +102,10 @@ export async function validateCsv(q: Queryable, text: string): Promise<{ rows: I
     const res = QuestionInputSchema.safeParse(candidate);
     if (!res.success) {
       for (const issue of res.error.issues) errors.push(`${fieldName(issue.path)}: ${issue.message}`);
+      // Object-level checks don't run when a field fails, so report duplicates explicitly.
+      if (!res.error.issues.some((i) => i.code === 'custom' && i.path[0] === 'options')) {
+        for (const d of duplicateOptions(candidate.options)) errors.push(`option_${d.label.toLowerCase()}: ${d.message}`);
+      }
     }
     if (candidate.categoryId && !categories.has(candidate.categoryId)) errors.push(`category: unknown category "${candidate.categoryId}"`);
     const norm = normaliseForHash(candidate.text);

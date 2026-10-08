@@ -368,6 +368,8 @@ export async function submitMatchAnswer(q: Queryable, playerId: string, matchId:
 
 export async function forfeitMatch(q: Queryable, playerId: string, matchId: string) {
   await participant(q, matchId, playerId);
+  // Bring the match up to date first, so a forfeit after kick-off counts as one.
+  await tickMatch(q, matchId);
   await q.query(`update public.match_participants set status = 'forfeited' where match_id = $1 and player_id = $2 and status in ('connected','disconnected')`, [matchId, playerId]);
   await tickMatch(q, matchId);
   await notifyMatch(matchId);

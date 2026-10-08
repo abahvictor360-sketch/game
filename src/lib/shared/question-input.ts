@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { isValidDateString } from '@/lib/game/dates';
 import { REGION_SCOPES } from './categories';
 
 export const OPTION_LABELS = ['A', 'B', 'C', 'D'] as const;
@@ -43,21 +44,28 @@ export const QuestionInputSchema = z
     verifiedAt: z
       .string()
       .trim()
-      .regex(/^\d{4}-\d{2}-\d{2}$/, 'Use YYYY-MM-DD')
+      .refine(isValidDateString, 'Use a real date in YYYY-MM-DD format')
       .nullable()
       .default(null),
     sponsorRef: z.string().trim().max(100).nullable().default(null),
   })
   .superRefine((v, ctx) => {
-    const seen = new Map<string, string>();
-    for (const l of OPTION_LABELS) {
-      const key = v.options[l].toLowerCase().replace(/\s+/g, ' ');
-      if (seen.has(key)) {
-        ctx.addIssue({ code: 'custom', path: ['options', l], message: `Option ${l} duplicates option ${seen.get(key)}` });
-      }
-      seen.set(key, l);
-    }
+    for (const d of duplicateOptions(v.options)) ctx.addIssue({ code: 'custom', path: ['options', d.label], message: d.message });
   });
+
+/** Options that repeat an earlier option (case/space-insensitive). */
+export function duplicateOptions(options: Record<OptionLabel, string>): { label: OptionLabel; message: string }[] {
+  const seen = new Map<string, OptionLabel>();
+  const out: { label: OptionLabel; message: string }[] = [];
+  for (const l of OPTION_LABELS) {
+    const key = (options[l] ?? '').trim().toLowerCase().replace(/\s+/g, ' ');
+    if (!key) continue;
+    const prev = seen.get(key);
+    if (prev) out.push({ label: l, message: `Option ${l} duplicates option ${prev}` });
+    else seen.set(key, l);
+  }
+  return out;
+}
 
 export type QuestionInput = z.infer<typeof QuestionInputSchema>;
 
