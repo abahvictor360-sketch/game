@@ -15,6 +15,19 @@ export function effectiveDifficultySql(p: { minSample: string; easy: string; har
                else 'medium' end)`;
 }
 
+/**
+ * A version is eligible for difficulty `d` when its effective difficulty is
+ * `d` OR its editorial difficulty is `d`; calibrated matches are preferred
+ * (see `difficultyPreferenceSql`). This way calibration refines selection but
+ * can never empty a difficulty tier (e.g. after unrepresentative traffic).
+ */
+export function difficultyMatchSql(d: string, p: { minSample: string; easy: string; hard: string }) {
+  return `(${effectiveDifficultySql(p)} = ${d} or v.difficulty = ${d})`;
+}
+export function difficultyPreferenceSql(d: string, p: { minSample: string; easy: string; hard: string }) {
+  return `(${effectiveDifficultySql(p)} = ${d}) desc`;
+}
+
 export type Candidate = { question_id: string; version_id: string };
 
 /**
@@ -51,8 +64,9 @@ export async function selectQuestion(
       where q.status = 'approved'
         and v.language = $4 and v.age_rating = any($5::text[])
         and q.id not in (select question_id from used)
-        and ${effectiveDifficultySql({ minSample: '$6', easy: '$7', hard: '$8' })} = $3
+        and ${difficultyMatchSql('$3', { minSample: '$6', easy: '$7', hard: '$8' })}
       order by (h.last_seen_at is not null and h.last_seen_at > $9::timestamptz) asc,
+               ${difficultyPreferenceSql('$3', { minSample: '$6', easy: '$7', hard: '$8' })},
                coalesce(cu.n, 0) asc,
                h.last_seen_at asc nulls first,
                random()
@@ -72,15 +86,17 @@ export async function selectQuestion(
   return rows[0] ?? null;
 }
 
-/** Count of servable questions per effective difficulty. */
+/** Count of servable questions per difficulty (calibrated or editorial match). */
 export async function availableCounts(q: Queryable, rules: Rules): Promise<Record<Difficulty, number>> {
-  const rows = await q.query<{ d: Difficulty; n: number }>(
-    `select ${effectiveDifficultySql({ minSample: '$3', easy: '$4', hard: '$5' })} as d, count(*)::int as n
+  const p = { minSample: '$3', easy: '$4', hard: '$5' };
+  const [row] = await q.query<Record<Difficulty, number>>(
+    `select count(*) filter (where ${difficultyMatchSql("'easy'", p)})::int as easy,
+            count(*) filter (where ${difficultyMatchSql("'medium'", p)})::int as medium,
+            count(*) filter (where ${difficultyMatchSql("'hard'", p)})::int as hard
        from public.questions q
        join public.question_versions v on v.id = q.live_version_id
        left join public.question_stats s on s.version_id = v.id
-      where q.status = 'approved' and v.language = $1 and v.age_rating = any($2::text[])
-      group by 1`,
+      where q.status = 'approved' and v.language = $1 and v.age_rating = any($2::text[])`,
     [
       rules.content.language,
       pgArray(rules.content.allowedAgeRatings),
@@ -89,9 +105,7 @@ export async function availableCounts(q: Queryable, rules: Rules): Promise<Recor
       rules.calibration.hardBelow,
     ],
   );
-  const out: Record<Difficulty, number> = { easy: 0, medium: 0, hard: 0 };
-  for (const r of rows) out[r.d] = r.n;
-  return out;
+  return row;
 }
 
 /**
@@ -115,19 +129,20 @@ export async function selectDailySet(
             join public.question_versions v on v.id = dq.version_id
            where dc.challenge_date >= ($1::date - $2::int) and dc.challenge_date < $1::date
        ), pool as (
-          select v.id as version_id, v.category_id, (q.id in (select question_id from recent)) as recently_used
+          select v.id as version_id, v.category_id, (q.id in (select question_id from recent)) as recently_used,
+                 ${effectiveDifficultySql({ minSample: '$6', easy: '$7', hard: '$8' })} = $5 as calibrated
             from public.questions q
             join public.question_versions v on v.id = q.live_version_id
             left join public.question_stats s on s.version_id = v.id
            where q.status = 'approved' and v.language = $3 and v.age_rating = any($4::text[])
-             and ${effectiveDifficultySql({ minSample: '$6', easy: '$7', hard: '$8' })} = $5
+             and ${difficultyMatchSql('$5', { minSample: '$6', easy: '$7', hard: '$8' })}
        )
        select version_id from (
-         select version_id, recently_used,
+         select version_id, recently_used, calibrated,
                 row_number() over (partition by category_id order by random()) as rn
            from pool
        ) ranked
-       order by recently_used asc, rn asc, random()
+       order by recently_used asc, calibrated desc, rn asc, random()
        limit $9`,
       [
         args.date,

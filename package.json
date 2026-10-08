@@ -11,9 +11,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "db:migrate": "tsx scripts/migrate.ts",
-    "db:seed": "tsx scripts/seed.ts",
-    "admin:grant": "tsx scripts/grant-admin.ts"
+    "db:migrate": "tsx --conditions=react-server scripts/migrate.ts",
+    "db:seed": "tsx --conditions=react-server scripts/seed.ts",
+    "admin:grant": "tsx --conditions=react-server scripts/grant-admin.ts",
+    "load-test": "tsx scripts/load-test.ts"
   },
   "dependencies": {
     "@electric-sql/pglite": "0.5.8",
@@ -28,6 +29,7 @@
     "zod": "3.25.76"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
     "@playwright/test": "1.56.1",
     "@tailwindcss/postcss": "4.1.18",
     "@types/node": "22.20.5",

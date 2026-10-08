@@ -191,3 +191,29 @@ describe('CSV import validation', () => {
     expect(missing.fatal).toMatch(/Missing required columns/);
   });
 });
+
+describe('Difficulty calibration', () => {
+  it('uses observed difficulty but never empties a tier', async () => {
+    const { availableCounts, selectQuestion } = await import('@/lib/server/game/selection');
+    const { getActiveConfig } = await import('@/lib/server/config');
+    const cfg = await getActiveConfig(db);
+    const before = await availableCounts(db, cfg.rules);
+    // Simulate unrepresentative traffic: every question looks "hard".
+    await db.query(`update public.question_stats set unassisted_attempts = 100, unassisted_correct = 10`);
+    const after = await availableCounts(db, cfg.rules);
+    expect(after.easy).toBe(before.easy);
+    expect(after.hard).toBeGreaterThan(before.hard);
+    const p = await account(db);
+    const s = await db.tx((q) => startClassic(q, p));
+    expect(s).toBeTruthy();
+    // With an easy-looking question available, it is preferred for 'easy'.
+    const [one] = await db.query<{ version_id: string }>(
+      `select q.live_version_id as version_id from public.questions q join public.question_versions v on v.id = q.live_version_id
+        where v.difficulty = 'medium' and q.status = 'approved' limit 1`,
+    );
+    await db.query('update public.question_stats set unassisted_correct = 95 where version_id = $1', [one.version_id]);
+    const pick = await db.tx((q) => selectQuestion(q, { sessionId: crypto.randomUUID(), playerId: crypto.randomUUID(), difficulty: 'easy', rules: cfg.rules, now: new Date() }));
+    expect(pick!.version_id).toBe(one.version_id);
+    await db.query(`update public.question_stats set unassisted_attempts = 0, unassisted_correct = 0`);
+  });
+});

@@ -3,8 +3,34 @@ import { setClockForTesting } from '@/lib/server/clock';
 import { openDb, runMigrations, setDbForTesting, type Db } from '@/lib/server/db';
 import { createGuest, linkAccount, type Player } from '@/lib/server/players';
 
+/**
+ * A fresh, migrated database per test file. Uses embedded Postgres by default;
+ * set TEST_DATABASE_URL (a server URL whose user can CREATE DATABASE) to run
+ * the same tests against a real Postgres server through the production driver.
+ */
 export async function freshDb(opts: { fixtures?: boolean } = {}): Promise<Db> {
-  const db = await openDb({ kind: 'pglite', dir: 'memory://' });
+  let db: Db;
+  const server = process.env.TEST_DATABASE_URL;
+  if (server) {
+    const name = `fastora_t_${crypto.randomUUID().replace(/-/g, '').slice(0, 12)}`;
+    const admin = await openDb({ kind: 'postgres', url: server });
+    await admin.exec(`create database ${name}`);
+    await admin.close();
+    const url = new URL(server);
+    url.pathname = `/${name}`;
+    const inner = await openDb({ kind: 'postgres', url: url.toString() });
+    const close = inner.close.bind(inner);
+    db = Object.assign(inner, {
+      close: async () => {
+        await close();
+        const a = await openDb({ kind: 'postgres', url: server });
+        await a.exec(`drop database if exists ${name} with (force)`);
+        await a.close();
+      },
+    });
+  } else {
+    db = await openDb({ kind: 'pglite', dir: 'memory://' });
+  }
   await runMigrations(db);
   await bootstrap(db, { fixtures: opts.fixtures ?? true });
   setDbForTesting(db);

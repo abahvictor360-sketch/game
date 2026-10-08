@@ -27,8 +27,8 @@
 
   /* Accents taken from the reference screens: orange call-out pill, purple floor glow */
   --color-flame-400: #ff9a3c;
-  --color-flame-500: #ee7418;
-  --color-flame-600: #c95a08;
+  --color-flame-500: #bf5500; /* white text ≥4.5:1; the brighter #ee7418 is used in gradients/glow only */
+  --color-flame-600: #a34700;
   --color-violet-500: #5b34b8;
   --color-violet-700: #321a74;
 
@@ -285,7 +285,7 @@ body {
   box-shadow: inset 0 0 0 2px rgb(143 179 255 / 0.55);
 }
 .btn-flame {
-  background: linear-gradient(180deg, var(--color-flame-400), var(--color-flame-500) 55%, var(--color-flame-600));
+  background: linear-gradient(180deg, #c95a08, var(--color-flame-500) 50%, var(--color-flame-600));
   color: #fff;
   box-shadow: inset 0 0 0 2px #fff, inset 0 -3px 0 rgb(0 0 0 / 0.18);
 }

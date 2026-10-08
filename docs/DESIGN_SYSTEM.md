@@ -22,7 +22,7 @@ not reachable from the build environment).
 | `bar` / `bar-hi` | `#1E1B38` / `#2B2850` | Question & answer bar fill |
 | `rail` | `#E6EDFF` | Bar borders and side rails |
 | `gold-400` | `#FCC81A` | Letters A–D, score, timer ring, primary buttons, ribbons |
-| `flame-500` | `#EE7418` | Daily Challenge call-outs (orange pill in references) |
+| `flame-400` / `flame-500` | `#FF9A3C` / `#BF5500` | Daily Challenge call-outs (orange pill in references); the darker tone carries white text at ≥4.5:1 |
 | `violet-500` | `#5B34B8` | Floor glow, opponent strip |
 | `emerald-500` | `#12B76A` | Correct answer |
 | `coral-500` | `#F2603F` | Wrong answer, urgent timer (≤5 s), errors |

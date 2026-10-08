@@ -6,7 +6,7 @@ import { getActiveConfig, getConfigVersion } from '../config';
 import { pgArray, type Queryable } from '../db';
 import { AppError, notFound } from '../errors';
 import { notifyMatch } from '../realtime';
-import { effectiveDifficultySql, optionIdsFor, shuffle } from './selection';
+import { difficultyMatchSql, difficultyPreferenceSql, optionIdsFor, shuffle } from './selection';
 import { isUuid } from './sessions';
 
 /** A participant is presumed disconnected after this long without a heartbeat. */
@@ -132,9 +132,10 @@ async function createMatch(q: Queryable, players: string[], version: number, rul
          join public.question_versions v on v.id = qq.live_version_id
          left join public.question_stats s on s.version_id = v.id
         where qq.status = 'approved' and v.language = $1 and v.age_rating = any($2::text[])
-          and ${effectiveDifficultySql({ minSample: '$4', easy: '$5', hard: '$6' })} = $3
+          and ${difficultyMatchSql('$3', { minSample: '$4', easy: '$5', hard: '$6' })}
         order by (select count(*) from public.player_question_history h
                    where h.question_id = qq.id and h.player_id = any($7::uuid[]) and h.last_seen_at > $8::timestamptz) asc,
+                 ${difficultyPreferenceSql('$3', { minSample: '$4', easy: '$5', hard: '$6' })},
                  random()
         limit $9`,
       [rules.content.language, pgArray(rules.content.allowedAgeRatings), d, rules.calibration.minSample, rules.calibration.easyAtOrAbove, rules.calibration.hardBelow, pgArray(players), since, need],

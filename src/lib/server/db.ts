@@ -43,7 +43,18 @@ async function createPostgresDb(url: string): Promise<Db> {
     max: Number(process.env.DATABASE_POOL_SIZE ?? 5),
     idle_timeout: 20,
     connect_timeout: 10,
-    types: { bigint: postgres.BigInt },
+    onnotice: () => {},
+    types: {
+      bigint: postgres.BigInt,
+      // Callers pass JSON as pre-serialised text ($n::jsonb). The default
+      // serializer would JSON-encode it again, storing a JSON *string*.
+      json: {
+        to: 114,
+        from: [114, 3802],
+        serialize: (x: unknown) => (typeof x === 'string' ? x : JSON.stringify(x)),
+        parse: (x: string) => JSON.parse(x),
+      },
+    },
   });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const wrap = (s: { unsafe: (text: string, params?: any[]) => Promise<unknown> }): Queryable => ({
