@@ -2,11 +2,11 @@ import { NextResponse } from 'next/server';
 import { api } from '@/lib/server/api';
 import { track } from '@/lib/server/analytics';
 import { joinQueue, leaveQueue, pollQueue } from '@/lib/server/game/matches';
-import { ensurePlayer, requirePlayer } from '@/lib/server/identity';
+import { requireAccount, requirePlayer } from '@/lib/server/identity';
 import { rateLimit } from '@/lib/server/rate-limit';
 
 export const POST = api(async (req, db) => {
-  const player = req.nextUrl.searchParams.get('leave') ? await requirePlayer() : await ensurePlayer(db);
+  const player = req.nextUrl.searchParams.get('leave') ? await requirePlayer() : await requireAccount(db);
   if (req.nextUrl.searchParams.get('leave')) {
     await leaveQueue(db, player.id);
     return NextResponse.json({ status: 'idle' });

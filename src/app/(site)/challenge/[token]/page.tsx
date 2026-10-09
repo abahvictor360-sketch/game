@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ErrorState, PageTitle, Panel } from '@/components/ui';
+import { ErrorState, PageTitle, Panel, SignInRequired } from '@/components/ui';
 import { ensureReady } from '@/lib/server/bootstrap';
 import { getActiveConfig } from '@/lib/server/config';
 import { previewFriendChallenge } from '@/lib/server/game/phase2';
@@ -35,16 +35,15 @@ export default async function ChallengePage({ params, searchParams }: { params: 
             <p className="text-sm text-blue-100/85">
               Play the same {p.questionCount} questions under the same rules. No lifelines. You’ll see both scores at the end. Friend challenges are just for fun and don’t affect leaderboards.
             </p>
-            <form action={`/api/challenges/${token}/start`} method="post" className="mt-5">
-              <button className="btn btn-gold min-h-14 w-full text-lg">Accept challenge</button>
-            </form>
-            {!player || player.kind === 'guest' ? <p className="mt-3 text-xs text-blue-100/60">
-                You can play as a guest.{' '}
-                <Link href={`/auth/signin?next=${encodeURIComponent(`/challenge/${token}`)}`} className="font-bold text-gold-300 underline">
-                  Sign in
-                </Link>{' '}
-                first (or later) to keep the result on your profile.
-              </p> : null}
+            {player?.kind === 'account' ? (
+              <form action={`/api/challenges/${token}/start`} method="post" className="mt-5">
+                <button className="btn btn-gold min-h-14 w-full text-lg">Accept challenge</button>
+              </form>
+            ) : (
+              <div className="mt-5">
+                <SignInRequired next={`/challenge/${token}`} title="Sign in to accept" />
+              </div>
+            )}
           </>
         ) : p.state === 'played' ? (
           <>

@@ -1,9 +1,18 @@
 import { expect, test } from '@playwright/test';
 import { answerAndContinue, signIn } from './helpers';
 
-test('a guest plays a full 15-question Classic game and sees results', async ({ page }) => {
+test('signed-out visitors must sign in, then play a full 15-question Classic game', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('link', { name: /Play Classic/ }).first().click();
+  await expect(page.getByRole('button', { name: 'Start game' })).toHaveCount(0);
+  // Starting directly is refused too: the API sends the visitor to sign in.
+  const direct = await page.request.post('/api/play/classic', { headers: { 'Content-Type': 'application/json', Origin: new URL(page.url()).origin }, data: {} });
+  expect(direct.status()).toBe(401);
+  await page.getByRole('link', { name: 'Sign in or create an account' }).click();
+  await page.waitForURL(/\/auth\/signin\?next=%2Fplay%2Fclassic/);
+  await page.getByLabel('Email', { exact: true }).fill('classic@fastora.test');
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await page.waitForURL(/\/play\/classic$/);
   await page.getByRole('button', { name: 'Start game' }).click();
   await page.waitForURL(/\/play\//);
   // Lifelines are offered; use 50:50 once.
@@ -12,7 +21,7 @@ test('a guest plays a full 15-question Classic game and sees results', async ({ 
   for (let i = 0; i < 15; i++) await answerAndContinue(page);
   await page.waitForURL(/\/results\//);
   await expect(page.getByText(/points/i).first()).toBeVisible();
-  await expect(page.getByText(/Unranked — played as a guest/)).toBeVisible();
+  await expect(page.getByText(/Rank #\d+/)).toBeVisible();
   await expect(page.getByRole('button', { name: 'Share result' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Share on WhatsApp' })).toHaveAttribute('href', /wa\.me/);
   // Public share page exposes no questions.
@@ -72,4 +81,21 @@ test('non-staff cannot reach the admin area', async ({ page }) => {
   await signIn(page, 'player@fastora.test');
   const res = await page.goto('/admin');
   expect(res?.status()).toBe(404);
+});
+
+test('the demo account signs in with its password and can play', async ({ page }) => {
+  await page.goto('/auth/signin?next=/play/classic');
+  await page.getByText('Sign in with a password').click();
+  await page.getByLabel('Account email').fill('demo@fastora.africa');
+  await page.getByLabel('Password').fill('wrong-password');
+  await page.getByRole('button', { name: 'Sign in', exact: true }).click();
+  await expect(page.getByText(/email and password don’t match/)).toBeVisible();
+  await page.getByLabel('Account email').fill('demo@fastora.africa');
+  await page.getByLabel('Password').fill('e2e-demo-password');
+  await page.getByRole('button', { name: 'Sign in', exact: true }).click();
+  await page.waitForURL(/\/play\/classic$/);
+  await page.getByRole('button', { name: 'Start game' }).click();
+  await page.waitForURL(/\/play\/[0-9a-f-]{36}$/);
+  await page.goto('/profile');
+  await expect(page.getByLabel(/Display name/)).toHaveValue('Demo Player');
 });

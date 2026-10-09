@@ -1,7 +1,7 @@
 # Fastora African Quiz Game
 
 A mobile-first quiz game that makes African knowledge fun, competitive and easy
-to share. Players start instantly as guests, climb a 15-question ladder from
+to share. Players sign in (free account, required to play), climb a 15-question ladder from
 easy to hard, learn from an explanation after every answer, take a shared Daily
 Challenge, and compare results on leaderboards. Phase 2 adds friend
 challenges, recorded ("ghost") opponents, live two-player matches and Ask the
@@ -384,8 +384,19 @@ Details, components and accessibility rules: [docs/DESIGN_SYSTEM.md](docs/DESIGN
 
 ## 10. Authentication and admin access
 
-- **Guests:** created automatically on first play; identified by a signed
-  httpOnly cookie (`fq_session`, HMAC with `SESSION_SECRET`).
+- **An account is required to play** (owner decision, 2026-10-09). Every
+  start route (Classic, Daily, Versus, recorded opponents, friend
+  challenges) and every in-game API call requires a signed-in account;
+  signed-out visitors see "Sign in or create an account" and come back to
+  where they were after signing in. Sessions use a signed httpOnly cookie
+  (`fq_session`, HMAC with `SESSION_SECRET`). Guest code paths remain only
+  for games played before this change.
+- **Demo account:** sign in with **demo@fastora.africa** and the password
+  in the `DEMO_ACCOUNT_PASSWORD` environment variable ("Sign in with a
+  password" on the sign-in page). Built into the app (`src/lib/server/demo.ts`),
+  not a Supabase user, never staff. Unset the variable to switch it off.
+- **Password sign-in:** `/auth/password` also accepts Supabase Auth users
+  that have a password.
 - **Accounts:** Supabase Auth — Google OAuth and email magic link. The
   callback (`/auth/callback`) links the Supabase user to a Fastora player;
   if the visitor was a guest, their history comes with them (guest-played
@@ -601,6 +612,7 @@ Decisions made where the proposal left things open (all configurable):
 | Decision | Choice | Why |
 |---|---|---|
 | Classic after a wrong answer | Keep playing all 15 | Proposal default; elimination is a setting |
+| Guest play | Removed: an account is required to play (owner request) | Earlier default allowed guests; changed 2026-10-09 |
 | Daily ranking for guests | Shown but unranked | Guest identity is per-device, so enforcement is weaker |
 | Guest results after sign-up | Kept in history, stay unranked | Prevents playing as a guest first, then signing in with the best score |
 | Daily difficulty mix | 4 easy / 3 medium / 3 hard | Rising difficulty within 10 questions |

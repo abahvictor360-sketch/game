@@ -26,6 +26,7 @@ export default defineConfig({
       ADMIN_BOOTSTRAP_EMAILS: 'admin@fastora.test',
       FEATURE_FLAGS: 'multiplayer,ghostOpponents,friendChallenges,askAudience',
       CRON_SECRET: 'e2e-cron',
+      DEMO_ACCOUNT_PASSWORD: 'e2e-demo-password',
     },
   },
 });

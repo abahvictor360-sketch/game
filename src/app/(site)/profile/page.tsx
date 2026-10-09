@@ -10,12 +10,12 @@ export const metadata = { title: 'Profile' };
 
 export default async function ProfilePage() {
   const player = await currentPlayer();
-  if (!player) {
+  if (!player || player.kind !== 'account') {
     return (
       <div className="mx-auto max-w-xl">
         <PageTitle title="Your profile" />
-        <EmptyState title="Play a game to get started" action={<Link href="/auth/signin?next=/profile" className="btn btn-gold">Sign in</Link>}>
-          Sign in to keep your progress, or start a Classic game as a guest.
+        <EmptyState title="Sign in to get started" action={<Link href="/auth/signin?next=/profile" className="btn btn-gold">Sign in or create an account</Link>}>
+          A free account is needed to play. It keeps your scores and history and puts you on the leaderboards.
         </EmptyState>
       </div>
     );

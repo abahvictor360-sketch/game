@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { ErrorState, PageTitle, Panel } from '@/components/ui';
+import { ErrorState, PageTitle, Panel, SignInRequired } from '@/components/ui';
+import { currentAccount } from '@/lib/server/identity';
 import { ensureReady } from '@/lib/server/bootstrap';
 import { getActiveConfig } from '@/lib/server/config';
 import { modeRules } from '@/lib/game/rules';
@@ -15,7 +16,7 @@ const ERRORS: Record<string, string> = {
 export default async function ClassicSetup({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const { error } = await searchParams;
   const db = await ensureReady();
-  const cfg = await getActiveConfig(db);
+  const [cfg, account] = await Promise.all([getActiveConfig(db), currentAccount()]);
   const mr = modeRules('classic', cfg.rules, cfg.flags);
   const r = cfg.rules;
   return (
@@ -39,9 +40,15 @@ export default async function ClassicSetup({ searchParams }: { searchParams: Pro
           <li>• {r.classic.endOnWrongAnswer ? 'A wrong answer ends the game.' : 'A wrong answer or timeout scores zero — but you keep playing.'}</li>
           <li>• Lifelines (once each): {[mr.lifelines.fifty_fifty && '50:50', mr.lifelines.change_question && 'Change Question', mr.lifelines.ask_audience && 'Ask the Audience'].filter(Boolean).join(', ')}.</li>
         </ul>
-        <form action="/api/play/classic" method="post" className="mt-6">
-          <button className="btn btn-gold w-full min-h-14 text-lg">Start game</button>
-        </form>
+        {account ? (
+          <form action="/api/play/classic" method="post" className="mt-6">
+            <button className="btn btn-gold w-full min-h-14 text-lg">Start game</button>
+          </form>
+        ) : (
+          <div className="mt-6">
+            <SignInRequired next="/play/classic" />
+          </div>
+        )}
         <p className="mt-3 text-center text-xs text-blue-100/70">
           <Link href="/how-to-play" className="underline">
             Read the full rules

@@ -11,7 +11,7 @@ export const metadata = { title: 'Live match', robots: { index: false } };
 export default async function MatchPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const player = await currentPlayer();
-  if (!player) redirect('/versus');
+  if (player?.kind !== 'account') redirect(`/auth/signin?next=${encodeURIComponent(`/match/${id}`)}`);
   const db = await ensureReady();
   if (!(await getActiveConfig(db)).flags.multiplayer) notFound();
   try {

@@ -16,6 +16,9 @@ test('a friend completes an asynchronous challenge', async ({ browser }) => {
   const b = await (await browser.newContext()).newPage();
   await b.goto(new URL(link).pathname);
   await expect(b.getByText(/Creator wants to see if you can beat their score/)).toBeVisible();
+  await expect(b.getByRole('button', { name: 'Accept challenge' })).toHaveCount(0);
+  await signIn(b, 'friend@fastora.test', 'Friend');
+  await b.goto(new URL(link).pathname);
   await b.getByRole('button', { name: 'Accept challenge' }).click();
   await b.waitForURL(/\/play\//);
   for (let i = 0; i < 15; i++) await answerAndContinue(b);

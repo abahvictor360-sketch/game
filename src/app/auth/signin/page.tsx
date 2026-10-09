@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { BrandWordmark } from '@/components/Brand';
 import { HexBar, Panel } from '@/components/ui';
 import { authProvider } from '@/lib/server/auth-provider';
+import { demoEnabled } from '@/lib/server/demo';
 import { currentPlayer } from '@/lib/server/identity';
 import { SupabaseSignIn } from './SupabaseSignIn';
 import { BRAND } from '@/lib/shared/brand';
@@ -11,6 +12,8 @@ export const metadata = { title: 'Sign in' };
 const ERRORS: Record<string, string> = {
   callback: 'We couldn’t complete sign-in. The link may have expired — please request a new one.',
   invalid_email: 'Please enter a valid email address.',
+  password: 'That email and password don’t match. Check them, or use a sign-in link instead.',
+  rate_limited: 'Too many attempts. Please wait a few minutes and try again.',
   unavailable: 'Sign-in isn’t configured on this server yet.',
 };
 
@@ -47,8 +50,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
         ) : (
           <>
             <p className="text-sm text-blue-100/85">
-              Accounts keep your history across devices and put you on the leaderboards.
-              {player?.kind === 'guest' ? ' Your guest games come with you.' : ''}
+              You need a free account to play. It keeps your history across devices and puts you on the leaderboards.
             </p>
             {error ? (
               <p role="alert" className="mt-3 rounded-lg bg-coral-500/20 px-3 py-2 text-sm text-coral-400">
@@ -73,9 +75,26 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
                 </label>
                 <button className="btn btn-gold w-full">Continue</button>
               </form>
-            ) : (
+            ) : !demoEnabled() ? (
               <p className="mt-4 text-sm text-coral-400">{ERRORS.unavailable}</p>
-            )}
+            ) : null}
+            {provider === 'supabase' || demoEnabled() ? (
+              <details className="mt-4 rounded-xl bg-white/5 px-3 py-2 ring-1 ring-white/10" open={error === 'password' || provider === 'none'}>
+                <summary className="flex min-h-11 cursor-pointer items-center text-sm font-semibold">Sign in with a password</summary>
+                <form action="/auth/password" method="post" className="mt-2 space-y-3 pb-2">
+                  <input type="hidden" name="next" value={safeNext} />
+                  <label className="block text-sm font-semibold">
+                    Account email
+                    <input name="email" type="email" required autoComplete="username" className="field field-dark mt-1" />
+                  </label>
+                  <label className="block text-sm font-semibold">
+                    Password
+                    <input name="password" type="password" required autoComplete="current-password" className="field field-dark mt-1" />
+                  </label>
+                  <button className="btn btn-blue w-full">Sign in</button>
+                </form>
+              </details>
+            ) : null}
           </>
         )}
       </Panel>

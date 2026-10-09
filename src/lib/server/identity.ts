@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { ensureReady } from './bootstrap';
 import type { Queryable } from './db';
 import { AppError } from './errors';
-import { createGuest, getPlayer, type Player } from './players';
+import { getPlayer, type Player } from './players';
 import { COOKIE_NAME, cookieOptions, decodeSession, encodeSession } from './session-cookie';
 
 /** Current player from the signed session cookie (read-only; for pages). */
@@ -19,27 +19,28 @@ export async function currentPlayerId(): Promise<string | null> {
   return (await currentPlayer())?.id ?? null;
 }
 
-/** Current player, creating a guest identity when needed (route handlers / actions). */
-export async function ensurePlayer(q?: Queryable): Promise<Player> {
+/** Current signed-in account, or null (guests no longer count: an account is required to play). */
+export async function currentAccount(): Promise<Player | null> {
+  const p = await currentPlayer();
+  return p?.kind === 'account' ? p : null;
+}
+
+export const SIGN_IN_REQUIRED = 'sign_in_required';
+
+/** Signed-in account for route handlers / actions; refreshes a stale cookie. Throws when signed out. */
+export async function requireAccount(q?: Queryable): Promise<Player> {
   const jar = await cookies();
   const claims = decodeSession(jar.get(COOKIE_NAME)?.value);
   const db = q ?? (await ensureReady());
-  if (claims) {
-    const p = await getPlayer(db, claims.pid);
-    if (p) {
-      if (p.id !== claims.pid || p.kind !== claims.kind) setSessionCookie(jar, p);
-      return p;
-    }
-  }
-  const guest = await createGuest(db);
-  setSessionCookie(jar, guest);
-  return guest;
+  const p = claims ? await getPlayer(db, claims.pid) : null;
+  if (!p || p.kind !== 'account') throw new AppError('unauthorized', 'Sign in or create an account to play.', SIGN_IN_REQUIRED);
+  if (p.id !== claims!.pid || p.kind !== claims!.kind) setSessionCookie(jar, p);
+  return p;
 }
 
+/** Same as requireAccount, for handlers that only act on existing games. */
 export async function requirePlayer(): Promise<Player> {
-  const p = await currentPlayer();
-  if (!p) throw new AppError('unauthorized', 'Start a game first.');
-  return p;
+  return requireAccount();
 }
 
 export function setSessionCookie(jar: Awaited<ReturnType<typeof cookies>>, p: Pick<Player, 'id' | 'kind'>) {

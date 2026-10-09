@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { DailyCountdown } from '@/components/site/DailyCountdown';
-import { ErrorState, PageTitle, Panel, ResultGrid } from '@/components/ui';
+import { ErrorState, PageTitle, Panel, ResultGrid, SignInRequired } from '@/components/ui';
 import { ensureReady } from '@/lib/server/bootstrap';
 import { getActiveConfig } from '@/lib/server/config';
 import { getDailyStatus } from '@/lib/server/game/daily';
@@ -38,19 +38,19 @@ export default async function DailyPage({ searchParams }: { searchParams: Promis
             </li>
             <li>• One attempt per day. No lifelines.</li>
             <li>• Refreshing resumes your attempt — it won’t reset the clock.</li>
-            {player?.kind !== 'account' ? <li>• Playing as a guest: your score shows here but only signed-in players are ranked. Guest attempts are tracked on this device only.</li> : null}
           </ul>
           <p className="mt-4 text-sm text-blue-100/80">
             Today’s challenge closes in <DailyCountdown resetAt={status.resetAt} />
           </p>
-          <form action="/api/play/daily" method="post" className="mt-4">
-            <button className="btn btn-flame min-h-14 w-full text-lg">Start today’s challenge</button>
-          </form>
-          {player?.kind !== 'account' ? (
-            <Link href="/auth/signin?next=/daily" className="mt-3 inline-block text-sm font-bold text-gold-300 underline">
-              Sign in first to be ranked
-            </Link>
-          ) : null}
+          {player?.kind === 'account' ? (
+            <form action="/api/play/daily" method="post" className="mt-4">
+              <button className="btn btn-flame min-h-14 w-full text-lg">Start today’s challenge</button>
+            </form>
+          ) : (
+            <div className="mt-5">
+              <SignInRequired next="/daily" title="Sign in to take today’s challenge" />
+            </div>
+          )}
         </Panel>
       ) : null}
 

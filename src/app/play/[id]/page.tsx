@@ -10,7 +10,7 @@ export const metadata = { title: 'Playing', robots: { index: false } };
 export default async function PlayPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const player = await currentPlayer();
-  if (!player) redirect('/');
+  if (player?.kind !== 'account') redirect(`/auth/signin?next=${encodeURIComponent(`/play/${id}`)}`);
   const db = await ensureReady();
   let view;
   try {

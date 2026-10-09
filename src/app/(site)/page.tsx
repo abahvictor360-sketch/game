@@ -42,7 +42,7 @@ export default async function HomePage() {
         <Link href="/play/classic" className="btn btn-gold mt-6 min-h-14 px-10 text-lg">
           ▶ Play Classic
         </Link>
-        <p className="mt-2 text-xs text-blue-100/70">No sign-up needed — start playing as a guest.</p>
+        <p className="mt-2 text-xs text-blue-100/70">Free account required — sign in or sign up in seconds.</p>
       </section>
 
       <div className="grid gap-5 md:grid-cols-2">

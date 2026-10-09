@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { PageTitle, Panel } from '@/components/ui';
+import { PageTitle, Panel, SignInRequired } from '@/components/ui';
 import { ensureReady } from '@/lib/server/bootstrap';
 import { getActiveConfig } from '@/lib/server/config';
 import { currentPlayer } from '@/lib/server/identity';
@@ -16,7 +16,11 @@ export default async function HelpPage() {
   return (
     <div className="mx-auto max-w-md">
       <PageTitle title="Be the audience" subtitle="Keep this page open to help players who ask the audience. Your vote is anonymous." />
-      {!player?.settings.helpOthers ? (
+      {player?.kind !== 'account' ? (
+        <Panel>
+          <SignInRequired next="/help" title="Sign in to help other players" />
+        </Panel>
+      ) : !player.settings.helpOthers ? (
         <Panel className="text-center">
           <p>Turn on “Help other players” in your profile to receive questions.</p>
           <Link className="btn btn-gold mt-4" href="/profile">

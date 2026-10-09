@@ -7,7 +7,7 @@ import { captureException } from '@/lib/server/monitoring';
 import { startOrResumeDaily } from '@/lib/server/game/daily';
 import { startGhostGame } from '@/lib/server/game/phase2';
 import { startClassic } from '@/lib/server/game/sessions';
-import { ensurePlayer } from '@/lib/server/identity';
+import { requireAccount, SIGN_IN_REQUIRED } from '@/lib/server/identity';
 import { rateLimit } from '@/lib/server/rate-limit';
 
 const STARTERS = {
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ mode: stri
     const start = STARTERS[mode as keyof typeof STARTERS];
     if (!start) throw new AppError('not_found', 'Unknown game mode.');
     const db = await ensureReady();
-    const player = await ensurePlayer(db);
+    const player = await requireAccount(db);
     await rateLimit(db, `start:${player.id}`, 20, 60);
     const sessionId = await db.tx((q) => start(q, player));
     void track(mode === 'daily' ? 'daily_started' : 'game_started', player.id, { mode, eligible: player.kind === 'account' });
@@ -35,6 +35,7 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ mode: stri
     if (isForm) {
       const code = err instanceof AppError ? (err.reason ?? err.code) : 'internal';
       const back = mode === 'daily' ? '/daily' : mode === 'ghost' ? '/versus' : '/play/classic';
+      if (err instanceof AppError && err.reason === SIGN_IN_REQUIRED) return redirect303(req, `/auth/signin?next=${encodeURIComponent(back)}`);
       return redirect303(req, `${back}?error=${encodeURIComponent(code)}`);
     }
     return jsonError(err);

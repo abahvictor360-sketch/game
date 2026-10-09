@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
+import { signIn } from './helpers';
 
 const PAGES = ['/', '/how-to-play', '/daily', '/leaderboard', '/play/classic', '/auth/signin', '/privacy'];
 
@@ -13,6 +14,7 @@ for (const path of PAGES) {
 }
 
 test('no serious accessibility violations during gameplay and feedback', async ({ page }) => {
+  await signIn(page, 'a11y@fastora.test');
   await page.goto('/play/classic');
   await page.getByRole('button', { name: 'Start game' }).click();
   await page.waitForURL(/\/play\//);
@@ -37,6 +39,7 @@ test.describe('smallest supported phone (360px)', () => {
     });
   }
   test('gameplay fits and answers are at least 44px tall', async ({ page }) => {
+    await signIn(page, 'small@fastora.test');
     await page.goto('/play/classic');
     await page.getByRole('button', { name: 'Start game' }).click();
     await page.waitForURL(/\/play\//);

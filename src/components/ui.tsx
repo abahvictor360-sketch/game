@@ -140,3 +140,19 @@ export function Confetti({ pieces = 36 }: { pieces?: number }) {
     </div>
   );
 }
+
+/** Shown in place of a "start" action when nobody is signed in. Playing requires an account. */
+export function SignInRequired({ next, title = 'Sign in to play', children }: { next: string; title?: string; children?: ReactNode }) {
+  const href = `/auth/signin?next=${encodeURIComponent(next)}`;
+  return (
+    <div className="text-center">
+      <h2 className="font-display text-lg font-black">{title}</h2>
+      <p className="mx-auto mt-1 max-w-sm text-sm text-blue-100/85">
+        {children ?? 'A free account keeps your scores and history and puts you on the leaderboards.'}
+      </p>
+      <Link href={href} className="btn btn-gold mt-4 w-full">
+        Sign in or create an account
+      </Link>
+    </div>
+  );
+}
