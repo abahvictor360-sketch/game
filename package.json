@@ -14,7 +14,8 @@
     "db:migrate": "tsx --conditions=react-server scripts/migrate.ts",
     "db:seed": "tsx --conditions=react-server scripts/seed.ts",
     "admin:grant": "tsx --conditions=react-server scripts/grant-admin.ts",
-    "load-test": "tsx scripts/load-test.ts"
+    "load-test": "tsx scripts/load-test.ts",
+    "content:sql": "tsx scripts/build-starter-sql.ts"
   },
   "dependencies": {
     "@electric-sql/pglite": "0.5.8",

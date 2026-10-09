@@ -516,6 +516,14 @@ Current state and remaining manual steps: **§3**. Full guide:
   testing, **not verified**, tagged `dev-fixture`, flagged `is_fixture`, and
   seeded only into the local embedded DB. The admin overview warns while any
   are live.
+- **Starter set (100 questions):** `db/seed/starter_questions_100.sql` loads
+  100 approved questions (all nine categories; 29 easy / 39 medium / 32 hard)
+  into Supabase — paste it into **SQL Editor** and run. It is safe to re-run.
+  They were drafted with AI assistance from well-documented facts, each with
+  a Wikipedia source, and are tagged `starter-set` + `needs-review` (not
+  editorially verified). Source: `db/content/starter-questions.ts`;
+  regenerate with `npm run content:sql` (a test checks the file is current
+  and plays games from it).
 - Workflow: draft → review → approve (admin) → archive. Editing a live
   question makes a new version; games keep the version they used.
 
