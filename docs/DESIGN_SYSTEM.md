@@ -86,5 +86,7 @@ page sections (`space-y-8`).
   disabled under `prefers-reduced-motion`.
 - Connectivity: `useOnline` drives offline banners in games, live matches,
   the Versus lobby and the audience page.
-- Sound: synthesised (no downloads), optional, with a visible mute toggle
-  remembered per device.
+- Sound: synthesised (no downloads), **off by default**; the visible sound
+  toggle turns it on, and the choice is remembered per device.
+- Home → "Play Classic" opens the Classic setup screen (rules summary +
+  Start), still with no sign-up form before the first question.

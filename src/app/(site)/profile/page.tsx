@@ -85,7 +85,7 @@ export default async function ProfilePage() {
       <section>
         <h2 className="font-display mb-3 text-lg font-black">Recent games</h2>
         {history.length === 0 ? (
-          <EmptyState title="No games yet" action={<form action="/api/play/classic" method="post"><button className="btn btn-gold">Play Classic</button></form>} />
+          <EmptyState title="No games yet" action={<Link href="/play/classic" className="btn btn-gold">Play Classic</Link>} />
         ) : (
           <ul className="space-y-2">
             {history.map((h) => (

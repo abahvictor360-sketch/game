@@ -39,9 +39,9 @@ export default async function HomePage() {
         </div>
         <h1 className="font-display mt-5 text-3xl font-black tracking-tight sm:text-4xl">{BRAND.tagline}</h1>
         <p className="mx-auto mt-2 max-w-md text-blue-100/85">{r.classic.questionCount} questions. Rising difficulty. Learn something new with every answer.</p>
-        <form action="/api/play/classic" method="post" className="mt-6">
-          <button className="btn btn-gold min-h-14 px-10 text-lg">▶ Play Classic</button>
-        </form>
+        <Link href="/play/classic" className="btn btn-gold mt-6 min-h-14 px-10 text-lg">
+          ▶ Play Classic
+        </Link>
         <p className="mt-2 text-xs text-blue-100/70">No sign-up needed — start playing as a guest.</p>
       </section>
 

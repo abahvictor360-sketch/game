@@ -3,7 +3,8 @@ import { answerAndContinue, signIn } from './helpers';
 
 test('a guest plays a full 15-question Classic game and sees results', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: /Play Classic/ }).click();
+  await page.getByRole('link', { name: /Play Classic/ }).first().click();
+  await page.getByRole('button', { name: 'Start game' }).click();
   await page.waitForURL(/\/play\//);
   // Lifelines are offered; use 50:50 once.
   await page.getByRole('button', { name: /50:50/ }).click();

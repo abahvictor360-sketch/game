@@ -1,7 +1,7 @@
 'use client';
 import { useCallback, useEffect, useState } from 'react';
 
-/** Optional, synthesised sound effects (no audio downloads). Muted state persists per device. */
+/** Optional, synthesised sound effects (no audio downloads). Off until the player turns it on; the choice persists per device. */
 const KEY = 'fastora:muted';
 let ctx: AudioContext | null = null;
 
@@ -43,9 +43,9 @@ export function useSound() {
   const [muted, setMuted] = useState(true);
   useEffect(() => {
     try {
-      setMuted(localStorage.getItem(KEY) === '1');
+      setMuted(localStorage.getItem(KEY) !== '0');
     } catch {
-      setMuted(false);
+      setMuted(true);
     }
   }, []);
   const toggle = useCallback(() => {
