@@ -31,6 +31,11 @@ test('signed-out visitors must sign in, then play a full 15-question Classic gam
   expect(await res.text()).not.toContain('Your answers');
   const img = await page.request.get(shareUrl + '/opengraph-image');
   expect(img.headers()['content-type']).toContain('image/png');
+  // Tall story image with QR code for TikTok/Instagram.
+  const story = await page.request.get(shareUrl + '/story');
+  expect(story.headers()['content-type']).toContain('image/png');
+  const png = await story.body();
+  expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([1080, 1920]);
 });
 
 test('Daily Challenge resumes after refresh and allows one attempt', async ({ page }) => {

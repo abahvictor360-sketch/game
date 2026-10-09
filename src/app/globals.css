@@ -156,6 +156,7 @@ body {
   width: 100vw;
   background: linear-gradient(90deg, transparent, var(--color-rail-soft) 60%, var(--color-rail));
   z-index: -1;
+  pointer-events: none; /* decorative: never take taps meant for a neighbour */
 }
 .railed::before {
   right: 100%;
@@ -173,7 +174,7 @@ body {
 .answer:not(:disabled):focus-visible .hex {
   --hex-border: linear-gradient(180deg, #fff3c4, var(--color-gold-400) 50%, var(--color-gold-600));
 }
-.answer:not(:disabled):active {
+.answer:not(:disabled):active .hex {
   transform: scale(0.985);
 }
 .answer[data-state='selected'] .hex {
@@ -470,7 +471,7 @@ body {
   }
 }
 .stagger > * {
-  animation: enter-up 460ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation: enter-up 460ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
 }
 .stagger > *:nth-child(2) { animation-delay: 70ms; }
 .stagger > *:nth-child(3) { animation-delay: 140ms; }
@@ -480,12 +481,12 @@ body {
 .stagger > *:nth-child(n + 7) { animation-delay: 420ms; }
 
 /* Answers slide in one after another for each new question (--i = index). */
-.answer-enter {
-  animation: enter-up 380ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+.answer-enter .hex {
+  animation: enter-up 380ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
   animation-delay: calc(var(--i, 0) * 70ms + 120ms);
 }
 .question-enter {
-  animation: enter-up 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation: enter-up 420ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
 }
 
 /* Reveal: the right answer glows and bounces; a wrong pick shakes. */
@@ -505,10 +506,11 @@ body {
   0%, 100% { filter: drop-shadow(0 0 4px rgb(252 200 26 / 0.35)); }
   50% { filter: drop-shadow(0 0 14px rgb(252 200 26 / 0.75)); }
 }
-.answer[data-state='correct'] { animation: correct-pop 650ms ease-out both; }
-.answer[data-state='wrong'] { animation: wrong-shake 420ms ease-in-out both; }
-.answer[data-state='selected'] { animation: selected-breathe 900ms ease-in-out infinite; }
-.answer:not(:disabled):hover { transform: translateY(-2px); }
+.answer[data-state='correct'] .hex { animation: correct-pop 650ms ease-out backwards; filter: drop-shadow(0 0 8px rgb(47 220 143 / 0.45)); }
+.answer[data-state='wrong'] .hex { animation: wrong-shake 420ms ease-in-out; }
+.answer[data-state='selected'] .hex { animation: selected-breathe 900ms ease-in-out infinite; }
+.answer .hex { transition: transform 120ms ease; }
+.answer:not(:disabled):hover .hex { transform: translateY(-2px); }
 
 /* Timer: the emblem throbs in the last five seconds. */
 @keyframes urgent-throb {
@@ -541,7 +543,7 @@ body {
   100% { opacity: 1; transform: none; }
 }
 .cell-pop {
-  animation: cell-pop 360ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation: cell-pop 360ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
   animation-delay: calc(var(--i, 0) * 55ms + 200ms);
 }
 
@@ -611,7 +613,7 @@ body {
 
 /* Pressing wins over hovering. */
 .btn:not(:disabled):active { transform: scale(0.97); }
-.answer:not(:disabled):active { transform: scale(0.985); }
+.answer:not(:disabled):active .hex { transform: scale(0.985); }
 .lifeline:not(:disabled):active { transform: scale(0.95); }
 
 /* Interactive cards lift slightly under the pointer. */
@@ -640,7 +642,7 @@ body {
   .tilt,
   .lift:hover,
   .btn:not(:disabled):hover,
-  .answer:not(:disabled):hover,
+  .answer:not(:disabled):hover .hex,
   .lifeline:not(:disabled):hover {
     transform: none !important;
   }

@@ -157,7 +157,7 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
 
       <Panel>
         <h2 className="font-display mb-3 text-lg font-black">Share your result</h2>
-        <ShareActions text={shareText(summary)} url={shareUrl} imageUrl={`/s/${id}/opengraph-image`} sessionId={id} />
+        <ShareActions text={shareText(summary)} url={shareUrl} imageUrl={`/s/${id}/opengraph-image`} storyUrl={`/s/${id}/story`} sessionId={id} />
       </Panel>
 
       {player?.kind === 'guest' ? (

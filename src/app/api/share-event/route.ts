@@ -4,7 +4,7 @@ import { api, body } from '@/lib/server/api';
 import { track } from '@/lib/server/analytics';
 import { currentPlayer } from '@/lib/server/identity';
 
-const Schema = z.object({ sessionId: z.string().uuid(), channel: z.enum(['native', 'whatsapp', 'copy', 'image']) });
+const Schema = z.object({ sessionId: z.string().uuid(), channel: z.enum(['native', 'whatsapp', 'copy', 'image', 'image_share']) });
 
 export const POST = api(async (req) => {
   const input = await body(req, Schema);
