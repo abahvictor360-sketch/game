@@ -49,8 +49,8 @@ Audience, all behind feature flags.
 |---|---|
 | **Phase 1** (Classic, lifelines, Daily, guest play, auth, profiles, leaderboards, sharing, admin, CSV import, PWA) | ✅ Built and tested |
 | **Phase 2** (friend challenges, ghost opponents, live matches, Ask the Audience) | ✅ Built and tested, **switched off** by default |
-| Unit + integration tests (57) | ✅ Pass on embedded Postgres **and** real PostgreSQL 16 |
-| End-to-end tests (14, incl. two-browser live match and accessibility scans) | ✅ Pass |
+| Unit + integration tests (60) | ✅ Pass on embedded Postgres **and** real PostgreSQL 16 |
+| End-to-end tests (26, incl. two-browser live match, forfeit, accessibility scans and 360 px layout) | ✅ Pass |
 | Supabase | ✅ Dedicated project **`fastora`** created, schema + RLS + Realtime policy applied (see §3) |
 | Vercel | ✅ Project **`fastora-quiz`** linked to this repo, env vars set — ⚠️ needs `DATABASE_URL` before it can serve (see §3) |
 | Verified question bank | ❌ Not supplied — only 72 **unverified development fixtures** exist |
@@ -96,8 +96,8 @@ To see Phase 2 features locally add
 
 ```bash
 npm run typecheck
-npm test                         # 57 unit + integration tests
-npm run build && npm run test:e2e   # 14 Playwright tests (needs Chromium: npx playwright install chromium)
+npm test                         # 60 unit + integration tests
+npm run build && npm run test:e2e   # 26 Playwright tests (needs Chromium: npx playwright install chromium)
 ```
 
 ### 2.3 Tidy up the Git setup (recommended first job)
@@ -365,15 +365,17 @@ bars joined by side rails, circular gold timer emblem, gold points ribbon,
 round lifeline buttons. Fastora's identity is original (no third-party
 marks).
 
-- **All colours/tokens:** `src/app/globals.css` (`@theme` block).
-- **Logo/wordmark:** `src/components/Brand.tsx`.
+- **All colours/type tokens:** `src/app/globals.css` (`@theme` block).
+- **Brand name, wordmark, image colours:** `src/lib/shared/brand.ts`
+  (nothing else hardcodes the name or brand colours).
+- **Logo SVG:** `src/components/Brand.tsx`.
 - **Current palette** (from the reference screenshots, because
   www.fastora.africa was blocked from the build environment):
   stage blue `#1253B8` → `#04103A`, bars `#1E1B38`, rails `#E6EDFF`,
   gold `#FCC81A`, orange `#BF5500` (text-safe) / `#FF9A3C` (accent),
   violet `#5B34B8`, correct `#12B76A`, wrong `#F2603F`, ivory `#FFFDF7`.
 - **To apply the official Fastora palette:** replace the hex values in
-  `globals.css`, then run `npm run build && npx playwright test tests/e2e/a11y.spec.ts`
+  `globals.css` and the `colors` mirror in `src/lib/shared/brand.ts`, then run `npm run build && npx playwright test tests/e2e/a11y.spec.ts`
   to confirm contrast still passes.
 
 Details, components and accessibility rules: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md).
@@ -635,6 +637,7 @@ Commits on `claude/youthful-ptolemy-26brkb` (oldest first):
 9. Full handover README (continuation guide, backlog)
 10. Vercel-safe config (daily cron, no embedded DB on Vercel, `POSTGRES_URL` + SSL support)
 11. Infrastructure: Supabase project `fastora` (schema applied) and Vercel project `fastora-quiz` (linked, env vars)
+12. Brief audit against sections 2–4 (Phase 2, design system, screens): live-match forfeit/ready/reconnect states, live recorded-opponent progress, audience re-ask fix and helper page, friend-challenge errors; central brand file, type scale, skeletons, toasts/dialogs, celebration; Versus/friend rules in How to play, config-driven home rules, Daily countdowns, past-day leaderboard picker, results performance summary; 360 px tests
 
 Bugs found and fixed during testing are listed in
 [docs/TESTING.md](docs/TESTING.md#bugs-found-by-testing-fixed).

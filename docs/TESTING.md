@@ -8,9 +8,11 @@ All results below were produced in the build environment on 2026-10-08.
 |---|---|---|
 | Unit (rules, scoring, ranking, dates, cookie signing) | `npm test` | 12 passed |
 | Integration on embedded Postgres (PGlite) | `npm test` | 45 passed |
-| Integration on **real PostgreSQL 16** via the production driver | `TEST_DATABASE_URL=postgres://… npm test` | 57/57 passed (unit + integration) |
+| Integration on **real PostgreSQL 16** via the production driver | `TEST_DATABASE_URL=postgres://… npm test` | 57/57 passed (unit + integration) on 2026-10-08; 60 on embedded Postgres on 2026-10-09 |
 | End-to-end (Playwright, Pixel 7 viewport, production build) | `npm run build && npm run test:e2e` | see below |
 | Accessibility (axe-core, WCAG 2.1 A/AA, serious+critical) | part of e2e | 8 passed, 0 violations |
+| 360 px phone: no horizontal scroll on 10 screens, answers ≥44 px | part of e2e | 11 passed |
+| End-to-end total (2026-10-09) | `npm run test:e2e` | 26 passed |
 
 ### What the integration tests cover
 
@@ -53,7 +55,8 @@ All results below were produced in the build environment on 2026-10-08.
   no answer data sent to helpers); live matches (matchmaking fallback after
   30 s, synchronized rounds with private answers, reconnection without timer
   reset, forfeit after 20 s, both-disconnected cancellation, single
-  finalisation, strangers denied).
+  finalisation, strangers denied); Ask the Audience can be asked again on
+  the same question after a restored (no-vote) request.
 
 ### End-to-end journeys
 
@@ -62,7 +65,9 @@ Guest plays a full Classic game (uses 50:50) → results → public share page
 single attempt with ranking; admin creates → reviews → publishes a question
 and validates a bad CSV; non-staff get 404 on `/admin`; a friend completes an
 asynchronous challenge in a second browser; **two browsers complete a live
-match**; axe scans of 7 pages plus gameplay and feedback.
+match**; **leaving a live match** shows the forfeit screen at once while
+the opponent finishes and wins; axe scans of 7 pages plus gameplay and
+feedback; 360 px layout checks.
 
 ## Bugs found by testing (fixed)
 
@@ -77,6 +82,13 @@ match**; axe scans of 7 pages plus gameplay and feedback.
   Classic unavailable; selection now prefers calibrated difficulty but falls
   back to editorial difficulty.
 - Orange call-outs failed WCAG contrast with white text.
+- The "+points" pill (white on emerald-500) failed contrast — only caught
+  when the scanned answer happened to be correct.
+- A player who left a live match kept seeing active rounds with answer
+  buttons that failed ("You left this match").
+- Using Ask the Audience again after a no-vote request restored it hit a
+  unique-constraint error.
+- A recorded opponent's "Answered" indicator never updated during a question.
 
 ## Load measurements
 

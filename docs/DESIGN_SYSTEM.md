@@ -5,9 +5,12 @@ Direction requested by Fastora: a modern take on the classic TV quiz-show look
 emblem, gold highlights, round lifeline buttons) — with Fastora’s own original
 identity (no third-party logos or trade dress).
 
-All tokens live in `src/app/globals.css` (`@theme`), so final branding can be
-swapped in one place. The brand mark and wordmark are in
-`src/components/Brand.tsx`.
+Colour, type and radius tokens live in `src/app/globals.css` (`@theme`). The
+brand name, tagline, wordmark, monogram and a JS mirror of the colours (for
+generated images, app icons, the manifest and the browser theme colour) live
+in `src/lib/shared/brand.ts`; the logo SVG is in `src/components/Brand.tsx`.
+No screen hardcodes the name or a brand hex value, so rebranding touches
+those three files.
 
 ## Colour
 
@@ -36,6 +39,21 @@ System font stack (no web-font download for low-end devices and slow
 networks), rounded display stack for headings and numbers, tabular numerals
 for scores and timers. Body 15–16 px on phones.
 
+Type scale tokens (Tailwind utilities generated from `@theme`):
+
+| Utility | Size | Use |
+|---|---|---|
+| `text-eyebrow` | 11 px, 0.18em tracking | Category / mode labels above titles (with `uppercase font-bold`) |
+| `text-label` | 12 px, 0.1em tracking | Stat labels, small caps headers |
+| `text-title` | 20 px | Panel titles |
+| `text-headline` | 30 px | Page headlines |
+| `text-hero` | 36 px | Home hero |
+| `text-score` | 40 px | Large scores |
+
+Spacing follows Tailwind's 4 px base: 16 px page gutters (`px-4`), 20 px
+panel padding (`p-5`), 12 px between related controls (`gap-3`), 32 px between
+page sections (`space-y-8`).
+
 ## Components
 
 | Component | File | States |
@@ -46,11 +64,14 @@ for scores and timers. Body 15–16 px on phones.
 | Points ribbon | `.ribbon` | — |
 | Ladder | `game/Ladder.tsx` | strip (phone) / vertical ladder (desktop); current, correct, wrong, upcoming |
 | Lifelines | `game/Lifelines.tsx`, `.lifeline` | available, loading, used (struck through), hidden when disabled |
-| Buttons | `.btn-gold`, `.btn-flame`, `.btn-blue`, `.btn-ghost` | ≥48 px tall; pressed scale |
-| Panels, badges, tabs, empty/error states, skeletons | `ui.tsx` | — |
+| Buttons | `.btn-gold`, `.btn-flame`, `.btn-blue`, `.btn-ghost`, `.btn-light` (ivory), `.btn-coral`/`.btn-danger` | ≥48 px tall (`.btn-sm` 44 px); pressed scale; disabled |
+| Panels, badges, tabs, empty/error states | `ui.tsx` | — |
+| Skeletons | `ui.tsx` `Skeleton`, `GameSkeleton`; `loading.tsx` for site, gameplay, live match and admin | dark and ivory variants |
 | Leaderboard rows | `site/LeaderboardTable.tsx` | current player highlighted |
-| Dialog | `game/ReportDialog.tsx` (native `<dialog>`) | — |
-| Toasts | inline in `GameClient` | error / info |
+| Dialogs | `feedback.tsx` `ConfirmDialog`, `game/ReportDialog.tsx` (native `<dialog>`, Esc closes, focus returns) | danger / primary |
+| Toasts | `feedback.tsx` `Toast` + `useToast` | error / info / success; auto-dismiss, dismiss button |
+| Mute toggle | `feedback.tsx` `MuteButton` | on every screen that plays sound (games, live match) |
+| Celebration | `ui.tsx` `Confetti` (CSS only) | strong results and wins; hidden for reduced motion |
 
 ## Interaction & accessibility
 
@@ -60,7 +81,10 @@ for scores and timers. Body 15–16 px on phones.
 - Screen readers: live region announces correct/incorrect and the right
   answer; timer has an accessible label; ladder steps and result grids have
   text equivalents; lifeline states are in their labels.
-- Motion: small pop/rise animations; all motion and spotlight beams are
+- Motion: small pop/rise animations, a score "bump" when points are added,
+  confetti on strong results; all motion, confetti and spotlight beams are
   disabled under `prefers-reduced-motion`.
+- Connectivity: `useOnline` drives offline banners in games, live matches,
+  the Versus lobby and the audience page.
 - Sound: synthesised (no downloads), optional, with a visible mute toggle
   remembered per device.

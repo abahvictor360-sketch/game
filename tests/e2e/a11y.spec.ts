@@ -29,7 +29,7 @@ test('no serious accessibility violations during gameplay and feedback', async (
 
 test.describe('smallest supported phone (360px)', () => {
   test.use({ viewport: { width: 360, height: 740 } });
-  for (const path of [...PAGES, '/versus', '/help']) {
+  for (const path of [...PAGES, '/versus', '/help', '/leaderboard?view=daily']) {
     test(`no horizontal scrolling on ${path}`, async ({ page }) => {
       await page.goto(path);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);

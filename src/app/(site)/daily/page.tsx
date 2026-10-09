@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { DailyCountdown } from '@/components/site/DailyCountdown';
 import { ErrorState, PageTitle, Panel, ResultGrid } from '@/components/ui';
 import { ensureReady } from '@/lib/server/bootstrap';
+import { getActiveConfig } from '@/lib/server/config';
 import { getDailyStatus } from '@/lib/server/game/daily';
 import { dailyLeaderboard } from '@/lib/server/game/leaderboard';
 import { currentPlayer } from '@/lib/server/identity';
@@ -13,7 +14,7 @@ export default async function DailyPage({ searchParams }: { searchParams: Promis
   const { error } = await searchParams;
   const db = await ensureReady();
   const player = await currentPlayer();
-  const status = await db.tx((q) => getDailyStatus(q, player?.id ?? null));
+  const [status, cfg] = await Promise.all([db.tx((q) => getDailyStatus(q, player?.id ?? null)), getActiveConfig(db)]);
   const board = status.available ? await dailyLeaderboard(db, status.date, { limit: 10, playerId: player?.id ?? null }) : null;
   const a = status.attempt;
   return (
@@ -22,6 +23,9 @@ export default async function DailyPage({ searchParams }: { searchParams: Promis
       {error === 'daily_unavailable' || !status.available ? (
         <ErrorState title="Today’s challenge isn’t available yet">
           We couldn’t publish today’s questions. Our team has been alerted. Please check back soon — Classic is still open.
+          <p className="mt-2">
+            Next challenge in <DailyCountdown resetAt={status.resetAt} />
+          </p>
         </ErrorState>
       ) : null}
       {error && error !== 'daily_unavailable' ? <ErrorState>We couldn’t start the challenge. Please try again.</ErrorState> : null}
@@ -29,12 +33,17 @@ export default async function DailyPage({ searchParams }: { searchParams: Promis
       {status.available && !a ? (
         <Panel className="text-center">
           <ul className="mx-auto max-w-sm space-y-1 text-left text-sm text-blue-100/90">
-            <li>• {status.questionCount} questions, 20 seconds each, rising difficulty.</li>
+            <li>
+              • {status.questionCount} questions, {cfg.rules.daily.timerMs / 1000} seconds each, rising difficulty.
+            </li>
             <li>• One attempt per day. No lifelines.</li>
             <li>• Refreshing resumes your attempt — it won’t reset the clock.</li>
             {player?.kind !== 'account' ? <li>• Playing as a guest: your score shows here but only signed-in players are ranked. Guest attempts are tracked on this device only.</li> : null}
           </ul>
-          <form action="/api/play/daily" method="post" className="mt-5">
+          <p className="mt-4 text-sm text-blue-100/80">
+            Today’s challenge closes in <DailyCountdown resetAt={status.resetAt} />
+          </p>
+          <form action="/api/play/daily" method="post" className="mt-4">
             <button className="btn btn-flame min-h-14 w-full text-lg">Start today’s challenge</button>
           </form>
           {player?.kind !== 'account' ? (
@@ -56,7 +65,7 @@ export default async function DailyPage({ searchParams }: { searchParams: Promis
 
       {a && a.status === 'completed' ? (
         <Panel className="text-center">
-          <p className="text-sm uppercase tracking-widest text-blue-100/70">Your result</p>
+          <p className="text-label font-bold uppercase text-blue-100/70">Your result</p>
           <p className="font-display text-5xl font-black text-gold-400">{a.score}</p>
           <p className="text-blue-100/85">
             {a.correctCount}/{status.questionCount} correct{a.rank ? ` · rank #${a.rank}` : a.eligible ? '' : ' · unranked (guest)'}

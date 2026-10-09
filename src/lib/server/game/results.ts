@@ -102,5 +102,5 @@ export function shareText(r: ResultSummary): string {
     r.mode === 'daily'
       ? `${BRAND.name} Daily ${r.challengeDate} — ${r.correctCount}/${r.totalQuestions}`
       : `${BRAND.name} ${r.mode === 'classic' ? 'Classic' : 'Quiz'} — ${r.score} points (${r.correctCount}/${r.totalQuestions})`;
-  return `${head}\n${grid}\nHow well do you know Africa?`;
+  return `${head}\n${grid}\n${BRAND.tagline}`;
 }

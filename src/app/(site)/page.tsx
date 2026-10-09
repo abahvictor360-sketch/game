@@ -18,6 +18,19 @@ export default async function HomePage() {
     getActiveConfig(db),
   ]);
   const versus = cfg.flags.multiplayer || cfg.flags.ghostOpponents;
+  const r = cfg.rules;
+  const dist = r.classic.distribution;
+  const lifelines = [
+    r.classic.lifelines.fifty_fifty && '50:50',
+    r.classic.lifelines.change_question && 'swap a question',
+    r.classic.lifelines.ask_audience && cfg.flags.askAudience && 'ask the audience',
+  ].filter(Boolean) as string[];
+  const NUM = ['No', 'One', 'Two', 'Three'];
+  const rules: [string, string][] = [
+    [`${r.classic.questionCount} questions`, `${dist.easy} easy, ${dist.medium} medium, ${dist.hard} hard. Points rise as you climb: ${r.points.easy}, ${r.points.medium}, then ${r.points.hard}.`],
+    ['Beat the clock', `${r.timersMs.easy / 1000} seconds for easy, ${r.timersMs.medium / 1000} for medium, ${r.timersMs.hard / 1000} for hard questions.`],
+  ];
+  if (lifelines.length) rules.push([`${NUM[lifelines.length] ?? lifelines.length} lifeline${lifelines.length > 1 ? 's' : ''}`, `${lifelines.join(', ').replace(/^./, (c) => c.toUpperCase())} — once each per game.`]);
   return (
     <div className="space-y-8 pt-2">
       <section className="text-center">
@@ -25,7 +38,7 @@ export default async function HomePage() {
           <BrandMark size={108} />
         </div>
         <h1 className="font-display mt-5 text-3xl font-black tracking-tight sm:text-4xl">{BRAND.tagline}</h1>
-        <p className="mx-auto mt-2 max-w-md text-blue-100/85">Fifteen questions. Rising difficulty. Learn something new with every answer.</p>
+        <p className="mx-auto mt-2 max-w-md text-blue-100/85">{r.classic.questionCount} questions. Rising difficulty. Learn something new with every answer.</p>
         <form action="/api/play/classic" method="post" className="mt-6">
           <button className="btn btn-gold min-h-14 px-10 text-lg">▶ Play Classic</button>
         </form>
@@ -91,7 +104,7 @@ export default async function HomePage() {
       {versus ? (
         <Panel className="text-center">
           <h2 className="font-display text-xl font-black">Versus</h2>
-          <p className="mt-1 text-sm text-blue-100/85">Go head to head on the same 15 questions. Fastest correct answers earn bonus points.</p>
+          <p className="mt-1 text-sm text-blue-100/85">Go head to head on the same {r.versus.questionCount} questions. Fastest correct answers earn bonus points.</p>
           <Link href="/versus" className="btn btn-blue mt-4">
             Find an opponent
           </Link>
@@ -116,12 +129,8 @@ export default async function HomePage() {
             How it works
           </h2>
         </HexBar>
-        <ul className="mx-auto mt-5 grid max-w-3xl gap-3 text-left sm:grid-cols-3">
-          {[
-            ['15 questions', '5 easy, 5 medium, 5 hard. Points rise as you climb: 100, 200, then 300.'],
-            ['Beat the clock', '20 seconds for easy, 18 for medium, 15 for hard questions.'],
-            ['Two lifelines', 'Use 50:50 or swap a question — once each per game.'],
-          ].map(([t, d]) => (
+        <ul className={`mx-auto mt-5 grid max-w-3xl gap-3 text-left ${rules.length === 3 ? 'sm:grid-cols-3' : 'sm:grid-cols-2'}`}>
+          {rules.map(([t, d]) => (
             <li key={t} className="panel p-4">
               <p className="font-display font-black text-gold-400">{t}</p>
               <p className="mt-1 text-sm text-blue-100/85">{d}</p>

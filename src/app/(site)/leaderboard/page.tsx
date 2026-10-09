@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { LeaderboardTable } from '@/components/site/LeaderboardTable';
 import { PageTitle, Tabs } from '@/components/ui';
-import { challengeDateFor, isValidDateString } from '@/lib/game/dates';
+import { addDays, challengeDateFor, isValidDateString } from '@/lib/game/dates';
 import { ensureReady } from '@/lib/server/bootstrap';
 import { clock } from '@/lib/server/clock';
 import { getActiveConfig } from '@/lib/server/config';
@@ -19,7 +19,7 @@ export default async function LeaderboardPage({ searchParams }: { searchParams: 
   const player = await currentPlayer();
   const cfg = await getActiveConfig(db);
   const today = challengeDateFor(clock.now(), cfg.rules.daily.timezone);
-  const date = sp.date && isValidDateString(sp.date) ? sp.date : today;
+  const date = sp.date && isValidDateString(sp.date) && sp.date <= today ? sp.date : today;
   const opts = { limit: PAGE, offset: (page - 1) * PAGE, playerId: player?.id ?? null };
   const board = view === 'daily' ? await dailyLeaderboard(db, date, opts) : await classicLeaderboard(db, opts);
   const pages = Math.max(1, Math.ceil(board.total / PAGE));
@@ -33,6 +33,28 @@ export default async function LeaderboardPage({ searchParams }: { searchParams: 
           { href: '/leaderboard', label: 'All-time', active: view === 'classic' },
         ]}
       />
+      {view === 'daily' ? (
+        <nav aria-label="Challenge day" className="mb-4 flex flex-wrap items-center justify-center gap-2">
+          <Link className="btn btn-ghost btn-sm" href={`/leaderboard?view=daily&date=${addDays(date, -1)}`}>
+            ← <span className="sr-only">Previous day,</span> {addDays(date, -1).slice(5)}
+          </Link>
+          <form action="/leaderboard" className="flex items-center gap-2">
+            <input type="hidden" name="view" value="daily" />
+            <label className="sr-only" htmlFor="lb-date">
+              Challenge date
+            </label>
+            <input id="lb-date" type="date" name="date" defaultValue={date} max={today} className="field field-dark w-40" />
+            <button className="btn btn-ghost btn-sm">Go</button>
+          </form>
+          {date < today ? (
+            <Link className="btn btn-ghost btn-sm" href={`/leaderboard?view=daily&date=${addDays(date, 1)}`}>
+              <span className="sr-only">Next day,</span> {addDays(date, 1).slice(5)} →
+            </Link>
+          ) : (
+            <span className="w-20" aria-hidden="true" />
+          )}
+        </nav>
+      ) : null}
       <LeaderboardTable board={board} empty={view === 'daily' ? 'No ranked results for this day yet.' : 'No ranked Classic games yet.'} />
       <nav aria-label="Pages" className="mt-4 flex items-center justify-between text-sm">
         {page > 1 ? (

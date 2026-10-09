@@ -44,6 +44,23 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
   const perfect = summary.correctCount === summary.totalQuestions;
   const headline = perfect ? 'Perfect game!' : summary.accuracy >= 70 ? 'Brilliant!' : summary.accuracy >= 40 ? 'Well played!' : 'Good effort!';
 
+  // Performance summary: accuracy per difficulty, plus strongest/weakest category.
+  const byDifficulty = (['easy', 'medium', 'hard'] as const)
+    .map((d) => ({ d, items: review.filter((r) => r.difficulty === d) }))
+    .filter((x) => x.items.length > 0)
+    .map(({ d, items }) => ({ d, correct: items.filter((r) => r.outcome === 'correct').length, total: items.length }));
+  const cats = new Map<string, { correct: number; total: number }>();
+  for (const r of review) {
+    const c = cats.get(r.category) ?? { correct: 0, total: 0 };
+    c.total++;
+    if (r.outcome === 'correct') c.correct++;
+    cats.set(r.category, c);
+  }
+  const catList = [...cats.entries()].map(([name, c]) => ({ name, ...c, rate: c.correct / c.total })).sort((a, b) => b.rate - a.rate || b.total - a.total);
+  const best = catList.find((c) => c.correct > 0);
+  const worst = [...catList].reverse().find((c) => c.rate < 1 && c !== best);
+  const timeouts = review.filter((r) => r.outcome === 'timeout').length;
+
   let versus: { label: string; theirs: number } | null = null;
   if (summary.mode === 'friend' && vs.friend_name) versus = { label: vs.friend_name, theirs: vs.friend_score ?? 0 };
 
@@ -93,6 +110,36 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
             You {summary.score} · {versus.label} {versus.theirs}
           </p>
           <p className="mt-2 text-xs text-blue-100/60">Friend challenges are just for fun and don’t count towards leaderboards.</p>
+        </Panel>
+      ) : null}
+
+      {review.length ? (
+        <Panel>
+          <h2 className="font-display mb-3 text-lg font-black">How you did</h2>
+          <dl className="grid grid-cols-3 gap-2 text-center">
+            {byDifficulty.map((x) => (
+              <div key={x.d} className="rounded-xl bg-white/5 p-3 ring-1 ring-white/10">
+                <dt className="text-label font-bold uppercase text-blue-100/70">{x.d}</dt>
+                <dd className="font-display text-2xl font-black tabular-nums">
+                  {x.correct}
+                  <span className="text-base text-blue-100/60">/{x.total}</span>
+                </dd>
+              </div>
+            ))}
+          </dl>
+          <ul className="mt-3 space-y-1 text-sm text-blue-100/90">
+            {best ? (
+              <li>
+                Strongest: <strong className="text-emerald-400">{best.name}</strong> ({best.correct}/{best.total})
+              </li>
+            ) : null}
+            {worst ? (
+              <li>
+                Room to grow: <strong className="text-coral-400">{worst.name}</strong> ({worst.correct}/{worst.total}) — read the explanations below.
+              </li>
+            ) : null}
+            {timeouts ? <li>{timeouts === 1 ? 'One question' : `${timeouts} questions`} ran out of time — answering a little earlier pays off.</li> : null}
+          </ul>
         </Panel>
       ) : null}
 
