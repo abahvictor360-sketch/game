@@ -172,6 +172,31 @@ describe('Ask the Audience', () => {
     expect(v.question!.remainingMs).toBeGreaterThan(13000);
     expect(v.question!.remainingMs).toBeLessThanOrEqual(15000);
   });
+
+  it('a live request with no votes restores the lifeline, and it can be asked again on the same question', async () => {
+    for (let i = 0; i < 5; i++) {
+      const h = await account(db);
+      await db.tx((q) => updateProfile(q, h.id, { displayName: `Quiet ${i}`, avatarKey: 'sun', countryCode: null, settings: { helpOthers: true } }));
+      await db.tx((q) => helperHeartbeat(q, h.id));
+    }
+    const p = await guest(db);
+    const s = await db.tx((q) => startClassic(q, p));
+    let v = await db.tx((q) => getSessionView(q, p.id, s));
+    const issuedId = v.question!.issuedId;
+    await db.query('update public.question_stats set answer_distribution = $2::jsonb where version_id = (select version_id from public.issued_questions where id = $1)', [issuedId, '{}']);
+    v = await db.tx((q) => useLifeline(q, p.id, s, { issuedId, lifeline: 'ask_audience', requestKey: key() }));
+    expect(v.audience!.status).toBe('collecting');
+    clock.advance(16000); // nobody votes
+    v = await db.tx((q) => getSessionView(q, p.id, s));
+    expect(v.audience!.status).toBe('insufficient');
+    expect(v.lifelines.ask_audience).toBe('available');
+    const [a] = v.question!.options;
+    await db.query('update public.question_stats set answer_distribution = $2::jsonb where version_id = (select version_id from public.issued_questions where id = $1)', [issuedId, JSON.stringify({ [a.id]: 40 })]);
+    await db.query('delete from public.helper_presence');
+    v = await db.tx((q) => useLifeline(q, p.id, s, { issuedId, lifeline: 'ask_audience', requestKey: key() }));
+    expect(v.audience).toMatchObject({ status: 'ready', source: 'historical', sampleSize: 40 });
+    expect(v.lifelines.ask_audience).toBe('used');
+  });
 });
 
 describe('Live matches', () => {

@@ -98,6 +98,18 @@ export default async function HomePage() {
         </Panel>
       ) : null}
 
+      {cfg.flags.askAudience ? (
+        <Panel className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="font-display text-lg font-black">Be the audience</h2>
+            <p className="text-sm text-blue-100/85">Help players who use Ask the Audience by voting on their question.</p>
+          </div>
+          <Link href="/help" className="btn btn-ghost btn-sm">
+            Help other players
+          </Link>
+        </Panel>
+      ) : null}
+
       <section aria-labelledby="rules-title" className="text-center">
         <HexBar railed className="mx-auto max-w-sm" innerClassName="px-6 py-2">
           <h2 id="rules-title" className="font-display font-black">

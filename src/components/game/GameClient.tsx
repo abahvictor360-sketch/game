@@ -5,8 +5,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Lifeline } from '@/lib/game/rules';
 import type { SessionView } from '@/lib/shared/types';
 import { apiFetch, newKey, type ApiError } from '@/lib/client/api';
-import { prefersReducedMotion, useSound } from '@/lib/client/sound';
+import { prefersReducedMotion } from '@/lib/client/sound';
 import { Avatar } from '../Avatar';
+import { MuteButton, Toast, useOnline, useSound, useToast } from '../feedback';
 import { AnswerButton, type AnswerState } from './AnswerButton';
 import { Ladder } from './Ladder';
 import { Lifelines } from './Lifelines';
@@ -29,7 +30,7 @@ export function GameClient({ initial }: { initial: SessionView }) {
   const [pending, setPending] = useState<string | null>(null); // option being submitted
   const [lifelineLoading, setLifelineLoading] = useState<Lifeline | null>(null);
   const [revealHold, setRevealHold] = useState(false);
-  const [toast, setToast] = useState<{ text: string; tone: 'error' | 'info' } | null>(null);
+  const { toast, show, clear } = useToast();
   const [offline, setOffline] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
   const { muted, toggle, play } = useSound();
@@ -46,8 +47,8 @@ export function GameClient({ initial }: { initial: SessionView }) {
   const fail = useCallback((e: unknown) => {
     const err = e as ApiError;
     if (err.offline) setOffline(true);
-    setToast({ text: err.message ?? 'Something went wrong.', tone: 'error' });
-  }, []);
+    show(err.message ?? 'Something went wrong.', 'error');
+  }, [show]);
 
   const refresh = useCallback(async () => {
     try {
@@ -74,7 +75,8 @@ export function GameClient({ initial }: { initial: SessionView }) {
     return () => clearTimeout(t);
   }, [view.phase, q, remaining, pending, refresh]);
 
-  // Poll while the audience is voting, and periodically for recorded opponents.
+  // Poll while the audience is voting. (Recorded opponents need no polling: the
+  // view carries when the recording answered, so progress is shown locally.)
   useEffect(() => {
     if (view.audience?.status === 'collecting') {
       const t = setInterval(refresh, 1000);
@@ -103,25 +105,17 @@ export function GameClient({ initial }: { initial: SessionView }) {
     if (view.phase === 'feedback' && !revealHold) continueRef.current?.focus();
   }, [view.phase, revealHold]);
 
+  const online = useOnline(refresh);
   useEffect(() => {
-    const on = () => {
-      setOffline(false);
-      refresh();
-    };
-    const off = () => setOffline(true);
-    window.addEventListener('online', on);
-    window.addEventListener('offline', off);
-    return () => {
-      window.removeEventListener('online', on);
-      window.removeEventListener('offline', off);
-    };
-  }, [refresh]);
+    setOffline(!online);
+  }, [online]);
 
+  // Animate the score when points are added.
+  const lastScore = useRef(initial.score);
+  const scoreChanged = view.score !== lastScore.current;
   useEffect(() => {
-    if (!toast) return;
-    const t = setTimeout(() => setToast(null), 4500);
-    return () => clearTimeout(t);
-  }, [toast]);
+    lastScore.current = view.score;
+  }, [view.score]);
 
   const answer = useCallback(
     async (optionId: string) => {
@@ -168,13 +162,13 @@ export function GameClient({ initial }: { initial: SessionView }) {
         if (l === 'change_question') lastTick.current = -1;
       } catch (e) {
         const err = e as ApiError;
-        setToast({ text: err.message, tone: err.reason === 'no_replacement' || err.reason === 'audience_insufficient' ? 'info' : 'error' });
+        show(err.message, err.reason === 'no_replacement' || err.reason === 'audience_insufficient' ? 'info' : 'error');
         if (err.reason === 'answer_locked' || err.reason === 'not_current') refresh();
       } finally {
         setLifelineLoading(null);
       }
     },
-    [q, view.id, apply, refresh],
+    [q, view.id, apply, refresh, show],
   );
 
   // Keyboard: 1–4 or A–D to answer, Enter to continue.
@@ -218,6 +212,13 @@ export function GameClient({ initial }: { initial: SessionView }) {
   }
   if (liveText && announced.current !== liveText) announced.current = liveText;
 
+  // A recorded opponent "answers" once the elapsed time passes its recorded response time.
+  const ghostAnswered =
+    !!view.ghost &&
+    (view.phase !== 'question'
+      ? view.ghost.answeredCurrent
+      : view.ghost.answeredCurrentAtMs !== null && !!q && !q.paused && q.durationMs - remaining >= view.ghost.answeredCurrentAtMs);
+
   const percents = new Map((view.audience?.status === 'ready' ? view.audience.percentages : []).map((p) => [p.optionId, p.percent]));
 
   if (!q) {
@@ -239,9 +240,7 @@ export function GameClient({ initial }: { initial: SessionView }) {
           {MODE_LABEL[view.mode]}
           {view.challengeDate ? ` · ${view.challengeDate}` : ''}
         </p>
-        <button type="button" onClick={toggle} className="btn btn-ghost btn-sm" aria-pressed={!muted} aria-label={muted ? 'Sound off. Turn sound on' : 'Sound on. Turn sound off'}>
-          {muted ? '🔇' : '🔊'}
-        </button>
+        <MuteButton muted={muted} onToggle={toggle} />
       </header>
 
       {offline ? (
@@ -257,7 +256,9 @@ export function GameClient({ initial }: { initial: SessionView }) {
             <div className="text-center">
               <p className="text-[11px] font-bold uppercase tracking-widest text-blue-100/70">Score</p>
               <p className="font-display text-2xl font-black tabular-nums text-gold-400" aria-live="polite">
-                {view.score}
+                <span key={view.score} className={scoreChanged ? 'anim-bump' : undefined}>
+                  {view.score}
+                </span>
               </p>
             </div>
             <TimerEmblem remainingMs={view.phase === 'question' ? remaining : q.remainingMs} durationMs={q.durationMs} paused={q.paused} done={view.phase === 'feedback'} />
@@ -288,9 +289,9 @@ export function GameClient({ initial }: { initial: SessionView }) {
                 </span>
               </span>
               <span className="font-display font-black tabular-nums text-gold-300">{view.ghost.score}</span>
-              <span className="sr-only">{view.ghost.answeredCurrent ? 'Opponent has answered' : 'Opponent is thinking'}</span>
-              <span aria-hidden="true" className={`text-xs font-bold ${view.ghost.answeredCurrent ? 'text-emerald-400' : 'text-blue-100/60'}`}>
-                {view.ghost.answeredCurrent ? 'Answered' : '…'}
+              <span className="sr-only" aria-live="polite">{ghostAnswered ? 'Opponent has answered' : 'Opponent is thinking'}</span>
+              <span aria-hidden="true" className={`text-xs font-bold ${ghostAnswered ? 'text-emerald-400' : 'text-blue-100/60'}`}>
+                {ghostAnswered ? 'Answered' : '…'}
               </span>
             </div>
           ) : null}
@@ -381,13 +382,9 @@ export function GameClient({ initial }: { initial: SessionView }) {
         </aside>
       </div>
 
-      {toast ? (
-        <div role={toast.tone === 'error' ? 'alert' : 'status'} className={`fixed inset-x-4 bottom-4 z-50 mx-auto max-w-md rounded-xl px-4 py-3 text-sm font-semibold shadow-xl ${toast.tone === 'error' ? 'bg-coral-500 text-white' : 'bg-stage-900 text-white ring-1 ring-rail'}`}>
-          {toast.text}
-        </div>
-      ) : null}
+      <Toast toast={toast} onDismiss={clear} />
 
-      <ReportDialog open={reportOpen} onClose={() => setReportOpen(false)} issuedId={fb?.issuedId ?? q.issuedId} onDone={() => setToast({ text: 'Thanks — our editors will review this question.', tone: 'info' })} />
+      <ReportDialog open={reportOpen} onClose={() => setReportOpen(false)} issuedId={fb?.issuedId ?? q.issuedId} onDone={() => show('Thanks — our editors will review this question.', 'success')} />
     </div>
   );
 }

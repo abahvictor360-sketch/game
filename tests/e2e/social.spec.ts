@@ -46,3 +46,27 @@ test('two players complete a live match in separate browsers', async ({ browser 
   await expect(p1.getByRole('heading', { name: /You won|won|draw/ })).toBeVisible({ timeout: 20000 });
   await expect(p2.getByRole('heading', { name: /You won|won|draw/ })).toBeVisible({ timeout: 20000 });
 });
+
+test('leaving a live match forfeits: the leaver sees it at once, the opponent wins', async ({ browser }) => {
+  const [p1, p2] = await Promise.all([1, 2].map(async (n) => {
+    const page = await (await browser.newContext()).newPage();
+    await signIn(page, `quit${n}@fastora.test`, `Quit ${n}`);
+    await page.goto('/versus');
+    await page.getByRole('button', { name: 'Find an opponent' }).click();
+    return page;
+  }));
+  await Promise.all([p1.waitForURL(/\/match\//, { timeout: 30000 }), p2.waitForURL(/\/match\//, { timeout: 30000 })]);
+  await p1.locator('.answer:not([disabled])').first().waitFor({ timeout: 20000 });
+  await p1.getByRole('button', { name: 'Leave' }).click();
+  await p1.getByRole('button', { name: 'Leave and forfeit' }).click();
+  await expect(p1.getByRole('heading', { name: 'You left the match' })).toBeVisible({ timeout: 10000 });
+  await expect(p1.locator('.answer')).toHaveCount(0);
+  // The opponent keeps playing and wins by forfeit at the end.
+  for (let round = 0; round < 15; round++) {
+    const btn = p2.locator('.answer:not([disabled])').first();
+    await btn.waitFor({ timeout: 20000 });
+    await btn.click();
+  }
+  await expect(p2.getByRole('heading', { name: 'You won! 🏆' })).toBeVisible({ timeout: 20000 });
+  await expect(p2.getByText('Your opponent left the match.')).toBeVisible();
+});

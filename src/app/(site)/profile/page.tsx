@@ -78,6 +78,7 @@ export default async function ProfilePage() {
           allowGhostReplay={player.settings.allowGhostReplay !== false}
           helpOthers={!!player.settings.helpOthers}
           showHelp={cfg.flags.askAudience}
+          showGhost={cfg.flags.ghostOpponents}
         />
       </Panel>
 

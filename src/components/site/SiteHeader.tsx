@@ -3,7 +3,7 @@ import { Avatar } from '../Avatar';
 import { BrandWordmark } from '../Brand';
 import type { Player } from '@/lib/server/players';
 
-export function SiteHeader({ player }: { player: Player | null }) {
+export function SiteHeader({ player, versus = false }: { player: Player | null; versus?: boolean }) {
   return (
     <header className="relative z-10 mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
       <Link href="/" aria-label="Fastora home" className="rounded-lg">
@@ -13,6 +13,11 @@ export function SiteHeader({ player }: { player: Player | null }) {
         <Link href="/daily" className="hidden min-h-11 items-center rounded-full px-3 hover:bg-white/10 sm:inline-flex">
           Daily
         </Link>
+        {versus ? (
+          <Link href="/versus" className="hidden min-h-11 items-center rounded-full px-3 hover:bg-white/10 sm:inline-flex">
+            Versus
+          </Link>
+        ) : null}
         <Link href="/leaderboard" className="hidden min-h-11 items-center rounded-full px-3 hover:bg-white/10 sm:inline-flex">
           Leaderboards
         </Link>
@@ -64,12 +69,18 @@ export function MobileNav() {
   );
 }
 
-export function SiteFooter() {
+export function SiteFooter({ helpers = false }: { helpers?: boolean }) {
   return (
     <footer className="relative z-10 mx-auto max-w-5xl px-4 pb-24 pt-10 text-center text-xs text-blue-100/60 sm:pb-8">
       <p>Fastora African Quiz Game · Made with care for players across Africa and the diaspora.</p>
       <p className="mt-1">
-        <a href="/how-to-play" className="underline">How to play</a> · <a href="/privacy" className="underline">Privacy</a>
+        <a href="/how-to-play" className="inline-flex min-h-11 items-center px-1 underline">How to play</a>
+        {helpers ? (
+          <>
+            {' '}· <a href="/help" className="inline-flex min-h-11 items-center px-1 underline">Be the audience</a>
+          </>
+        ) : null}{' '}
+        · <a href="/privacy" className="inline-flex min-h-11 items-center px-1 underline">Privacy</a>
       </p>
     </footer>
   );

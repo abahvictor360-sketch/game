@@ -6,6 +6,14 @@ import { getActiveConfig } from '@/lib/server/config';
 import { previewFriendChallenge } from '@/lib/server/game/phase2';
 import { currentPlayer } from '@/lib/server/identity';
 
+const START_ERRORS: Record<string, string> = {
+  expired: 'This challenge has expired.',
+  own_challenge: 'You can’t accept your own challenge — share the link with a friend!',
+  unavailable: 'Some questions in this challenge have been withdrawn, so it can no longer be played.',
+  feature_disabled: 'Friend challenges aren’t available right now.',
+  rate_limited: 'Too many attempts — please wait a minute and try again.',
+};
+
 export const metadata = { title: 'Friend challenge', robots: { index: false } };
 
 export default async function ChallengePage({ params, searchParams }: { params: Promise<{ token: string }>; searchParams: Promise<{ error?: string }> }) {
@@ -20,7 +28,7 @@ export default async function ChallengePage({ params, searchParams }: { params: 
   return (
     <div className="mx-auto max-w-md">
       <PageTitle title="You’ve been challenged!" subtitle={`${p.creatorName} wants to see if you can beat their score.`} />
-      {error ? <ErrorState title="Couldn’t start">{error === 'expired' ? 'This challenge has expired.' : 'Please try again.'}</ErrorState> : null}
+      {error ? <ErrorState title="Couldn’t start">{START_ERRORS[error] ?? 'Please try again.'}</ErrorState> : null}
       <Panel className="text-center">
         {p.state === 'open' ? (
           <>
@@ -30,7 +38,13 @@ export default async function ChallengePage({ params, searchParams }: { params: 
             <form action={`/api/challenges/${token}/start`} method="post" className="mt-5">
               <button className="btn btn-gold min-h-14 w-full text-lg">Accept challenge</button>
             </form>
-            {!player || player.kind === 'guest' ? <p className="mt-3 text-xs text-blue-100/60">You can play as a guest. Sign in later to keep the result.</p> : null}
+            {!player || player.kind === 'guest' ? <p className="mt-3 text-xs text-blue-100/60">
+                You can play as a guest.{' '}
+                <Link href={`/auth/signin?next=${encodeURIComponent(`/challenge/${token}`)}`} className="font-bold text-gold-300 underline">
+                  Sign in
+                </Link>{' '}
+                first (or later) to keep the result on your profile.
+              </p> : null}
           </>
         ) : p.state === 'played' ? (
           <>

@@ -11,6 +11,7 @@ type Props = {
   allowGhostReplay: boolean;
   helpOthers: boolean;
   showHelp: boolean;
+  showGhost: boolean;
 };
 
 export function ProfileForm(p: Props) {
@@ -45,19 +46,30 @@ export function ProfileForm(p: Props) {
           ))}
         </select>
       </label>
-      <label className="flex min-h-11 items-start gap-3 text-sm">
-        <input type="checkbox" name="allowGhostReplay" defaultChecked={p.allowGhostReplay} className="mt-1 h-5 w-5 accent-gold-500" />
-        <span>
-          Let others race against recordings of my lifeline-free Classic games
-          <span className="block text-xs text-blue-100/60">Shown under a pseudonym and always labelled as a recorded player.</span>
-        </span>
-      </label>
+      {p.showGhost ? (
+        <label className="flex min-h-11 items-start gap-3 text-sm">
+          <input type="checkbox" name="allowGhostReplay" defaultChecked={p.allowGhostReplay} className="mt-1 h-5 w-5 accent-gold-500" />
+          <span>
+            Let others race against recordings of my lifeline-free Classic games
+            <span className="block text-xs text-blue-100/60">Shown under a pseudonym and always labelled as a recorded player.</span>
+          </span>
+        </label>
+      ) : p.allowGhostReplay ? (
+        // Keep the saved choice while the feature is switched off.
+        <input type="hidden" name="allowGhostReplay" value="on" />
+      ) : null}
       {p.showHelp ? (
         <label className="flex min-h-11 items-start gap-3 text-sm">
           <input type="checkbox" name="helpOthers" defaultChecked={p.helpOthers} className="mt-1 h-5 w-5 accent-gold-500" />
           <span>
             Help other players (Ask the Audience)
-            <span className="block text-xs text-blue-100/60">You may be invited to vote on a question while you’re not in a game, at most once every two minutes.</span>
+            <span className="block text-xs text-blue-100/60">
+              While the{' '}
+              <a href="/help" className="font-bold text-gold-300 underline">
+                Be the audience
+              </a>{' '}
+              page is open and you’re not in a game, you may be invited to vote — at most once every two minutes.
+            </span>
           </span>
         </label>
       ) : null}

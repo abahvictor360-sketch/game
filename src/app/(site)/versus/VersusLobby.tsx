@@ -1,16 +1,21 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useOnline } from '@/components/feedback';
 import { Panel } from '@/components/ui';
 import { apiFetch, type ApiError } from '@/lib/client/api';
 
 type Queue = { status: 'waiting'; waitedMs: number; fallbackAfterMs: number; fallbackAvailable: boolean } | { status: 'matched'; matchId: string } | { status: 'idle' };
 
+const NO_RECORDING = 'No recorded opponent is available right now. Play a solo Classic game, or keep waiting for a live opponent.';
+
 export function VersusLobby({ live, ghosts, fallbackMs, initialError }: { live: boolean; ghosts: boolean; fallbackMs: number; initialError: string | null }) {
   const router = useRouter();
   const [q, setQ] = useState<Queue>({ status: 'idle' });
-  const [error, setError] = useState<string | null>(initialError === 'no_recording' ? 'No recorded opponent is available right now. Try a solo Classic game or keep waiting.' : initialError ? 'Something went wrong. Please try again.' : null);
+  const [error, setError] = useState<string | null>(initialError === 'no_recording' ? NO_RECORDING : initialError ? 'Something went wrong. Please try again.' : null);
+  const [busy, setBusy] = useState(false);
   const timer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const online = useOnline();
 
   const stop = useCallback(() => {
     if (timer.current) clearInterval(timer.current);
@@ -32,6 +37,7 @@ export function VersusLobby({ live, ghosts, fallbackMs, initialError }: { live: 
     setError(null);
     try {
       handle(await apiFetch<Queue>('/api/match/queue', { json: {} }));
+      stop();
       timer.current = setInterval(async () => {
         try {
           handle(await apiFetch<Queue>('/api/match/queue'));
@@ -50,6 +56,21 @@ export function VersusLobby({ live, ghosts, fallbackMs, initialError }: { live: 
     setQ({ status: 'idle' });
   }
 
+  /** Start a recorded-opponent game. The live queue is only left once the game exists. */
+  async function raceRecording() {
+    setBusy(true);
+    setError(null);
+    try {
+      const { sessionId } = await apiFetch<{ sessionId: string }>('/api/play/ghost', { json: {} });
+      if (q.status === 'waiting') await cancel();
+      router.push(`/play/${sessionId}`);
+    } catch (e) {
+      const err = e as ApiError;
+      setError(err.reason === 'no_recording' ? NO_RECORDING : err.message);
+      setBusy(false);
+    }
+  }
+
   useEffect(() => () => stop(), [stop]);
   useEffect(() => {
     const leave = () => navigator.sendBeacon?.('/api/match/queue?leave=1');
@@ -57,15 +78,27 @@ export function VersusLobby({ live, ghosts, fallbackMs, initialError }: { live: 
     return () => window.removeEventListener('pagehide', leave);
   }, []);
 
+  const solo = (
+    <form action="/api/play/classic" method="post" onSubmit={() => (q.status === 'waiting' ? cancel() : undefined)}>
+      <button className="btn btn-blue w-full">Play solo Classic</button>
+    </form>
+  );
+
   const waiting = q.status === 'waiting';
   return (
     <Panel className="text-center">
+      {!online ? (
+        <p role="status" className="mb-4 rounded-xl bg-flame-500 px-3 py-2 text-sm font-semibold">
+          You’re offline. Versus needs a connection — we’ll carry on when you’re back.
+        </p>
+      ) : null}
       {!live ? (
         <>
           <p className="text-sm text-blue-100/85">Race a recording of a real player’s completed game. It’s clearly labelled — never presented as someone online now.</p>
-          <form action="/api/play/ghost" method="post" className="mt-5">
-            <button className="btn btn-gold w-full">Play a recorded opponent</button>
-          </form>
+          <button type="button" className="btn btn-gold mt-5 w-full" onClick={raceRecording} disabled={busy || !online}>
+            {busy ? 'Finding a recording…' : 'Play a recorded opponent'}
+          </button>
+          {error ? <div className="mt-3">{solo}</div> : null}
         </>
       ) : waiting ? (
         <div role="status" aria-live="polite">
@@ -77,13 +110,11 @@ export function VersusLobby({ live, ghosts, fallbackMs, initialError }: { live: 
             <div className="mt-4 space-y-2">
               <p className="text-sm text-blue-100/85">No one is available right now.</p>
               {ghosts ? (
-                <form action="/api/play/ghost" method="post" onSubmit={() => cancel()}>
-                  <button className="btn btn-gold w-full">Race a recorded player instead</button>
-                </form>
+                <button type="button" className="btn btn-gold w-full" onClick={raceRecording} disabled={busy}>
+                  {busy ? 'Finding a recording…' : 'Race a recorded player instead'}
+                </button>
               ) : null}
-              <form action="/api/play/classic" method="post" onSubmit={() => cancel()}>
-                <button className="btn btn-blue w-full">Play solo Classic</button>
-              </form>
+              {solo}
               <p className="text-xs text-blue-100/60">Or keep waiting — we’ll keep searching.</p>
             </div>
           ) : (
@@ -94,9 +125,12 @@ export function VersusLobby({ live, ghosts, fallbackMs, initialError }: { live: 
           </button>
         </div>
       ) : (
-        <button type="button" className="btn btn-gold min-h-14 w-full text-lg" onClick={join}>
-          Find an opponent
-        </button>
+        <>
+          <button type="button" className="btn btn-gold min-h-14 w-full text-lg" onClick={join} disabled={!online}>
+            Find an opponent
+          </button>
+          {error ? <div className="mt-3">{solo}</div> : null}
+        </>
       )}
       {error ? (
         <p role="alert" className="mt-3 text-sm text-coral-400">

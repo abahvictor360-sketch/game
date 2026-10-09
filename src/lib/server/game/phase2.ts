@@ -333,6 +333,9 @@ function percentages(optionIds: string[], count: (id: string) => number, total: 
 }
 
 registerLifeline('ask_audience', async (q, { s, iq, cfg, now }) => {
+  // A restored lifeline leaves an 'insufficient' request behind; clear it so the
+  // player can ask again on the same question (one request per issued question).
+  await q.query(`delete from public.audience_requests where issued_question_id = $1 and status = 'insufficient'`, [iq.id]);
   const helpers = await eligibleHelpers(q, s.player_id, cfg.rules, now);
   if (helpers.length >= cfg.rules.audience.minLiveHelpers) {
     const closesAt = new Date(now.getTime() + cfg.rules.audience.votingWindowMs);
