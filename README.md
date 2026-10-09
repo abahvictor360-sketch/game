@@ -157,6 +157,7 @@ commands).
 | Git | `abahvictor360-sketch/game`, production branch `claude/youthful-ptolemy-26brkb` — **every push deploys** |
 | Env vars set | `SESSION_SECRET` (sensitive), `CRON_SECRET` (sensitive), `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `ADMIN_BOOTSTRAP_EMAILS=abahvictor360@gmail.com` |
 | Cron | Daily at 22:30 UTC (Hobby plan allows daily crons only) |
+| Function region | `lhr1` (London), next to the database |
 
 > A different, older Vercel project named **`fastora`** exists in the same team
 > (linked to another repository). It was deliberately left untouched.
@@ -272,7 +273,7 @@ unless you intend to upgrade.
 │   ├── e2e/                     Playwright journeys + axe accessibility
 │   └── support/                 test DB factory, fake clock, helpers
 ├── playwright.config.ts, vitest.config.ts, next.config.ts, postcss.config.mjs, tsconfig.json
-├── vercel.json                  cron: /api/cron/tick daily 22:30 UTC
+├── vercel.json                  functions in London (lhr1, next to Supabase eu-west-2); cron daily 22:30 UTC
 └── .env.example                 every environment variable, documented
 ```
 
