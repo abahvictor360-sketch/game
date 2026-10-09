@@ -182,8 +182,8 @@ commands).
 3. **Supabase Auth URLs.** Supabase → **Authentication → URL Configuration**:
    Site URL = your production URL (`https://fastora-africa-quiz.vercel.app`);
    Redirect URLs: add `https://fastora-africa-quiz.vercel.app/auth/callback` (and your
-   custom domain's `/auth/callback` later). Then add `NEXT_PUBLIC_SITE_URL`
-   with the same URL in Vercel.
+   custom domain's `/auth/callback` later). `NEXT_PUBLIC_SITE_URL` is already
+   set to this URL in Vercel — update it if you add a custom domain.
 4. **Google sign-in (optional).** Create an OAuth client in Google Cloud
    (redirect URI `https://tsfhuyxvznpzbmwcswkq.supabase.co/auth/v1/callback`),
    then Supabase → Authentication → Providers → Google. Email magic links work
