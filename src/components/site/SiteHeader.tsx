@@ -73,7 +73,7 @@ export function MobileNav() {
 
 export function SiteFooter({ helpers = false }: { helpers?: boolean }) {
   return (
-    <footer className="relative z-10 mx-auto max-w-5xl px-4 pb-24 pt-10 text-center text-xs text-blue-100/60 sm:pb-8">
+    <footer className="relative z-10 mx-auto max-w-5xl px-4 pb-24 pt-10 text-center text-xs text-blue-100/75 sm:pb-8">
       <p>{BRAND.fullName} · Made with care for players across Africa and the diaspora.</p>
       <p className="mt-1">
         <a href="/how-to-play" className="inline-flex min-h-11 items-center px-1 underline">How to play</a>

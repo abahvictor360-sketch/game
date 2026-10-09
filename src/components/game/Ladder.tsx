@@ -13,7 +13,7 @@ export function Ladder({ ladder, history, position, vertical = false }: { ladder
             <li
               key={i}
               aria-current={current ? 'step' : undefined}
-              className={`flex items-center justify-between gap-4 rounded-full px-3 py-1 font-bold tabular-nums ${current ? 'ribbon' : h === 'correct' ? 'text-emerald-400' : h ? 'text-coral-400' : 'text-blue-100/70'}`}
+              className={`flex items-center justify-between gap-4 rounded-full px-3 py-1 font-bold tabular-nums ${current ? 'ribbon' : h === 'correct' ? 'text-emerald-400' : h ? 'text-coral-400' : 'text-blue-100/80'}`}
             >
               <span>{i + 1}</span>
               <span>{step.points}</span>

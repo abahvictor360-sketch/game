@@ -41,7 +41,7 @@ export function SupabaseSignIn({ url, anonKey, next }: { url: string; anonKey: s
         </svg>
         Continue with Google
       </button>
-      <div className="flex items-center gap-3 text-xs text-blue-100/60" aria-hidden="true">
+      <div className="flex items-center gap-3 text-xs text-blue-100/75" aria-hidden="true">
         <span className="h-px flex-1 bg-white/20" /> or <span className="h-px flex-1 bg-white/20" />
       </div>
       {state === 'sent' ? (
@@ -60,7 +60,7 @@ export function SupabaseSignIn({ url, anonKey, next }: { url: string; anonKey: s
           <button className="btn btn-gold w-full" disabled={state === 'sending'}>
             {state === 'sending' ? 'Sending…' : 'Email me a sign-in link'}
           </button>
-          <p className="text-xs text-blue-100/60">No password needed. Lost access? Just request a new link to the same email.</p>
+          <p className="text-xs text-blue-100/75">No password needed. Lost access? Just request a new link to the same email.</p>
         </form>
       )}
       {state === 'error' ? (

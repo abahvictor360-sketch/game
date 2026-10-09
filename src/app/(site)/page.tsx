@@ -45,7 +45,7 @@ export default async function HomePage() {
         <Link href="/play/classic" className="btn btn-gold mt-6 min-h-14 px-10 text-lg">
           <Icon name="play" size={20} /> Play Classic
         </Link>
-        <p className="mt-2 text-xs text-blue-100/70">Free account required. Sign in or sign up in seconds.</p>
+        <p className="mt-2 text-xs text-blue-100/80">Free account required. Sign in or sign up in seconds.</p>
       </HeroArt>
 
       <div className="stagger grid gap-5 md:grid-cols-2">
@@ -63,7 +63,7 @@ export default async function HomePage() {
                 {daily.attempt.rank ? ` · rank #${daily.attempt.rank}` : ''}
               </p>
               <ResultGrid grid={daily.attempt.grid} size="sm" />
-              <p className="text-xs text-blue-100/70">
+              <p className="text-xs text-blue-100/80">
                 Next challenge in <DailyCountdown resetAt={daily.resetAt} />
               </p>
             </div>

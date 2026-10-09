@@ -33,6 +33,19 @@ not reachable from the build environment).
 
 Contrast: white on stage blues ≥ 6:1; gold on bar ≥ 9:1; ink on ivory ≥ 12:1.
 
+**Rule: all text must be readable.** Every piece of text meets WCAG AA
+(4.5:1, or 3:1 for large text) against what is really behind it, including
+the glow, pattern, squiggles and glyph bands. `tests/e2e/contrast.spec.ts`
+measures rendered pixels on every main screen at 360px and 1280px and fails
+on any shortfall. Practical limits that keep it passing:
+
+- Light text on the stage is at least 75% opacity (`text-blue-100/75`).
+- The top stage glow stays at 35% strength or less.
+- Outline (`.btn-ghost`) buttons have a dark translucent fill.
+- Brush squiggles fade out before the headline; hero text has a soft shadow.
+- White button text sits on colours at least as dark as `flame-500`,
+  `coral-700`, `emerald-700` or the darkened WhatsApp green `#0e7a3f`.
+
 ## African identity
 
 - **Background:** a faint mud-cloth (bogolanfini) inspired tile of zigzags,

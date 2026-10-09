@@ -71,7 +71,7 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
     <div className="mx-auto max-w-2xl space-y-6">
       {summary.accuracy >= 70 || (versus && summary.score > versus.theirs) || (summary.mode === 'ghost' && (vs.ghost_score ?? Infinity) < summary.score) ? <Confetti /> : null}
       <section className="text-center anim-pop">
-        <p className="text-eyebrow font-bold uppercase text-blue-100/70">
+        <p className="text-eyebrow font-bold uppercase text-blue-100/80">
           {summary.mode === 'daily' ? `Daily Challenge · ${summary.challengeDate}` : summary.mode === 'friend' ? 'Friend Challenge' : summary.mode === 'ghost' ? 'Versus' : 'Classic'}
         </p>
         <HexBar railed className="mx-auto mt-3 max-w-sm" innerClassName="px-8 py-3">
@@ -100,7 +100,7 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
 
       <figure className="glyph-frame mx-auto max-w-md text-center">
         <blockquote className="font-display text-lg font-bold text-gold-300 [text-wrap:balance]">“{proverbFor(id)}”</blockquote>
-        <figcaption className="mt-1 text-label font-bold uppercase text-blue-100/60">African proverb</figcaption>
+        <figcaption className="mt-1 text-label font-bold uppercase text-blue-100/75">African proverb</figcaption>
       </figure>
 
       {summary.mode === 'ghost' && vs.ghost_alias ? (
@@ -119,7 +119,7 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
           <p className="text-sm text-blue-100/80">
             You {summary.score} · {versus.label} {versus.theirs}
           </p>
-          <p className="mt-2 text-xs text-blue-100/60">Friend challenges are just for fun and don’t count towards leaderboards.</p>
+          <p className="mt-2 text-xs text-blue-100/75">Friend challenges are just for fun and don’t count towards leaderboards.</p>
         </Panel>
       ) : null}
 
@@ -129,10 +129,10 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
           <dl className="grid grid-cols-3 gap-2 text-center">
             {byDifficulty.map((x) => (
               <div key={x.d} className="rounded-xl bg-white/5 p-3 ring-1 ring-white/10">
-                <dt className="text-label font-bold uppercase text-blue-100/70">{x.d}</dt>
+                <dt className="text-label font-bold uppercase text-blue-100/80">{x.d}</dt>
                 <dd className="font-display text-2xl font-black tabular-nums">
                   {x.correct}
-                  <span className="text-base text-blue-100/60">/{x.total}</span>
+                  <span className="text-base text-blue-100/75">/{x.total}</span>
                 </dd>
               </div>
             ))}
@@ -169,7 +169,7 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
       {player?.kind === 'guest' ? (
         <Panel className="text-center">
           <p className="font-semibold">Create a free account to keep your history and join the leaderboards.</p>
-          <p className="mt-1 text-xs text-blue-100/70">Games you’ve played as a guest stay in your history; new games count for rankings.</p>
+          <p className="mt-1 text-xs text-blue-100/80">Games you’ve played as a guest stay in your history; new games count for rankings.</p>
           <Link href="/auth/signin" className="btn btn-gold mt-3">
             Save my progress
           </Link>

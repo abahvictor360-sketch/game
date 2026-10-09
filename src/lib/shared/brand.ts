@@ -32,4 +32,4 @@ export const BRAND = {
 } as const;
 
 /** WhatsApp's own brand green, used only on the "Share on WhatsApp" button. */
-export const WHATSAPP_GREEN = '#1f9d55';
+export const WHATSAPP_GREEN = '#0e7a3f'; // darker than WhatsApp's own green so white text passes WCAG AA

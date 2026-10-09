@@ -33,7 +33,7 @@ export function HeroArt({ children }: { children: ReactNode }) {
   };
   return (
     <section ref={ref} className="relative text-center" onPointerMove={(e) => move(e.clientX, e.clientY)}>
-      <div className="pointer-events-none absolute inset-x-[-16px] -top-2 h-[12.5rem] overflow-hidden opacity-75 sm:inset-x-0 sm:h-[14.5rem]" aria-hidden="true">
+      <div className="pointer-events-none absolute inset-x-[-16px] -top-2 h-[12.5rem] overflow-hidden opacity-75 [mask-image:linear-gradient(#000_65%,transparent)] sm:inset-x-0 sm:h-[14.5rem]" aria-hidden="true">
         <svg className="squiggles squiggle mx-auto h-full w-full max-w-3xl" viewBox="0 0 420 260" preserveAspectRatio="xMidYMid slice" fill="none" strokeLinecap="round" strokeLinejoin="round">
           {STROKES.map((s, i) => (
             <path key={i} d={s.d} stroke={s.color} strokeWidth={11} pathLength={100} style={{ ['--len' as string]: 100, animationDelay: `${s.delay}ms` }} />

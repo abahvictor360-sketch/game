@@ -98,7 +98,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
           </>
         )}
       </Panel>
-      <p className="mt-6 text-center text-xs text-blue-100/60">
+      <p className="mt-6 text-center text-xs text-blue-100/75">
         We only show your display name and avatar publicly. See our <Link href="/privacy" className="underline">privacy notice</Link>.
       </p>
     </main>

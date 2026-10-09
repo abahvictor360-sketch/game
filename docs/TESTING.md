@@ -12,7 +12,8 @@ All results below were produced in the build environment on 2026-10-08.
 | End-to-end (Playwright, Pixel 7 viewport, production build) | `npm run build && npm run test:e2e` | see below |
 | Accessibility (axe-core, WCAG 2.1 A/AA, serious+critical) | part of e2e | 8 passed, 0 violations |
 | 360 px phone: no horizontal scroll on 10 screens, answers ≥44 px | part of e2e | 11 passed |
-| End-to-end total (2026-10-09) | `npm run test:e2e` | 26 passed |
+| Text contrast on real pixels (all main screens, 360 px and 1280 px, WCAG AA) | `npx playwright test tests/e2e/contrast.spec.ts` | 4 passed |
+| End-to-end total (2026-10-09) | `npm run test:e2e` | 31 passed |
 
 ### What the integration tests cover
 

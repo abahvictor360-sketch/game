@@ -115,10 +115,10 @@ export function VersusLobby({ live, ghosts, fallbackMs, initialError }: { live: 
                 </button>
               ) : null}
               {solo}
-              <p className="text-xs text-blue-100/60">Or keep waiting and we’ll keep searching.</p>
+              <p className="text-xs text-blue-100/75">Or keep waiting and we’ll keep searching.</p>
             </div>
           ) : (
-            <p className="mt-1 text-xs text-blue-100/60">Usually under {Math.round(fallbackMs / 1000)} seconds.</p>
+            <p className="mt-1 text-xs text-blue-100/75">Usually under {Math.round(fallbackMs / 1000)} seconds.</p>
           )}
           <button type="button" className="btn btn-ghost btn-sm mt-4" onClick={cancel}>
             Cancel

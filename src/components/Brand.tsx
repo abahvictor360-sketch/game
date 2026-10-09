@@ -33,9 +33,9 @@ export function BrandWordmark({ className = '' }: { className?: string }) {
   return (
     <span className={`inline-flex items-center gap-2 ${className}`}>
       <BrandMark size={34} />
-      <span className="font-display text-lg font-black tracking-wide">
+      <span className="font-display text-xl font-black tracking-wide [text-shadow:0_1px_6px_rgb(4_16_58_/_0.85)]">
         {BRAND.wordmark[0]}
-        <span className="text-gold-400">{BRAND.wordmark[1]}</span>
+        <span className="text-gold-300">{BRAND.wordmark[1]}</span>
       </span>
     </span>
   );

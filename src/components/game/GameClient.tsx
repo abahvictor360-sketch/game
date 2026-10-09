@@ -254,17 +254,17 @@ export function GameClient({ initial }: { initial: SessionView }) {
           {/* Emblem + score */}
           <div className="flex items-center justify-center gap-4 sm:gap-8">
             <div className="text-center">
-              <p className="text-eyebrow font-bold uppercase text-blue-100/70">Score</p>
+              <p className="text-eyebrow font-bold uppercase text-blue-100/80">Score</p>
               <p className="font-display text-2xl font-black tabular-nums text-gold-400" aria-live="polite">
                 <CountUp value={view.score} bump />
               </p>
             </div>
             <TimerEmblem remainingMs={view.phase === 'question' ? remaining : q.remainingMs} durationMs={q.durationMs} paused={q.paused} done={view.phase === 'feedback'} />
             <div className="text-center">
-              <p className="text-eyebrow font-bold uppercase text-blue-100/70">Question</p>
+              <p className="text-eyebrow font-bold uppercase text-blue-100/80">Question</p>
               <p className="font-display text-2xl font-black tabular-nums">
                 {q.position + 1}
-                <span className="text-base text-blue-100/60">/{view.totalQuestions}</span>
+                <span className="text-base text-blue-100/75">/{view.totalQuestions}</span>
               </p>
             </div>
           </div>
@@ -283,12 +283,12 @@ export function GameClient({ initial }: { initial: SessionView }) {
               <span className="flex items-center gap-2">
                 <Avatar name="star" size={26} />
                 <span>
-                  <span className="font-bold">{view.ghost.alias}</span> <span className="text-xs text-blue-100/70">(recorded player)</span>
+                  <span className="font-bold">{view.ghost.alias}</span> <span className="text-xs text-blue-100/80">(recorded player)</span>
                 </span>
               </span>
               <CountUp value={view.ghost.score} className="font-display font-black tabular-nums text-gold-300" />
               <span className="sr-only" aria-live="polite">{ghostAnswered ? 'Opponent has answered' : 'Opponent is thinking'}</span>
-              <span aria-hidden="true" className={`text-xs font-bold ${ghostAnswered ? 'text-emerald-400' : 'text-blue-100/60'}`}>
+              <span aria-hidden="true" className={`text-xs font-bold ${ghostAnswered ? 'text-emerald-400' : 'text-blue-100/75'}`}>
                 {ghostAnswered ? 'Answered' : '…'}
               </span>
             </div>

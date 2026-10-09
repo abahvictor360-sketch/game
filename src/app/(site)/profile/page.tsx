@@ -42,7 +42,7 @@ export default async function ProfilePage() {
         <Avatar name={player.avatarKey} size={64} />
         <div className="flex-1">
           <p className="font-display text-xl font-black">{player.displayName}</p>
-          <p className="text-sm text-blue-100/70">{player.kind === 'account' ? 'Account' : 'Guest on this device'}</p>
+          <p className="text-sm text-blue-100/80">{player.kind === 'account' ? 'Account' : 'Guest on this device'}</p>
         </div>
         {player.kind === 'account' ? (
           <form action="/auth/signout" method="post">
@@ -63,7 +63,7 @@ export default async function ProfilePage() {
           ['Dailies', stats.dailies],
         ].map(([k, v]) => (
           <div key={k} className="panel p-3 text-center">
-            <dt className="text-label font-bold uppercase text-blue-100/60">{k}</dt>
+            <dt className="text-label font-bold uppercase text-blue-100/75">{k}</dt>
             <dd className="font-display text-2xl font-black text-gold-400">{v}</dd>
           </div>
         ))}
@@ -93,7 +93,7 @@ export default async function ProfilePage() {
                 <Link href={`/results/${h.id}`} className="panel flex items-center justify-between gap-3 p-3 hover:ring-1 hover:ring-gold-400">
                   <span>
                     <span className="font-semibold capitalize">{h.mode === 'ghost' ? 'Versus' : h.mode}</span>
-                    <span className="block text-xs text-blue-100/60">{h.completed_at.toISOString().slice(0, 10)}</span>
+                    <span className="block text-xs text-blue-100/75">{h.completed_at.toISOString().slice(0, 10)}</span>
                   </span>
                   <span className="flex items-center gap-2">
                     {!h.leaderboard_eligible && (h.mode === 'classic' || h.mode === 'daily') ? <Badge tone="grey">unranked</Badge> : null}

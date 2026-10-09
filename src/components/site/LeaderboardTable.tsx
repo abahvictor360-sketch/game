@@ -17,7 +17,7 @@ export function LeaderboardTable({ board, empty }: { board: Board; empty: string
       <table className="w-full text-sm">
         <caption className="sr-only">{board.label}</caption>
         <thead>
-          <tr className="text-left text-xs uppercase tracking-wider text-blue-100/60">
+          <tr className="text-left text-xs uppercase tracking-wider text-blue-100/75">
             <th scope="col" className="w-12 px-2 py-2 text-center">
               Rank
             </th>

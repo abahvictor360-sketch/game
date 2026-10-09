@@ -66,7 +66,7 @@ export default async function DailyPage({ searchParams }: { searchParams: Promis
 
       {a && a.status === 'completed' ? (
         <Panel className="text-center">
-          <p className="text-label font-bold uppercase text-blue-100/70">Your result</p>
+          <p className="text-label font-bold uppercase text-blue-100/80">Your result</p>
           <p className="font-display text-5xl font-black tabular-nums text-gold-400">
             <CountUp value={a.score} from={0} durationMs={1000} />
           </p>

@@ -65,7 +65,7 @@ export default async function LeaderboardPage({ searchParams }: { searchParams: 
         ) : (
           <span />
         )}
-        <span className="text-blue-100/70">
+        <span className="text-blue-100/80">
           Page {page} of {pages} · {board.total} players
         </span>
         {page < pages ? (
@@ -76,7 +76,7 @@ export default async function LeaderboardPage({ searchParams }: { searchParams: 
           <span />
         )}
       </nav>
-      <p className="mt-6 text-center text-xs text-blue-100/60">
+      <p className="mt-6 text-center text-xs text-blue-100/75">
         Ranked by score, then correct answers, then total answer time. Only results played while signed in are ranked.
         {!player || player.kind === 'guest' ? (
           <>

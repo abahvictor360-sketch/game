@@ -21,7 +21,7 @@ export function ProfileForm(p: Props) {
       <label className="block text-sm font-semibold">
         Display name
         <input name="displayName" defaultValue={p.displayName} required minLength={2} maxLength={24} className="field field-dark mt-1" />
-        <span className="mt-1 block text-xs font-normal text-blue-100/60">Shown on leaderboards. 2–24 letters, numbers or spaces.</span>
+        <span className="mt-1 block text-xs font-normal text-blue-100/75">Shown on leaderboards. 2–24 letters, numbers or spaces.</span>
       </label>
       <fieldset>
         <legend className="text-sm font-semibold">Avatar</legend>
@@ -51,7 +51,7 @@ export function ProfileForm(p: Props) {
           <input type="checkbox" name="allowGhostReplay" defaultChecked={p.allowGhostReplay} className="mt-1 h-5 w-5 accent-gold-500" />
           <span>
             Let others race against recordings of my lifeline-free Classic games
-            <span className="block text-xs text-blue-100/60">Shown under a pseudonym and always labelled as a recorded player.</span>
+            <span className="block text-xs text-blue-100/75">Shown under a pseudonym and always labelled as a recorded player.</span>
           </span>
         </label>
       ) : p.allowGhostReplay ? (
@@ -63,7 +63,7 @@ export function ProfileForm(p: Props) {
           <input type="checkbox" name="helpOthers" defaultChecked={p.helpOthers} className="mt-1 h-5 w-5 accent-gold-500" />
           <span>
             Help other players (Ask the Audience)
-            <span className="block text-xs text-blue-100/60">
+            <span className="block text-xs text-blue-100/75">
               While the{' '}
               <a href="/help" className="font-bold text-gold-300 underline">
                 Be the audience

@@ -70,7 +70,7 @@ export function ShareActions({ text, url, imageUrl, storyUrl, sessionId }: { tex
       <button type="button" className="btn btn-ghost" onClick={shareImage} disabled={imageState === 'loading'}>
         <Icon name="qr" size={18} /> {imageState === 'loading' ? 'Preparing image…' : 'Share image'}
       </button>
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-blue-100/70 sm:col-span-2">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-blue-100/80 sm:col-span-2">
         <span>The tall image has a QR code, made for TikTok, Instagram and WhatsApp Status.</span>
         <a className="inline-flex min-h-11 items-center font-bold text-gold-300 underline" href={storyUrl} download={`${BRAND.name.toLowerCase()}-story.png`} onClick={() => log('image')}>
           Save tall image
