@@ -1,4 +1,4 @@
-# Content guide — question bank, import and moderation
+# Content guide: question bank, import and moderation
 
 ## Launch content
 
@@ -20,7 +20,7 @@ ladder slots.
 |---|---|
 | Question | 10–400 characters; neutral, unambiguous wording |
 | Options A–D | One correct; options must differ (checked) |
-| Explanation | 10–800 characters; shown after every answer — teach something |
+| Explanation | 10–800 characters; shown after every answer: teach something |
 | Category | history, geography, culture, languages, arts, sports, science, innovation, society |
 | Country scope | ISO codes (`NG`, `KE`…) or regions (`AFRICA`, `NORTH`, `WEST`, `CENTRAL`, `EAST`, `SOUTHERN`, `DIASPORA`) |
 | Difficulty | Editorial difficulty: easy / medium / hard |
@@ -86,7 +86,7 @@ the exact version. Typical handling:
 - Offensive or culturally insensitive → archive first, then review.
 - Not an issue → dismiss with a note.
 
-Editorial principles: represent Africa’s diversity — avoid treating the
+Editorial principles: represent Africa’s diversity: avoid treating the
 continent as one culture; prefer specific, verifiable facts; avoid
 stereotypes, politically inflammatory framing and questions whose answers
 change frequently (or set a review date via `verified_at`).

@@ -2,7 +2,7 @@ import 'server-only';
 import type { QuestionInput } from '@/lib/shared/question-input';
 
 /**
- * DEVELOPMENT FIXTURES — NOT VERIFIED PRODUCTION CONTENT.
+ * DEVELOPMENT FIXTURES: NOT VERIFIED PRODUCTION CONTENT.
  *
  * These questions exist so the game can be exercised end to end in local
  * development and automated tests. They were written for testing, have not
@@ -26,7 +26,7 @@ const RAW: F[] = [
   ['history', 'easy', 'The ancient pyramids of Giza are in which country?', ['Egypt', 'Sudan', 'Libya', 'Morocco'], 'The Giza pyramid complex stands on the outskirts of Cairo, Egypt.', ['EG'], 'Giza_pyramid_complex'],
   ['culture', 'easy', 'Jollof rice is a celebrated dish from which region of Africa?', ['West Africa', 'North Africa', 'Southern Africa', 'The Horn of Africa'], 'Jollof rice is cooked across West Africa, and friendly rivalry over the best version is part of its fame.', ['WEST'], 'Jollof_rice'],
   ['culture', 'easy', 'Kente cloth is most closely associated with which country?', ['Ghana', 'Morocco', 'Ethiopia', 'Zambia'], 'Kente is a woven cloth of the Asante and Ewe peoples of Ghana.', ['GH'], 'Kente_cloth'],
-  ['culture', 'easy', 'Couscous is a staple food in which region?', ['The Maghreb (North-West Africa)', 'The Great Lakes', 'Southern Africa', 'The Sahel only'], 'Couscous is a staple across the Maghreb — Morocco, Algeria, Tunisia and Libya.', ['NORTH'], 'Couscous'],
+  ['culture', 'easy', 'Couscous is a staple food in which region?', ['The Maghreb (North-West Africa)', 'The Great Lakes', 'Southern Africa', 'The Sahel only'], 'Couscous is a staple across the Maghreb: Morocco, Algeria, Tunisia and Libya.', ['NORTH'], 'Couscous'],
   ['languages', 'easy', 'Kiswahili is most widely spoken in which part of Africa?', ['East Africa', 'West Africa', 'North Africa', 'Southern Africa only'], 'Kiswahili is a lingua franca of East Africa, spoken in Tanzania, Kenya, Uganda and beyond.', ['EAST'], 'Swahili_language'],
   ['languages', 'easy', 'Amharic is the working language of which country’s federal government?', ['Ethiopia', 'Somalia', 'Sudan', 'Kenya'], 'Amharic is the working language of Ethiopia’s federal government.', ['ET'], 'Amharic'],
   ['languages', 'easy', 'Yoruba is mainly spoken in which country?', ['Nigeria', 'Kenya', 'Egypt', 'Angola'], 'Yoruba is spoken mainly in south-western Nigeria, and also in Benin and Togo.', ['NG'], 'Yoruba_language'],
@@ -56,7 +56,7 @@ const RAW: F[] = [
   ['languages', 'medium', 'Amharic is written in which script?', ['Ge’ez (Ethiopic)', 'Latin', 'Arabic', 'Tifinagh'], 'Amharic uses the Ge’ez (Ethiopic) script, an abugida in which each character is a syllable.', ['ET'], 'Ge%CA%BDez_script'],
   ['arts', 'medium', 'In which year did Wole Soyinka win the Nobel Prize in Literature?', ['1986', '1976', '1991', '2003'], 'Wole Soyinka became the first African laureate in Literature in 1986.', ['NG'], 'Wole_Soyinka'],
   ['arts', 'medium', 'The South African singer Miriam Makeba was popularly known as what?', ['Mama Africa', 'The Golden Voice', 'Lady of Soul', 'Queen of Highlife'], 'Miriam Makeba was known worldwide as “Mama Africa”.', ['ZA'], 'Miriam_Makeba'],
-  ['arts', 'medium', 'The Egyptian singer Umm Kulthum was celebrated by what title?', ['The Star of the East', 'The Voice of the Nile', 'Mama Africa', 'The Desert Rose'], 'Umm Kulthum was called Kawkab al-Sharq — “the Star of the East”.', ['EG'], 'Umm_Kulthum'],
+  ['arts', 'medium', 'The Egyptian singer Umm Kulthum was celebrated by what title?', ['The Star of the East', 'The Voice of the Nile', 'Mama Africa', 'The Desert Rose'], 'Umm Kulthum was called Kawkab al-Sharq, “the Star of the East”.', ['EG'], 'Umm_Kulthum'],
   ['sports', 'medium', 'In 2022, which became the first African team to reach a FIFA World Cup semi-final?', ['Morocco', 'Cameroon', 'Senegal', 'Ghana'], 'Morocco reached the semi-finals at the 2022 World Cup in Qatar.', ['MA'], 'Morocco_national_football_team'],
   ['sports', 'medium', 'Long-distance great Haile Gebrselassie represented which country?', ['Ethiopia', 'Kenya', 'Eritrea', 'Uganda'], 'Haile Gebrselassie won Olympic 10,000 m gold for Ethiopia in 1996 and 2000.', ['ET'], 'Haile_Gebrselassie'],
   ['science', 'medium', 'Which surgeon performed the first human-to-human heart transplant, in Cape Town in 1967?', ['Christiaan Barnard', 'Denton Cooley', 'Norman Shumway', 'Magdi Yacoub'], 'Christiaan Barnard led the team at Groote Schuur Hospital, Cape Town, in December 1967.', ['ZA'], 'Christiaan_Barnard'],
@@ -81,7 +81,7 @@ const RAW: F[] = [
   ['languages', 'hard', 'Malagasy, the language of Madagascar, belongs to which language family?', ['Austronesian', 'Niger–Congo (Bantu)', 'Afroasiatic', 'Nilo-Saharan'], 'Malagasy is Austronesian, closely related to languages of Borneo.', ['MG'], 'Malagasy_language'],
   ['languages', 'hard', 'The N’Ko script, created by Solomana Kanté in 1949, was designed for which languages?', ['Manding languages such as Bambara and Maninka', 'Wolof', 'Yoruba', 'isiZulu'], 'Solomana Kanté created N’Ko for the Manding languages of West Africa.', ['WEST'], 'N%27Ko_script'],
   ['arts', 'hard', 'Which Senegalese filmmaker directed “Black Girl” (La Noire de…) in 1966?', ['Ousmane Sembène', 'Djibril Diop Mambéty', 'Souleymane Cissé', 'Idrissa Ouédraogo'], 'Ousmane Sembène, often called the father of African cinema, directed “Black Girl”.', ['SN'], 'Ousmane_Semb%C3%A8ne'],
-  ['arts', 'hard', 'The Benin Bronzes come from the historic Kingdom of Benin, in which present-day country?', ['Nigeria', 'The Republic of Benin', 'Ghana', 'Togo'], 'The Kingdom of Benin was centred on Benin City in today’s Nigeria — not the Republic of Benin.', ['NG'], 'Benin_Bronzes'],
+  ['arts', 'hard', 'The Benin Bronzes come from the historic Kingdom of Benin, in which present-day country?', ['Nigeria', 'The Republic of Benin', 'Ghana', 'Togo'], 'The Kingdom of Benin was centred on Benin City in today’s Nigeria, not the Republic of Benin.', ['NG'], 'Benin_Bronzes'],
   ['sports', 'hard', 'Which Ethiopian runner won the 1960 Olympic marathon in Rome running barefoot?', ['Abebe Bikila', 'Mamo Wolde', 'Miruts Yifter', 'Kenenisa Bekele'], 'Abebe Bikila won barefoot in Rome in 1960 and won again in Tokyo in 1964.', ['ET'], 'Abebe_Bikila'],
   ['sports', 'hard', 'Which country won the first Africa Cup of Nations, in 1957?', ['Egypt', 'Ethiopia', 'Sudan', 'Ghana'], 'Egypt won the first Africa Cup of Nations, held in Sudan in 1957.', ['EG'], '1957_African_Cup_of_Nations'],
   ['science', 'hard', 'The fossil “Lucy” (Australopithecus afarensis) was discovered in 1974 in which country?', ['Ethiopia', 'Kenya', 'Tanzania', 'Chad'], 'Lucy was found at Hadar in Ethiopia’s Afar region in 1974.', ['ET'], 'Lucy_(Australopithecus)'],

@@ -4,7 +4,7 @@ import 'server-only';
  * Authentication adapter.
  *  - 'supabase': Google OAuth and email (magic link / one-time code) through
  *    Supabase Auth. Requires NEXT_PUBLIC_SUPABASE_URL + NEXT_PUBLIC_SUPABASE_ANON_KEY.
- *  - 'dev': DEVELOPMENT SUBSTITUTE — sign in by typing an email, no message is
+ *  - 'dev': DEVELOPMENT SUBSTITUTE: sign in by typing an email, no message is
  *    sent and nothing is verified. Refused in production deployments.
  */
 export type AuthProvider = 'supabase' | 'dev' | 'none';

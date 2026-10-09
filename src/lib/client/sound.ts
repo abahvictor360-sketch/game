@@ -19,7 +19,7 @@ function tone(freq: number, ms: number, type: OscillatorType = 'sine', gain = 0.
     o.start(t);
     o.stop(t + ms / 1000 + 0.02);
   } catch {
-    // Audio unavailable — silently ignore.
+    // Audio unavailable: silently ignore.
   }
 }
 

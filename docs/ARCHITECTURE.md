@@ -6,7 +6,7 @@
 |---|---|
 | Web app | Next.js 16 (App Router) + React 19 + TypeScript |
 | Styling | Tailwind CSS 4 with design tokens in `src/app/globals.css` |
-| Database | Supabase Postgres in production (`postgres` driver via `DATABASE_URL`); embedded Postgres (PGlite) locally and in tests — **the same SQL migrations run on both** |
+| Database | Supabase Postgres in production (`postgres` driver via `DATABASE_URL`); embedded Postgres (PGlite) locally and in tests: **the same SQL migrations run on both** |
 | Auth | Supabase Auth (Google OAuth + email magic link) → linked to a Fastora player; signed session cookie for guests and accounts |
 | Realtime | Supabase Realtime private channels as a *ping* accelerator; authoritative state is always fetched from the server (polling fallback) |
 | Deadlines | Durable timestamps in Postgres, resolved lazily on every read/write and by a scheduled sweeper (`/api/cron/tick`) |
@@ -48,16 +48,16 @@ knowing about them.
 
 ## Game flow (solo modes)
 
-1. `POST /api/play/{classic|daily|ghost}` — server creates the session with the
+1. `POST /api/play/{classic|daily|ghost}`: server creates the session with the
    active ruleset version and issues question 0 (`issued_questions` row with
    `issued_at`/`deadline_at`, shuffled option order).
-2. `GET /api/sessions/:id` — returns the current question **without** the answer
+2. `GET /api/sessions/:id`: returns the current question **without** the answer
    key or explanation, plus `serverTime` so the client can correct clock skew.
-3. `POST /api/sessions/:id/answer {issuedId, optionId, submissionKey}` — locks
+3. `POST /api/sessions/:id/answer {issuedId, optionId, submissionKey}`: locks
    the session row, rejects foreign/stale/duplicate/expired submissions, judges
    timing and correctness on the server, records the outcome, returns feedback
    (now including the correct option and explanation).
-4. `POST /api/sessions/:id/next {fromPosition}` — idempotent advance; completes
+4. `POST /api/sessions/:id/next {fromPosition}`: idempotent advance; completes
    the session after the last question.
 5. Timeouts: if a deadline (+grace) passes with no answer, the next read/write
    or the sweeper records a timeout. Browser timers are display-only.
@@ -108,7 +108,7 @@ the player accepts.
 
 - Leaderboards are computed with window functions over indexed columns. At
   large volumes, materialise per-day and per-scoring-key bests (e.g. a
-  `leaderboard_best` table maintained on completion) — the query layer is
+  `leaderboard_best` table maintained on completion): the query layer is
   isolated in `leaderboard.ts`.
 - The sweeper is idempotent and safe to run concurrently.
 - PGlite is single-connection and for development/tests only; production uses

@@ -14,7 +14,7 @@ export async function rateLimit(q: Queryable, bucket: string, limit: number, win
      returning hits`,
     [bucket, windowSec],
   );
-  if (row.hits > limit) throw new AppError('rate_limited', 'Too many requests — please slow down a little.');
+  if (row.hits > limit) throw new AppError('rate_limited', 'Too many requests. Please slow down a little.');
 }
 
 export async function pruneRateLimits(q: Queryable) {

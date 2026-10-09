@@ -45,7 +45,7 @@ export default async function AdminOverview() {
           <ul className="mt-2 space-y-1 text-sm">
             {alerts.map((a) => (
               <li key={a.id}>
-                {a.created_at.toISOString().slice(0, 16).replace('T', ' ')} — {a.message}
+                {a.created_at.toISOString().slice(0, 16).replace('T', ' ')}: {a.message}
               </li>
             ))}
           </ul>
@@ -70,7 +70,7 @@ export default async function AdminOverview() {
               <li key={d} className="flex justify-between border-b border-ivory-200 py-1">
                 <span className="capitalize">{d}</span>
                 <span className={counts[d] < need[d] * 4 ? 'font-bold text-coral-700' : ''}>
-                  {counts[d]} {counts[d] < need[d] * 4 ? '(low — repeats likely)' : ''}
+                  {counts[d]} {counts[d] < need[d] * 4 ? '(low: repeats likely)' : ''}
                 </span>
               </li>
             ))}

@@ -1,5 +1,5 @@
 /**
- * Seed DEVELOPMENT FIXTURE questions (unverified — never for production).
+ * Seed DEVELOPMENT FIXTURE questions (unverified, never for production).
  * Refuses to run against a production deployment.
  */
 import { seedFixtures } from '../src/lib/server/bootstrap';

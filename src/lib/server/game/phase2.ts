@@ -23,7 +23,7 @@ import {
 } from './sessions';
 
 // ===========================================================================
-// Challenge a Friend (asynchronous, casual — never on ranked leaderboards)
+// Challenge a Friend (asynchronous, casual, never on ranked leaderboards)
 // ===========================================================================
 
 export function hashToken(token: string) {
@@ -126,7 +126,7 @@ export async function startFriendChallenge(q: Queryable, player: { id: string },
     [c.id, player.id],
   );
   if (existing) return existing.session_id;
-  if (c.creator_id === player.id) throw new AppError('conflict', 'You can’t accept your own challenge — share it with a friend!', 'own_challenge');
+  if (c.creator_id === player.id) throw new AppError('conflict', 'You can’t accept your own challenge. Share it with a friend!', 'own_challenge');
   if (c.expires_at.getTime() < clock.now().getTime()) throw new AppError('expired', 'This challenge has expired.', 'expired');
   if (c.archived_count > 0) throw new AppError('content_unavailable', 'Some questions in this challenge have been withdrawn, so it can no longer be played.', 'unavailable');
   const now = clock.now();

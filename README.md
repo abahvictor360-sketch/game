@@ -10,9 +10,9 @@ Audience, all behind feature flags.
 > **This README is the complete handover.** If you clone this repository with a
 > different account (or a new Claude session), read this file top to bottom
 > and you can continue exactly where the work stopped. Deeper detail is in
-> [`docs/`](docs) — each section below links to the relevant file.
+> [`docs/`](docs): each section below links to the relevant file.
 
-| Phone — question | Phone — feedback | Desktop |
+| Phone: question | Phone: feedback | Desktop |
 |---|---|---|
 | ![Question](docs/screenshots/question-phone.png) | ![Feedback](docs/screenshots/feedback-phone.png) | ![Desktop](docs/screenshots/question-desktop.png) |
 
@@ -36,7 +36,7 @@ Audience, all behind feature flags.
 14. [Testing](#14-testing)
 15. [Deployment](#15-deployment)
 16. [Content (questions)](#16-content-questions)
-17. [Gotchas — read before changing code](#17-gotchas--read-before-changing-code)
+17. [Gotchas: read before changing code](#17-gotchas-read-before-changing-code)
 18. [What is left to do (backlog)](#18-what-is-left-to-do-backlog)
 19. [Decisions log](#19-decisions-log)
 20. [History of the build](#20-history-of-the-build)
@@ -52,10 +52,10 @@ Audience, all behind feature flags.
 | Unit + integration tests (60) | ✅ Pass on embedded Postgres **and** real PostgreSQL 16 |
 | End-to-end tests (26, incl. two-browser live match, forfeit, accessibility scans and 360 px layout) | ✅ Pass |
 | Supabase | ✅ Dedicated project **`fastora`** created, schema + RLS + Realtime policy applied (see §3) |
-| Vercel | ✅ Project **`fastora-quiz`** linked to this repo, env vars set — ⚠️ needs `DATABASE_URL` before it can serve (see §3) |
-| Verified question bank | ❌ Not supplied — only 72 **unverified development fixtures** exist |
-| Final branding (logo, palette from fastora.africa) | ❌ Pending — palette taken from reference screenshots |
-| Pull request | ❌ Not opened — the GitHub repo has no `main` branch yet (see §2) |
+| Vercel | ✅ Project **`fastora-quiz`** linked to this repo, env vars set: ⚠️ needs `DATABASE_URL` before it can serve (see §3) |
+| Verified question bank | ❌ Not supplied: only 72 **unverified development fixtures** exist |
+| Final branding (logo, palette from fastora.africa) | ❌ Pending: palette taken from reference screenshots |
+| Pull request | ❌ Not opened: the GitHub repo has no `main` branch yet (see §2) |
 
 **Where the code is:** GitHub `abahvictor360-sketch/game`, branch
 **`claude/youthful-ptolemy-26brkb`** (currently the repo's only branch).
@@ -102,7 +102,7 @@ npm run build && npm run test:e2e   # 26 Playwright tests (needs Chromium: npx p
 
 ### 2.3 Tidy up the Git setup (recommended first job)
 
-The repository has no default `main` branch — all work is on
+The repository has no default `main` branch: all work is on
 `claude/youthful-ptolemy-26brkb`. To make normal pull requests possible:
 
 ```bash
@@ -123,7 +123,7 @@ branding**.
 ### 2.5 If you are a new Claude Code session
 
 Tell it: *"Read README.md fully, then continue with the backlog in §18."*
-Key facts it needs are all here, especially [§17 Gotchas](#17-gotchas--read-before-changing-code)
+Key facts it needs are all here, especially [§17 Gotchas](#17-gotchas-read-before-changing-code)
 (Next.js 16 changes, the PGlite transaction rule, JSON parameters, test
 commands).
 
@@ -131,30 +131,30 @@ commands).
 
 ## 3. Supabase and Vercel status
 
-### Supabase — project `fastora` ✅
+### Supabase: project `fastora` ✅
 
 | | |
 |---|---|
 | Organisation | *xpelbeauty001@gmail.com's Org* |
-| Project | **`fastora`** — ref `tsfhuyxvznpzbmwcswkq`, region `eu-west-2` (London) |
+| Project | **`fastora`**: ref `tsfhuyxvznpzbmwcswkq`, region `eu-west-2` (London) |
 | API URL | `https://tsfhuyxvznpzbmwcswkq.supabase.co` |
 | Dashboard | https://supabase.com/dashboard/project/tsfhuyxvznpzbmwcswkq |
 | Schema | Migrations `0001`–`0003` applied (31 public + 3 private tables, RLS on all) and recorded in `private.app_migrations`, so `npm run db:migrate` will skip them |
 | Realtime | `db/supabase/realtime_policies.sql` applied |
-| Security advisor | Only "RLS enabled, no policy" notices — intentional: browsers get no direct access; the server reads/writes |
+| Security advisor | Only "RLS enabled, no policy" notices: intentional: browsers get no direct access; the server reads/writes |
 | Data | Empty. Default rules and categories are created automatically on the first request. No dev fixtures (they never go to Supabase). |
 
 > The other Supabase project in the same organisation, **"Xtend"**
-> (`jxbugdxeofbjspdcnvmx`), is a **separate live app** — do not deploy Fastora
+> (`jxbugdxeofbjspdcnvmx`), is a **separate live app**: do not deploy Fastora
 > there or run these migrations against it.
 
-### Vercel — project `fastora-quiz` ✅ (one manual step left)
+### Vercel: project `fastora-quiz` ✅ (one manual step left)
 
 | | |
 |---|---|
 | Team | *abahvictor360-3017's projects* (`team_Y1PGVkrNWi7NT2b2NtLd2TUh`) |
 | Project | **`fastora-quiz`** (`prj_58P2BqUFiruxui748V3RJpzUADtY`) |
-| Git | `abahvictor360-sketch/game`, production branch `claude/youthful-ptolemy-26brkb` — **every push deploys** |
+| Git | `abahvictor360-sketch/game`, production branch `claude/youthful-ptolemy-26brkb`: **every push deploys** |
 | Public URL | **https://fastora-africa-quiz.vercel.app** (also `fastora-quiz-abahvictor360-3017s-projects.vercel.app`) |
 | Env vars set | `SESSION_SECRET` (sensitive), `CRON_SECRET` (sensitive), `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `ADMIN_BOOTSTRAP_EMAILS=abahvictor360@gmail.com`, `NEXT_PUBLIC_SITE_URL` |
 | Cron | Daily at 22:30 UTC (Hobby plan allows daily crons only) |
@@ -183,11 +183,11 @@ commands).
    Site URL = your production URL (`https://fastora-africa-quiz.vercel.app`);
    Redirect URLs: add `https://fastora-africa-quiz.vercel.app/auth/callback` (and your
    custom domain's `/auth/callback` later). `NEXT_PUBLIC_SITE_URL` is already
-   set to this URL in Vercel — update it if you add a custom domain.
+   set to this URL in Vercel: update it if you add a custom domain.
 4. **Google sign-in (optional).** Create an OAuth client in Google Cloud
    (redirect URI `https://tsfhuyxvznpzbmwcswkq.supabase.co/auth/v1/callback`),
    then Supabase → Authentication → Providers → Google. Email magic links work
-   without this (Supabase's built-in mailer is rate-limited — add custom SMTP
+   without this (Supabase's built-in mailer is rate-limited: add custom SMTP
    before launch).
 5. Sign in on the live site with **abahvictor360@gmail.com** → you become
    admin → import questions in **/admin/import**.
@@ -207,10 +207,10 @@ commands).
 | CSV | papaparse | 5.5.3 |
 | Unit/integration tests | Vitest | 3.2.7 |
 | E2E tests | Playwright (+ axe-core) | 1.56.1 |
-| Hosting | Vercel (cron in `vercel.json`) | — |
-| Analytics / errors | PostHog capture API, Sentry envelope API (lightweight adapters) | — |
+| Hosting | Vercel (cron in `vercel.json`) | - |
+| Analytics / errors | PostHog capture API, Sentry envelope API (lightweight adapters) | - |
 
-`package-lock.json` is committed — always use `npm install` (not `npm update`)
+`package-lock.json` is committed: always use `npm install` (not `npm update`)
 unless you intend to upgrade.
 
 ---
@@ -397,7 +397,7 @@ Details, components and accessibility rules: [docs/DESIGN_SYSTEM.md](docs/DESIGN
   not a Supabase user, never staff. Unset the variable to switch it off.
 - **Password sign-in:** `/auth/password` also accepts Supabase Auth users
   that have a password.
-- **Accounts:** Supabase Auth — Google OAuth and email magic link. The
+- **Accounts:** Supabase Auth: Google OAuth and email magic link. The
   callback (`/auth/callback`) links the Supabase user to a Fastora player;
   if the visitor was a guest, their history comes with them (guest-played
   results stay unranked; no duplicate Daily attempts).
@@ -438,10 +438,10 @@ Full list with comments: [`.env.example`](.env.example). Summary:
 | `SESSION_SECRET` | optional (insecure default + warning) | **required**, ≥32 chars (`openssl rand -base64 48`) |
 | `DATABASE_URL` (or `POSTGRES_URL` from the Supabase integration) | empty → embedded DB | **required**: Supabase transaction pooler (port 6543); SSL is enabled automatically |
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` | empty → dev sign-in | **required** for sign-in |
-| `SUPABASE_SERVICE_ROLE_KEY` | — | optional, server only (Realtime pings) |
+| `SUPABASE_SERVICE_ROLE_KEY` | - | optional, server only (Realtime pings) |
 | `ADMIN_BOOTSTRAP_EMAILS` | your email | first admin(s) |
-| `CRON_SECRET` | — | **required** for `/api/cron/tick` |
-| `POSTHOG_KEY`, `POSTHOG_HOST`, `SENTRY_DSN` | — | optional |
+| `CRON_SECRET` | - | **required** for `/api/cron/tick` |
+| `POSTHOG_KEY`, `POSTHOG_HOST`, `SENTRY_DSN` | - | optional |
 | `FEATURE_FLAGS`, `SEED_FIXTURES`, `ALLOW_DEV_AUTH`, `INSECURE_COOKIES` | dev/test only | **never set** |
 
 Never commit `.env.local` (it is git-ignored).
@@ -468,7 +468,7 @@ Never commit `.env.local` (it is git-ignored).
 
 Full report with measured numbers: [docs/TESTING.md](docs/TESTING.md).
 
-- **57 unit + integration tests** — scoring, deadlines and grace, duplicate and
+- **57 unit + integration tests**: scoring, deadlines and grace, duplicate and
   concurrent submissions, lifelines, freshness, Daily uniqueness and resume,
   guest→account merge, versioning, RLS denial, CSV validation, friend
   challenges, ghosts, audience (live + fallback), live matches (sync,
@@ -518,7 +518,7 @@ Current state and remaining manual steps: **§3**. Full guide:
   are live.
 - **Starter set (100 questions):** `db/seed/starter_questions_100.sql` loads
   100 approved questions (all nine categories; 29 easy / 39 medium / 32 hard)
-  into Supabase — paste it into **SQL Editor** and run. It is safe to re-run.
+  into Supabase: paste it into **SQL Editor** and run. It is safe to re-run.
   They were drafted with AI assistance from well-documented facts, each with
   a Wikipedia source, and are tagged `starter-set` + `needs-review` (not
   editorially verified). Source: `db/content/starter-questions.ts`;
@@ -532,7 +532,7 @@ Full guide (fields, CSV format, moderation, calibration):
 
 ---
 
-## 17. Gotchas — read before changing code
+## 17. Gotchas: read before changing code
 
 1. **Next.js 16 is not Next.js 14/15.** `middleware` is now `proxy`, request
    APIs (`cookies()`, `headers()`, `params`, `searchParams`) are async only,
@@ -542,7 +542,7 @@ Full guide (fields, CSV format, moderation, calibration):
 2. **PGlite transaction rule (important):** the embedded DB has one
    connection; a plain `db.query(...)` waits for any open transaction. So
    **never call `db.query`/`ensureReady()`-based helpers from inside a
-   `db.tx(q => …)` callback — always use the `q` you were given**, otherwise
+   `db.tx(q => …)` callback: always use the `q` you were given**, otherwise
    local dev and tests hang forever.
 3. **JSON parameters:** pass JSON as a string with a cast, e.g.
    `q.query('… $1::jsonb', [JSON.stringify(x)])` (helper `pgJson`). The
@@ -556,7 +556,7 @@ Full guide (fields, CSV format, moderation, calibration):
    (`rateLimit(db, key, limit, windowSec)`); wrap with `api()` for error
    handling + same-origin check.
 6. **Answer privacy test:** `tests/integration/classic.test.ts` asserts no
-   `correctOptionId`/`explanation` appears before answering — keep it passing
+   `correctOptionId`/`explanation` appears before answering: keep it passing
    when you change `SessionView`.
 7. **Service worker:** `public/sw.js` must never cache `/api/*` or game
    pages. If you change caching, bump `VERSION`. The page only reloads after
@@ -568,7 +568,7 @@ Full guide (fields, CSV format, moderation, calibration):
    sign-in is disabled in production; the seed script refuses in production.
 10. **Testing a production build on http://localhost:** set
     `SESSION_SECRET`, `INSECURE_COOKIES=true` and (for sign-in)
-    `ALLOW_DEV_AUTH=true` — see `playwright.config.ts` for a working example.
+    `ALLOW_DEV_AUTH=true`: see `playwright.config.ts` for a working example.
 
 ---
 
@@ -577,7 +577,7 @@ Full guide (fields, CSV format, moderation, calibration):
 Ordered by priority.
 
 **Launch blockers**
-1. ~~Create a dedicated Supabase project~~ ✅ and ~~Vercel project~~ ✅ —
+1. ~~Create a dedicated Supabase project~~ ✅ and ~~Vercel project~~ ✅:
    finish the **manual steps in §3** (DATABASE_URL, deployment protection,
    auth URLs, Google OAuth, custom SMTP), then confirm the cron runs.
 2. Connect a **custom domain** in Vercel and add it to Supabase Auth redirect URLs.
@@ -594,7 +594,7 @@ Ordered by priority.
 **Recommended soon after launch**
 8. Set up CI (GitHub Actions): `npm ci`, `npm run typecheck`, `npm test`,
    `npm run build`, `npm run test:e2e`.
-9. Add ESLint (flat config) — Next 16 removed `next lint`.
+9. Add ESLint (flat config): Next 16 removed `next lint`.
 10. Customise the Supabase magic-link email template with Fastora branding.
 11. Swap the lightweight Sentry/PostHog adapters for full SDKs if tracing or
     session replay is wanted.
@@ -602,7 +602,7 @@ Ordered by priority.
     (see ARCHITECTURE → Scaling).
 13. Admin UI to resolve `ops_alerts` and manage staff roles (currently SQL/CLI).
 
-**Phase 2 rollout** (code done — product decisions needed)
+**Phase 2 rollout** (code done: product decisions needed)
 14. Turn on friend challenges → ghost opponents → live matches → Ask the
     Audience one by one, watching analytics and errors.
 
@@ -631,7 +631,7 @@ Decisions made where the proposal left things open (all configurable):
 | Ghost recordings | Only lifeline-free Classic runs, opt-out in profile, pseudonymous | Honest, comparable, privacy-respecting |
 | Audience timer | Paused while voting, resumes with remaining time | Fair to the player |
 | Difficulty calibration | Prefer observed difficulty (≥30 unassisted answers) but fall back to editorial | Calibration can never empty a difficulty tier |
-| Fonts | System font stack | No font downloads on slow networks |
+| Fonts | Bricolage Grotesque (display) + Plus Jakarta Sans (body), self-hosted | Owner asked for a more distinctive look; about 70 KB, no third-party requests |
 | Local database | PGlite (embedded Postgres) | Zero setup, and the same SQL as production |
 
 ---
@@ -639,7 +639,7 @@ Decisions made where the proposal left things open (all configurable):
 ## 20. History of the build
 
 Built in one session (Claude Code) from the master build prompt based on the
-*Fastora Proposal — African Quiz Game* PDF. Owner requests during the build:
+*Fastora Proposal: African Quiz Game* PDF. Owner requests during the build:
 "modern style" quiz-show look from reference screenshots; "pick Fastora
 colour" (fastora.africa was blocked by the build environment's network policy,
 so the palette came from the screenshots).

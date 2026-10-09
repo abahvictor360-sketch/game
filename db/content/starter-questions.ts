@@ -1,5 +1,5 @@
 /**
- * STARTER QUESTION SET — 100 questions for launch testing on the live site.
+ * STARTER QUESTION SET: 100 questions for launch testing on the live site.
  *
  * Drafted with AI assistance from well-documented facts, each with a
  * Wikipedia source. They have NOT been through Fastora's editorial

@@ -50,7 +50,7 @@ export function SettingsForm({ rules: r, flags, envFlags }: { rules: Rules; flag
           <Num name="classic_hard" label="Hard questions" value={r.classic.distribution.hard} />
         </div>
         <div className="mt-2 grid gap-1 md:grid-cols-2">
-          <Check name="endOnWrongAnswer" label="Elimination: a wrong answer ends the game" checked={r.classic.endOnWrongAnswer} hint="Default off — players finish all questions." />
+          <Check name="endOnWrongAnswer" label="Elimination: a wrong answer ends the game" checked={r.classic.endOnWrongAnswer} hint="Default off: players finish all questions." />
           <Check name="ll_fifty" label="50:50 lifeline" checked={r.classic.lifelines.fifty_fifty} />
           <Check name="ll_change" label="Change Question lifeline" checked={r.classic.lifelines.change_question} />
           <Check name="ll_audience" label="Ask the Audience lifeline" checked={r.classic.lifelines.ask_audience} hint="Also requires the Ask the Audience feature flag." />

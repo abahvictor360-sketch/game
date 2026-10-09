@@ -92,7 +92,7 @@ export default async function QuestionDetailPage({ params, searchParams }: { par
         Question <Status value={d.status} />
       </H1>
       {sp.saved ? <p role="status" className="rounded-xl bg-emerald-50 p-3 text-sm text-emerald-900">Saved.</p> : null}
-      {d.isFixture ? <p className="rounded-xl bg-amber-50 p-3 text-sm text-amber-900">Development fixture — not verified content.</p> : null}
+      {d.isFixture ? <p className="rounded-xl bg-amber-50 p-3 text-sm text-amber-900">Development fixture: not verified content.</p> : null}
 
       {latest.state === 'review' ? (
         <Card className="border-amber-300">
@@ -138,7 +138,7 @@ export default async function QuestionDetailPage({ params, searchParams }: { par
             </div>
             <div>
               <dt className="text-xs text-ink-500">Scope</dt>
-              <dd>{latest.countryScope.join(', ') || '—'}</dd>
+              <dd>{latest.countryScope.join(', ') || '-'}</dd>
             </div>
             <div>
               <dt className="text-xs text-ink-500">Age rating · language</dt>
@@ -153,7 +153,7 @@ export default async function QuestionDetailPage({ params, searchParams }: { par
             <div>
               <dt className="text-xs text-ink-500">Author · reviewer</dt>
               <dd>
-                {latest.authorName ?? '—'} · {latest.reviewerName ?? '—'}
+                {latest.authorName ?? '-'} · {latest.reviewerName ?? '-'}
               </dd>
             </div>
             <div className="col-span-2 md:col-span-3">
@@ -165,7 +165,7 @@ export default async function QuestionDetailPage({ params, searchParams }: { par
                         {s.title}
                       </a>
                     ))
-                  : '—'}
+                  : '-'}
               </dd>
             </div>
             {latest.tags.length ? (
@@ -238,7 +238,7 @@ export default async function QuestionDetailPage({ params, searchParams }: { par
             <li key={i} className="flex justify-between gap-2 py-1.5">
               <span>
                 <strong>{h.actor ?? 'System'}</strong> · {h.action}
-                {h.data?.note ? ` — “${String(h.data.note)}”` : ''}
+                {h.data?.note ? `: “${String(h.data.note)}”` : ''}
               </span>
               <span className="text-ink-500">{h.created_at.toISOString().slice(0, 16).replace('T', ' ')}</span>
             </li>

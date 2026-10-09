@@ -10,7 +10,7 @@ import { BRAND } from '@/lib/shared/brand';
 export const metadata = { title: 'Sign in' };
 
 const ERRORS: Record<string, string> = {
-  callback: 'We couldn’t complete sign-in. The link may have expired — please request a new one.',
+  callback: 'We couldn’t complete sign-in. The link may have expired. Please request a new one.',
   invalid_email: 'Please enter a valid email address.',
   password: 'That email and password don’t match. Check them, or use a sign-in link instead.',
   rate_limited: 'Too many attempts. Please wait a few minutes and try again.',

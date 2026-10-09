@@ -8,7 +8,7 @@ export function DailyCountdown({ resetAt }: { resetAt: string }) {
     const t = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(t);
   }, []);
-  if (now === null) return <span>—</span>;
+  if (now === null) return <span>--:--:--</span>;
   const ms = Math.max(0, new Date(resetAt).getTime() - now);
   const h = Math.floor(ms / 3600000);
   const m = Math.floor((ms % 3600000) / 60000);

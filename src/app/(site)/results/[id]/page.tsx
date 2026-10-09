@@ -89,7 +89,7 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
         </div>
         <div className="mt-4 flex flex-wrap justify-center gap-2">
           {rank ? <Badge tone="gold">Rank #{rank}</Badge> : null}
-          {!summary.leaderboardEligible && (summary.mode === 'classic' || summary.mode === 'daily') ? <Badge tone="grey">Unranked — played as a guest</Badge> : null}
+          {!summary.leaderboardEligible && (summary.mode === 'classic' || summary.mode === 'daily') ? <Badge tone="grey">Unranked: played as a guest</Badge> : null}
         </div>
       </section>
 
@@ -135,10 +135,10 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
             ) : null}
             {worst ? (
               <li>
-                Room to grow: <strong className="text-coral-400">{worst.name}</strong> ({worst.correct}/{worst.total}) — read the explanations below.
+                Room to grow: <strong className="text-coral-400">{worst.name}</strong> ({worst.correct}/{worst.total}). Read the explanations below.
               </li>
             ) : null}
-            {timeouts ? <li>{timeouts === 1 ? 'One question' : `${timeouts} questions`} ran out of time — answering a little earlier pays off.</li> : null}
+            {timeouts ? <li>{timeouts === 1 ? 'One question' : `${timeouts} questions`} ran out of time. Answering a little earlier pays off.</li> : null}
           </ul>
         </Panel>
       ) : null}

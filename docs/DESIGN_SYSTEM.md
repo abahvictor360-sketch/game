@@ -1,8 +1,8 @@
-# Design system — “quiz-show stage”
+# Design system: “quiz-show stage”
 
 Direction requested by Fastora: a modern take on the classic TV quiz-show look
 (deep-blue spotlight stage, angled answer bars joined by side rails, a circular
-emblem, gold highlights, round lifeline buttons) — with Fastora’s own original
+emblem, gold highlights, round lifeline buttons): with Fastora’s own original
 identity (no third-party logos or trade dress).
 
 Colour, type and radius tokens live in `src/app/globals.css` (`@theme`). The
@@ -35,9 +35,20 @@ Contrast: white on stage blues ≥ 6:1; gold on bar ≥ 9:1; ink on ivory ≥ 12
 
 ## Typography
 
-System font stack (no web-font download for low-end devices and slow
-networks), rounded display stack for headings and numbers, tabular numerals
-for scores and timers. Body 15–16 px on phones.
+- **Display:** Bricolage Grotesque (variable), for headings, scores, the
+  timer and buttons with `font-display`. Bold and characterful, fitting the
+  quiz-show stage.
+- **Body:** Plus Jakarta Sans (variable), clean and very readable on small
+  screens.
+- Both are self-hosted from npm (`@fontsource-variable/*`, imported in
+  `src/app/layout.tsx`), so there are no requests to Google. The Latin subsets
+  weigh about 70 KB together; other subsets load only if a page needs them.
+  Text shows immediately in the system font and swaps in when ready
+  (`font-display: swap`).
+- Tabular numerals for scores and timers. Body 15–16 px on phones.
+- To change fonts: install the new `@fontsource-variable` packages, swap the
+  two imports in `layout.tsx`, and update `--font-sans` / `--font-display` in
+  `globals.css`.
 
 Type scale tokens (Tailwind utilities generated from `@theme`):
 
@@ -61,11 +72,11 @@ page sections (`space-y-8`).
 | Hex bar (question, headings) | `ui.tsx` `HexBar`, `.hex` | optional side rails (`.railed`) |
 | Answer button | `game/AnswerButton.tsx` | idle, hover/focus (gold border), selected (gold fill), correct (emerald), wrong (coral), removed (50:50), dim |
 | Timer emblem | `game/TimerEmblem.tsx` | running, urgent ≤5 s, paused (audience), done |
-| Points ribbon | `.ribbon` | — |
+| Points ribbon | `.ribbon` | - |
 | Ladder | `game/Ladder.tsx` | strip (phone) / vertical ladder (desktop); current, correct, wrong, upcoming |
 | Lifelines | `game/Lifelines.tsx`, `.lifeline` | available, loading, used (struck through), hidden when disabled |
 | Buttons | `.btn-gold`, `.btn-flame`, `.btn-blue`, `.btn-ghost`, `.btn-light` (ivory), `.btn-coral`/`.btn-danger` | ≥48 px tall (`.btn-sm` 44 px); pressed scale; disabled |
-| Panels, badges, tabs, empty/error states | `ui.tsx` | — |
+| Panels, badges, tabs, empty/error states | `ui.tsx` | - |
 | Skeletons | `ui.tsx` `Skeleton`, `GameSkeleton`; `loading.tsx` for site, gameplay, live match and admin | dark and ivory variants |
 | Leaderboard rows | `site/LeaderboardTable.tsx` | current player highlighted |
 | Dialogs | `feedback.tsx` `ConfirmDialog`, `game/ReportDialog.tsx` (native `<dialog>`, Esc closes, focus returns) | danger / primary |

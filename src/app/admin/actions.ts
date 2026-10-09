@@ -73,7 +73,7 @@ export async function saveQuestion(questionId: string | null, _prev: FormState, 
   const db = await ensureReady();
   const dups = await findDuplicates(db, parsed.data.text, questionId ?? undefined);
   if (dups.length && form.get('allowDuplicate') !== 'on') {
-    return { errors: { text: 'A question with the same wording already exists.' }, message: 'Possible duplicate — review it, or tick “Save anyway”.', duplicates: dups };
+    return { errors: { text: 'A question with the same wording already exists.' }, message: 'Possible duplicate. Review it, or tick “Save anyway”.', duplicates: dups };
   }
   let id = questionId;
   try {

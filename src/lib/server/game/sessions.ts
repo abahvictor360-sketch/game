@@ -217,7 +217,7 @@ export async function startClassic(q: Queryable, player: { id: string; kind: str
 
 // ---------------------------------------------------------------------------
 // Timeouts (durable, server-side; resolved lazily on any read or write and by
-// the scheduled sweeper — never by the browser)
+// the scheduled sweeper, never by the browser)
 // ---------------------------------------------------------------------------
 
 export async function resolveIfExpired(q: Queryable, s: SessionRow, iq: IssuedRow, cfg: ConfigVersion, now: Date): Promise<boolean> {

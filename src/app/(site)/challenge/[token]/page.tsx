@@ -8,10 +8,10 @@ import { currentPlayer } from '@/lib/server/identity';
 
 const START_ERRORS: Record<string, string> = {
   expired: 'This challenge has expired.',
-  own_challenge: 'You can’t accept your own challenge — share the link with a friend!',
+  own_challenge: 'You can’t accept your own challenge. Share the link with a friend!',
   unavailable: 'Some questions in this challenge have been withdrawn, so it can no longer be played.',
   feature_disabled: 'Friend challenges aren’t available right now.',
-  rate_limited: 'Too many attempts — please wait a minute and try again.',
+  rate_limited: 'Too many attempts. Please wait a minute and try again.',
 };
 
 export const metadata = { title: 'Friend challenge', robots: { index: false } };
@@ -53,7 +53,7 @@ export default async function ChallengePage({ params, searchParams }: { params: 
             </Link>
           </>
         ) : p.state === 'own' ? (
-          <p>This is your own challenge — share the link with a friend!</p>
+          <p>This is your own challenge. Share the link with a friend!</p>
         ) : p.state === 'expired' ? (
           <p>This challenge expired on {p.expiresAt.slice(0, 10)}. Ask your friend for a new link, or play Classic.</p>
         ) : (

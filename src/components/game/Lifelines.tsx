@@ -3,9 +3,9 @@ import type { Lifeline } from '@/lib/game/rules';
 import type { LifelineState } from '@/lib/shared/types';
 
 const META: Record<Lifeline, { label: string; short: string; icon: React.ReactNode }> = {
-  fifty_fifty: { label: '50:50 — remove two wrong answers', short: '50:50', icon: <span className="font-display text-base font-black">50:50</span> },
+  fifty_fifty: { label: '50:50: remove two wrong answers', short: '50:50', icon: <span className="font-display text-base font-black">50:50</span> },
   change_question: {
-    label: 'Change question — swap for another of the same difficulty',
+    label: 'Change question: swap for another of the same difficulty',
     short: 'Swap',
     icon: (
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

@@ -68,7 +68,7 @@ export function ProfileForm(p: Props) {
               <a href="/help" className="font-bold text-gold-300 underline">
                 Be the audience
               </a>{' '}
-              page is open and you’re not in a game, you may be invited to vote — at most once every two minutes.
+              page is open and you’re not in a game, you may be invited to vote, at most once every two minutes.
             </span>
           </span>
         </label>

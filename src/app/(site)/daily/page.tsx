@@ -22,7 +22,7 @@ export default async function DailyPage({ searchParams }: { searchParams: Promis
       <PageTitle title="Daily Challenge" subtitle={`${status.date} · the same ${status.questionCount} questions for everyone, every day.`} />
       {error === 'daily_unavailable' || !status.available ? (
         <ErrorState title="Today’s challenge isn’t available yet">
-          We couldn’t publish today’s questions. Our team has been alerted. Please check back soon — Classic is still open.
+          We couldn’t publish today’s questions. Our team has been alerted. Please check back soon. Classic is still open.
           <p className="mt-2">
             Next challenge in <DailyCountdown resetAt={status.resetAt} />
           </p>
@@ -37,7 +37,7 @@ export default async function DailyPage({ searchParams }: { searchParams: Promis
               • {status.questionCount} questions, {cfg.rules.daily.timerMs / 1000} seconds each, rising difficulty.
             </li>
             <li>• One attempt per day. No lifelines.</li>
-            <li>• Refreshing resumes your attempt — it won’t reset the clock.</li>
+            <li>• Refreshing resumes your attempt; it won’t reset the clock.</li>
           </ul>
           <p className="mt-4 text-sm text-blue-100/80">
             Today’s challenge closes in <DailyCountdown resetAt={status.resetAt} />
@@ -90,7 +90,7 @@ export default async function DailyPage({ searchParams }: { searchParams: Promis
       {board ? (
         <section>
           <h2 className="font-display mb-3 text-center text-lg font-black">Today’s ranking</h2>
-          <LeaderboardTable board={board} empty="No ranked results yet today — be the first!" />
+          <LeaderboardTable board={board} empty="No ranked results yet today. Be the first!" />
           <p className="mt-2 text-center text-sm">
             <Link href="/leaderboard?view=daily" className="font-bold text-gold-300 underline">
               Full daily leaderboard

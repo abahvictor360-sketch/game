@@ -81,7 +81,7 @@ export function HelperClient() {
           </button>
         ))}
       </div>
-      <p className="mt-3 text-xs text-blue-100/60">Your vote is anonymous. Answer only if you know — the player sees the vote percentages.</p>
+      <p className="mt-3 text-xs text-blue-100/60">Your vote is anonymous. Answer only if you know: the player sees the vote percentages.</p>
     </Panel>
   );
 }

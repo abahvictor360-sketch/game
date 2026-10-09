@@ -4,7 +4,7 @@ import 'server-only';
  * Error monitoring adapter. When SENTRY_DSN is set, events are sent to Sentry
  * using its envelope endpoint (no SDK needed, keeping bundles small). Without
  * a DSN, errors are logged to the server console. Swap in @sentry/nextjs for
- * tracing/performance if needed — callers only use these two functions.
+ * tracing/performance if needed; callers only use these two functions.
  */
 
 type Ctx = Record<string, unknown>;

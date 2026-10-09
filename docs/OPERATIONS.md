@@ -44,5 +44,5 @@ deleting the row from `staff_roles`. Bootstrap admins come from
   players gone, or a player missing at kick-off) the match is cancelled with
   no result. Matches resume from durable state once the service is back; the
   sweeper finalises anything overdue exactly once.
-- **Database restore**: answer keys are in the `private` schema — include it
+- **Database restore**: answer keys are in the `private` schema: include it
   in backups (Supabase backups do).

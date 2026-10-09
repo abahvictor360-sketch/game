@@ -19,7 +19,7 @@ export default async function HowToPlay() {
           <li>• Each question has four options and one correct answer.</li>
           <li>• Correct answers score {r.points.easy} (easy), {r.points.medium} (medium) or {r.points.hard} (hard) points. Wrong answers and timeouts score zero.</li>
           <li>• You have {s(r.timersMs.easy)} for easy, {s(r.timersMs.medium)} for medium and {s(r.timersMs.hard)} for hard questions.</li>
-          <li>• {r.classic.endOnWrongAnswer ? 'A wrong answer ends your game.' : 'A wrong answer doesn’t end your game — keep climbing!'}</li>
+          <li>• {r.classic.endOnWrongAnswer ? 'A wrong answer ends your game.' : 'A wrong answer doesn’t end your game. Keep climbing!'}</li>
           <li>• After each answer you’ll see the correct answer and a short explanation.</li>
         </ul>
       </Panel>
@@ -34,7 +34,7 @@ export default async function HowToPlay() {
           </li>
           {flags.askAudience ? (
             <li>
-              • <strong>Ask the Audience</strong> shows how other players answered — live voters when enough are online (your timer pauses while they vote), otherwise previous players’ answers for this exact question. The audience can be wrong!
+              • <strong>Ask the Audience</strong> shows how other players answered: live voters when enough are online (your timer pauses while they vote), otherwise previous players’ answers for this exact question. The audience can be wrong!
             </li>
           ) : null}
           <li>• Each lifeline works once per game, and only before you lock in an answer.</li>
@@ -48,7 +48,7 @@ export default async function HowToPlay() {
             • One attempt per day. A new challenge starts at midnight{' '}
             {r.daily.timezone === 'Africa/Lagos' ? 'West Africa Time (Lagos)' : `(${r.daily.timezone.replace(/_/g, ' ')} time)`}.
           </li>
-          <li>• Refreshing the page resumes your attempt — the clock keeps running on our server.</li>
+          <li>• Refreshing the page resumes your attempt, and the clock keeps running on our server.</li>
         </ul>
       </Panel>
       {flags.multiplayer || flags.ghostOpponents ? (
@@ -63,7 +63,7 @@ export default async function HowToPlay() {
             </li>
             {flags.multiplayer ? (
               <>
-                <li>• After a short countdown, each round stays open until you both answer or time runs out. You’ll see when your opponent has answered, but never what they picked — answers are revealed together.</li>
+                <li>• After a short countdown, each round stays open until you both answer or time runs out. You’ll see when your opponent has answered, but never what they picked. Answers are revealed together.</li>
                 <li>
                   • Lost your connection? You have {s(r.versus.reconnectWindowMs)} to come back; the clock doesn’t stop or restart. After that you forfeit, and your opponent finishes and wins.
                 </li>
@@ -73,7 +73,7 @@ export default async function HowToPlay() {
             ) : null}
             {flags.ghostOpponents ? (
               <li>
-                • {flags.multiplayer ? `If no one is found within about ${s(r.versus.matchmakingFallbackMs)}, you can` : 'You can'} race a recording of a real player’s lifeline-free game. It’s always labelled as a recorded player — never presented as someone online now.
+                • {flags.multiplayer ? `If no one is found within about ${s(r.versus.matchmakingFallbackMs)}, you can` : 'You can'} race a recording of a real player’s lifeline-free game. It’s always labelled as a recorded player and never presented as someone online now.
               </li>
             ) : null}
           </ul>
@@ -97,7 +97,7 @@ export default async function HowToPlay() {
             <Link href="/help" className="font-bold text-gold-300 underline">
               Be the audience
             </Link>{' '}
-            page open. When someone asks the audience you’ll get {s(r.audience.votingWindowMs)} to vote — anonymously, at most once every {Math.round(r.audience.helperCooldownMs / 60000)} minutes.
+            page open. When someone asks the audience you’ll get {s(r.audience.votingWindowMs)} to vote, anonymously and at most once every {Math.round(r.audience.helperCooldownMs / 60000)} minutes.
           </p>
         </Panel>
       ) : null}
@@ -106,7 +106,7 @@ export default async function HowToPlay() {
         <ul className="mt-2 space-y-1.5 text-sm text-blue-100/90">
           <li>• Only games played while signed in are ranked. Guests can play everything.</li>
           <li>• Ties are broken by number of correct answers, then by total answer time.</li>
-          <li>• Timing and scoring happen on our servers, so a slow connection may cost a moment — answer early when you can.</li>
+          <li>• Timing and scoring happen on our servers, so a slow connection may cost a moment, so answer early when you can.</li>
         </ul>
       </Panel>
       <div className="text-center">

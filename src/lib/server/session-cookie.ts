@@ -13,7 +13,7 @@ function secret(): string {
     throw new Error('SESSION_SECRET (≥32 characters) must be set in production.');
   }
   if (!warned && process.env.NODE_ENV !== 'test') {
-    console.warn('[fastora] SESSION_SECRET not set — using an insecure development secret.');
+    console.warn('[fastora] SESSION_SECRET not set; using an insecure development secret.');
     warned = true;
   }
   return 'fastora-insecure-development-secret-change-me';

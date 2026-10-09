@@ -13,7 +13,7 @@ export function FriendChallengeButton({ sessionId }: { sessionId: string }) {
     try {
       const r = await apiFetch<{ url: string }>('/api/challenges', { json: { sessionId } });
       setLink(r.url);
-      const text = `I just played ${BRAND.name} — can you beat my score on the same questions?`;
+      const text = `I just played ${BRAND.name}. Can you beat my score on the same questions?`;
       if (navigator.share) await navigator.share({ title: `${BRAND.name} challenge`, text, url: r.url }).catch(() => {});
       else await navigator.clipboard?.writeText(`${text} ${r.url}`).catch(() => {});
     } catch (e) {

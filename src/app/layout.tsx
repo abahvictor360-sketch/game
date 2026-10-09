@@ -1,6 +1,10 @@
 import type { Metadata, Viewport } from 'next';
 import { BRAND } from '@/components/Brand';
 import { PwaRegister } from '@/components/site/PwaRegister';
+// Self-hosted variable fonts (bundled at build time; no requests to Google).
+// Only the character subsets a page actually uses are downloaded.
+import '@fontsource-variable/bricolage-grotesque/wght.css';
+import '@fontsource-variable/plus-jakarta-sans/wght.css';
 import './globals.css';
 
 export const dynamic = 'force-dynamic';

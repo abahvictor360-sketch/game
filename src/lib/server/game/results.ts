@@ -7,7 +7,7 @@ import { isUuid } from './sessions';
 import { BRAND } from '@/lib/shared/brand';
 
 /**
- * Public-safe summary of a finished game: score and outcome grid only —
+ * Public-safe summary of a finished game: score and outcome grid only;
  * never questions or answers, so it can be shared.
  */
 export async function getResultSummary(q: Queryable, sessionId: string): Promise<ResultSummary | null> {
@@ -100,7 +100,7 @@ export function shareText(r: ResultSummary): string {
   const grid = r.grid.map((g) => (g === 'correct' ? '🟩' : g ? '🟥' : '⬜')).join('');
   const head =
     r.mode === 'daily'
-      ? `${BRAND.name} Daily ${r.challengeDate} — ${r.correctCount}/${r.totalQuestions}`
-      : `${BRAND.name} ${r.mode === 'classic' ? 'Classic' : 'Quiz'} — ${r.score} points (${r.correctCount}/${r.totalQuestions})`;
+      ? `${BRAND.name} Daily ${r.challengeDate}: ${r.correctCount}/${r.totalQuestions}`
+      : `${BRAND.name} ${r.mode === 'classic' ? 'Classic' : 'Quiz'}: ${r.score} points (${r.correctCount}/${r.totalQuestions})`;
   return `${head}\n${grid}\n${BRAND.tagline}`;
 }

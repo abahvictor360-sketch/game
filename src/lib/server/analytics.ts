@@ -2,7 +2,7 @@ import 'server-only';
 
 /**
  * Product analytics (PostHog capture API). Events carry pseudonymous player
- * ids and coarse properties only — never answers, emails or question text.
+ * ids and coarse properties only, never answers, emails or question text.
  * Without POSTHOG_KEY this is a no-op (logged in development).
  */
 export type AnalyticsEvent =

@@ -141,7 +141,7 @@ function cleanName(name?: string | null): string | null {
 
 /**
  * Admin bootstrap from server configuration (ADMIN_BOOTSTRAP_EMAILS), matched
- * against the identity provider's verified email — never against anything
+ * against the identity provider's verified email, never against anything
  * the player can edit.
  */
 async function grantBootstrapAdmin(q: Queryable, playerId: string, email: string | null) {

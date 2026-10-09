@@ -2,7 +2,7 @@ import { BRAND } from '@/lib/shared/brand';
 
 /**
  * Working logo and wordmark. Names and colours come from src/lib/shared/brand.ts;
- * replace the SVG below when the final logo is supplied — every screen uses it.
+ * replace the SVG below when the final logo is supplied; every screen uses it.
  */
 export { BRAND };
 const C = BRAND.colors;
@@ -22,7 +22,7 @@ export function BrandMark({ size = 40, className = '' }: { size?: number; classN
       </defs>
       <circle cx="32" cy="32" r="30" fill="url(#bm-bg)" stroke="url(#bm-gold)" strokeWidth="3" />
       <circle cx="32" cy="32" r="24" fill="none" stroke="#8fb3ff" strokeOpacity=".5" strokeDasharray="2 4" />
-      {/* Eight-point geometric star — an original motif */}
+      {/* Eight-point geometric star: an original motif */}
       <path d="M32 12l4.5 10.5L47 18l-4.5 10.5L53 32l-10.5 4.5L47 46l-10.5-4.5L32 52l-4.5-10.5L17 46l4.5-10.5L11 32l10.5-4.5L17 18l10.5 4.5z" fill="url(#bm-gold)" opacity=".95" />
       <text x="32" y="38.5" textAnchor="middle" fontSize="17" fontWeight="900" fill={C.stage950} fontFamily="system-ui, sans-serif">{BRAND.monogram}</text>
     </svg>

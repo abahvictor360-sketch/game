@@ -54,7 +54,7 @@ export function QuestionForm({ questionId, initial, categories, editsLive }: { q
         {err('text')}
       </label>
       <fieldset className="grid gap-3 md:grid-cols-2">
-        <legend className="mb-1 text-sm font-semibold">Options — choose the correct one</legend>
+        <legend className="mb-1 text-sm font-semibold">Options (choose the correct one)</legend>
         {(['A', 'B', 'C', 'D'] as const).map((l) => (
           <div key={l} className="flex items-start gap-2">
             <label className="mt-3 flex items-center gap-1 text-sm font-bold">

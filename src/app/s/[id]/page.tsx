@@ -8,7 +8,7 @@ import { ensureReady } from '@/lib/server/bootstrap';
 import { getResultSummary } from '@/lib/server/game/results';
 import { BRAND } from '@/lib/shared/brand';
 
-// Public share page: score and grid only — never questions or answers.
+// Public share page: score and grid only, never questions or answers.
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
   const db = await ensureReady();
@@ -47,7 +47,7 @@ export default async function SharePage({ params }: { params: Promise<{ id: stri
       </div>
       <p className="mt-8 font-semibold">How well do you know Africa?</p>
       <Link href={r.mode === 'daily' ? '/daily' : '/play/classic'} className="btn btn-gold mt-3 min-h-14 px-10 text-lg">
-        Play now — it’s free
+        Play now. It’s free!
       </Link>
     </main>
   );

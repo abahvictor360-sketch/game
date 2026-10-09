@@ -46,21 +46,21 @@ Commands:
      client from Google Cloud). Auth → URL configuration: site URL = your
      domain; redirect URL = `https://<domain>/auth/callback`.
    - Customise the magic-link email template with Fastora branding.
-2. **Vercel project** — environment variables (see `.env.example`):
+2. **Vercel project**: environment variables (see `.env.example`):
    `NEXT_PUBLIC_SITE_URL`, `SESSION_SECRET` (`openssl rand -base64 48`),
    `DATABASE_URL` (transaction pooler, port 6543), `NEXT_PUBLIC_SUPABASE_URL`,
    `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (server only),
    `ADMIN_BOOTSTRAP_EMAILS`, `CRON_SECRET`, optionally `POSTHOG_KEY`,
    `SENTRY_DSN`. Do **not** set `ALLOW_DEV_AUTH`, `SEED_FIXTURES`,
    `FEATURE_FLAGS` or `INSECURE_COOKIES` in production.
-3. **Cron** — `vercel.json` runs `/api/cron/tick` daily at 22:30 UTC (the
+3. **Cron**: `vercel.json` runs `/api/cron/tick` daily at 22:30 UTC (the
    Hobby plan allows daily crons only). It publishes today’s and tomorrow’s
    Daily Challenge, advances live matches, settles audience votes and abandons
    idle sessions. Matches, timeouts and votes are also advanced on every
    request, so daily is sufficient; on Pro you may use `* * * * *`.
-4. **Content** — import and approve the verified question bank; archive the
+4. **Content**: import and approve the verified question bank; archive the
    development fixtures if they were ever loaded.
-5. **Phase 2** — features stay hidden until switched on in Admin → Settings.
+5. **Phase 2**: features stay hidden until switched on in Admin → Settings.
 
 Safety rails: production refuses to start sessions without `SESSION_SECRET`,
 refuses the embedded database when `VERCEL_ENV=production`, disables the

@@ -245,7 +245,7 @@ export function GameClient({ initial }: { initial: SessionView }) {
 
       {offline ? (
         <div role="status" className="mt-3 rounded-xl bg-flame-500/90 px-4 py-2 text-center text-sm font-semibold text-white">
-          You’re offline. Your game is saved on our server — the timer keeps running, so reconnect as soon as you can.
+          You’re offline. Your game is saved on our server. The timer keeps running, so reconnect as soon as you can.
         </div>
       ) : null}
 
@@ -331,7 +331,7 @@ export function GameClient({ initial }: { initial: SessionView }) {
                 ? 'Asking the live audience… the timer is paused.'
                 : view.audience.status === 'ready'
                   ? `${view.audience.source === 'live' ? 'Live audience' : 'Previous players'} · ${view.audience.sampleSize} ${view.audience.sampleSize === 1 ? 'vote' : 'votes'}. The audience can be wrong!`
-                  : 'Not enough audience data — your lifeline has been restored.'}
+                  : 'Not enough audience data. Your lifeline has been restored.'}
             </p>
           ) : null}
 
@@ -384,7 +384,7 @@ export function GameClient({ initial }: { initial: SessionView }) {
 
       <Toast toast={toast} onDismiss={clear} />
 
-      <ReportDialog open={reportOpen} onClose={() => setReportOpen(false)} issuedId={fb?.issuedId ?? q.issuedId} onDone={() => show('Thanks — our editors will review this question.', 'success')} />
+      <ReportDialog open={reportOpen} onClose={() => setReportOpen(false)} issuedId={fb?.issuedId ?? q.issuedId} onDone={() => show('Thanks! Our editors will review this question.', 'success')} />
     </div>
   );
 }

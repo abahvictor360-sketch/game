@@ -259,7 +259,7 @@ export type QuestionDetail = {
   }[];
 };
 
-/** Full editorial view (admin only — includes the answer key). */
+/** Full editorial view (admin only; includes the answer key). */
 export async function getQuestionDetail(q: Queryable, questionId: string): Promise<QuestionDetail | null> {
   const [qq] = await q.query<{ id: string; status: QuestionStatus; is_fixture: boolean; live_version_id: string | null; latest_version_id: string }>(
     'select id, status, is_fixture, live_version_id, latest_version_id from public.questions where id = $1',

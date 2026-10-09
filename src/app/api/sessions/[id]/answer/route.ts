@@ -5,7 +5,7 @@ import { submitAnswer } from '@/lib/server/game/sessions';
 import { requirePlayer } from '@/lib/server/identity';
 import { rateLimit } from '@/lib/server/rate-limit';
 
-// The client sends only which option it chose — never a score or a verdict.
+// The client sends only which option it chose, never a score or a verdict.
 const Schema = z.object({ issuedId: z.string().uuid(), optionId: z.string().uuid(), submissionKey: z.string().min(8).max(64) });
 
 export const POST = api<{ params: Promise<{ id: string }> }>(async (req, db, ctx) => {

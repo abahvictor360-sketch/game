@@ -10,7 +10,7 @@ export default function ImportPage() {
       <H1>Import questions (CSV)</H1>
       <Card>
         <p className="text-sm">
-          Upload a UTF-8 CSV with one question per row (max {MAX_ROWS} rows, 2 MB). Rows are validated first — nothing is saved until you confirm. Imported questions start as drafts or in review; they are never published automatically.
+          Upload a UTF-8 CSV with one question per row (max {MAX_ROWS} rows, 2 MB). Rows are validated first; nothing is saved until you confirm. Imported questions start as drafts or in review; they are never published automatically.
         </p>
         <p className="mt-2 text-sm">
           Columns: <code className="text-xs">{CSV_COLUMNS.join(', ')}</code>. Use semicolons inside a cell for lists; sources are <code>Title|URL</code>.

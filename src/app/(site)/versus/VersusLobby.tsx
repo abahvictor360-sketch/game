@@ -89,12 +89,12 @@ export function VersusLobby({ live, ghosts, fallbackMs, initialError }: { live: 
     <Panel className="text-center">
       {!online ? (
         <p role="status" className="mb-4 rounded-xl bg-flame-500 px-3 py-2 text-sm font-semibold">
-          You’re offline. Versus needs a connection — we’ll carry on when you’re back.
+          You’re offline. Versus needs a connection. We’ll carry on when you’re back.
         </p>
       ) : null}
       {!live ? (
         <>
-          <p className="text-sm text-blue-100/85">Race a recording of a real player’s completed game. It’s clearly labelled — never presented as someone online now.</p>
+          <p className="text-sm text-blue-100/85">Race a recording of a real player’s completed game. It’s clearly labelled and never presented as someone online now.</p>
           <button type="button" className="btn btn-gold mt-5 w-full" onClick={raceRecording} disabled={busy || !online}>
             {busy ? 'Finding a recording…' : 'Play a recorded opponent'}
           </button>
@@ -115,7 +115,7 @@ export function VersusLobby({ live, ghosts, fallbackMs, initialError }: { live: 
                 </button>
               ) : null}
               {solo}
-              <p className="text-xs text-blue-100/60">Or keep waiting — we’ll keep searching.</p>
+              <p className="text-xs text-blue-100/60">Or keep waiting and we’ll keep searching.</p>
             </div>
           ) : (
             <p className="mt-1 text-xs text-blue-100/60">Usually under {Math.round(fallbackMs / 1000)} seconds.</p>

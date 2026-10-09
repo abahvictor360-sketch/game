@@ -30,7 +30,7 @@ export default async function HomePage() {
     [`${r.classic.questionCount} questions`, `${dist.easy} easy, ${dist.medium} medium, ${dist.hard} hard. Points rise as you climb: ${r.points.easy}, ${r.points.medium}, then ${r.points.hard}.`],
     ['Beat the clock', `${r.timersMs.easy / 1000} seconds for easy, ${r.timersMs.medium / 1000} for medium, ${r.timersMs.hard / 1000} for hard questions.`],
   ];
-  if (lifelines.length) rules.push([`${NUM[lifelines.length] ?? lifelines.length} lifeline${lifelines.length > 1 ? 's' : ''}`, `${lifelines.join(', ').replace(/^./, (c) => c.toUpperCase())} — once each per game.`]);
+  if (lifelines.length) rules.push([`${NUM[lifelines.length] ?? lifelines.length} lifeline${lifelines.length > 1 ? 's' : ''}`, `${lifelines.join(', ').replace(/^./, (c) => c.toUpperCase())}: once each per game.`]);
   return (
     <div className="space-y-8 pt-2">
       <section className="text-center">
@@ -42,7 +42,7 @@ export default async function HomePage() {
         <Link href="/play/classic" className="btn btn-gold mt-6 min-h-14 px-10 text-lg">
           ▶ Play Classic
         </Link>
-        <p className="mt-2 text-xs text-blue-100/70">Free account required — sign in or sign up in seconds.</p>
+        <p className="mt-2 text-xs text-blue-100/70">Free account required. Sign in or sign up in seconds.</p>
       </section>
 
       <div className="grid gap-5 md:grid-cols-2">
@@ -52,7 +52,7 @@ export default async function HomePage() {
             <span className="rounded-full bg-flame-500 px-3 py-1 text-xs font-black uppercase tracking-wider text-white">{daily.date}</span>
           </div>
           {!daily.available ? (
-            <p className="mt-3 text-sm text-blue-100/85">Today’s challenge isn’t ready yet. Our team has been alerted — please check back soon.</p>
+            <p className="mt-3 text-sm text-blue-100/85">Today’s challenge isn’t ready yet. Our team has been alerted. Please check back soon.</p>
           ) : daily.attempt?.status === 'completed' ? (
             <div className="mt-3 space-y-3 text-center">
               <p className="text-sm text-blue-100/85">
@@ -67,7 +67,7 @@ export default async function HomePage() {
           ) : (
             <>
               <p className="mt-3 text-sm text-blue-100/85">
-                {daily.questionCount} questions, the same for everyone today. One attempt — no lifelines.
+                {daily.questionCount} questions, the same for everyone today. One attempt, no lifelines.
                 {daily.participants ? ` ${daily.participants} players so far.` : ''}
               </p>
               <Link href="/daily" className="btn btn-flame mt-4 w-full">

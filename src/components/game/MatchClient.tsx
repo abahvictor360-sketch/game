@@ -228,7 +228,7 @@ export function MatchClient({ initial, supabase }: { initial: MatchView; supabas
       {offlineSince ? (
         <div role="status" className="mt-2 rounded-xl bg-flame-500 px-3 py-2 text-center text-sm font-semibold">
           {offlineLeft > 0
-            ? `Connection lost — reconnect within ${offlineLeft}s to stay in the match. The clock keeps running.`
+            ? `Connection lost. Reconnect within ${offlineLeft}s to stay in the match. The clock keeps running.`
             : 'Connection lost. If you don’t reconnect, the match is forfeited.'}
         </div>
       ) : null}
@@ -274,7 +274,7 @@ export function MatchClient({ initial, supabase }: { initial: MatchView; supabas
             {view.roundState === 'open'
               ? view.me.answered
                 ? view.opponent.answered
-                  ? 'Both answered — revealing…'
+                  ? 'Both answered. Revealing…'
                   : `Waiting for ${view.opponent.name}…`
                 : view.opponent.answered
                   ? `${view.opponent.name} has answered!`

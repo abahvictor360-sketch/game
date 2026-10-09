@@ -74,7 +74,7 @@ feedback; 360 px layout checks.
 - Service worker’s first activation reloaded the page and aborted in-flight
   form submissions (sign-in).
 - postgres.js double-encoded JSON parameters (stored settings and audience
-  data as JSON strings) — only visible against real Postgres.
+  data as JSON strings): only visible against real Postgres.
 - CSV files with mixed line endings merged rows.
 - Duplicate options and impossible dates slipped through CSV validation.
 - A forfeit at the exact kick-off cancelled the match instead of awarding it.
@@ -82,7 +82,7 @@ feedback; 360 px layout checks.
   Classic unavailable; selection now prefers calibrated difficulty but falls
   back to editorial difficulty.
 - Orange call-outs failed WCAG contrast with white text.
-- The "+points" pill (white on emerald-500) failed contrast — only caught
+- The "+points" pill (white on emerald-500) failed contrast: only caught
   when the scanned answer happened to be correct.
 - A player who left a live match kept seeing active rounds with answer
   buttons that failed ("You left this match").
@@ -104,12 +104,12 @@ PostgreSQL 16 on the same machine, pool size 10, 72 questions.
 | 400 | 12,800 | 212 req/s | 0 | 1,712 / 1,945 ms | 1,773 / 2,020 ms |
 
 Embedded development database (single connection), same machine: ~60 req/s,
-100 bots p95 ≈ 1.5–2.5 s, 0 errors — **not** representative of production.
+100 bots p95 ≈ 1.5–2.5 s, 0 errors: **not** representative of production.
 
 Interpretation: one Node process saturates around **~210 req/s**, CPU-bound.
 A real player makes roughly 2 requests per question every 10–20 s (≈0.1–0.2
 req/s), so one process should serve on the order of 1,000 simultaneously
-active players before latency degrades — an estimate, not a measurement.
+active players before latency degrades: an estimate, not a measurement.
 Serverless deployment scales processes horizontally; Postgres connections
 (pooler) and the leaderboard queries become the next limits. **Not tested:**
 real network latency from African mobile networks, Supabase-hosted Postgres,

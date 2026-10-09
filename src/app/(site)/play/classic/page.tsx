@@ -9,7 +9,7 @@ export const metadata = { title: 'Classic' };
 
 const ERRORS: Record<string, string> = {
   content_unavailable: 'Classic is temporarily unavailable while we add more questions. Please try again soon.',
-  rate_limited: 'You’re starting games very quickly — please wait a moment and try again.',
+  rate_limited: 'You’re starting games very quickly. Please wait a moment and try again.',
   internal: 'We couldn’t start your game. Please try again.',
 };
 
@@ -37,7 +37,7 @@ export default async function ClassicSetup({ searchParams }: { searchParams: Pro
         </dl>
         <ul className="mt-4 space-y-1 text-sm text-blue-100/85">
           <li>• {mr.questionCount} questions, four options each, one correct answer.</li>
-          <li>• {r.classic.endOnWrongAnswer ? 'A wrong answer ends the game.' : 'A wrong answer or timeout scores zero — but you keep playing.'}</li>
+          <li>• {r.classic.endOnWrongAnswer ? 'A wrong answer ends the game.' : 'A wrong answer or timeout scores zero, but you keep playing.'}</li>
           <li>• Lifelines (once each): {[mr.lifelines.fifty_fifty && '50:50', mr.lifelines.change_question && 'Change Question', mr.lifelines.ask_audience && 'Ask the Audience'].filter(Boolean).join(', ')}.</li>
         </ul>
         {account ? (

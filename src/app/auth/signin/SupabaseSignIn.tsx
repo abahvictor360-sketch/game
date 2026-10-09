@@ -46,7 +46,7 @@ export function SupabaseSignIn({ url, anonKey, next }: { url: string; anonKey: s
       </div>
       {state === 'sent' ? (
         <div role="status" className="rounded-lg bg-emerald-500/20 px-3 py-3 text-sm">
-          Check your inbox for a sign-in link from {BRAND.name}. It may take a minute — look in spam too. Didn’t get it?{' '}
+          Check your inbox for a sign-in link from {BRAND.name}. It may take a minute, so look in spam too. Didn’t get it?{' '}
           <button type="button" className="underline" onClick={() => setState('idle')}>
             Send another
           </button>

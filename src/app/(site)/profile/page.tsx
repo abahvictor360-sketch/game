@@ -58,7 +58,7 @@ export default async function ProfilePage() {
       <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {[
           ['Games', stats.games],
-          ['Best Classic', stats.best ?? '—'],
+          ['Best Classic', stats.best ?? '-'],
           ['Accuracy', `${accuracy}%`],
           ['Dailies', stats.dailies],
         ].map(([k, v]) => (

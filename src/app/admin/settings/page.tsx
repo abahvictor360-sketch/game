@@ -26,7 +26,7 @@ export default async function SettingsPage() {
           {versions.map((v) => (
             <li key={v.version} className="flex justify-between py-1.5">
               <span>
-                v{v.version} {v.version === cfg.version ? '(active)' : ''} — {v.note ?? 'no note'}
+                v{v.version} {v.version === cfg.version ? '(active)' : ''}: {v.note ?? 'no note'}
               </span>
               <span className="text-ink-500">
                 {v.actor ?? 'System'} · {v.created_at.toISOString().slice(0, 10)}

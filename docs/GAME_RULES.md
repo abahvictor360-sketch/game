@@ -38,7 +38,7 @@ changing settings never changes a game already underway.
   freshness window, balancing categories within the run.
 - The server issues the question with a deadline. The browser only displays
   the remaining time; the server judges timeliness (deadline + grace) and
-  correctness. Answers arrive as an option id — never a score.
+  correctness. Answers arrive as an option id: never a score.
 - **Elimination** (`endOnWrongAnswer`) is available as an explicit setting.
 
 ## Lifelines (once each per Classic game)
@@ -77,7 +77,7 @@ historical audience data.
 
 - Daily: eligible completed attempts for that day. All-time Classic: each
   player’s best eligible completed run under the current **scoring key**
-  (a signature of every score-affecting setting — changing points, timers or
+  (a signature of every score-affecting setting: changing points, timers or
   the ladder starts a fresh board instead of mixing incomparable results).
 - Ranking: score ↓, correct answers ↓, total validated response time ↑; exact
   ties share a rank (1, 1, 3).
@@ -89,7 +89,7 @@ historical audience data.
   private until the round closes (both answered or deadline + grace); then the
   correct answer, both outcomes and explanations are revealed.
 - Disconnect: a player without a heartbeat for 6 s is shown as disconnected;
-  20 s later they forfeit. Reconnecting within the window restores state —
+  20 s later they forfeit. Reconnecting within the window restores state:
   timers are never restarted. The remaining player finishes and wins by
   forfeit. Both gone, or a player missing at kick-off: cancelled, no result.
 - Ghost: after ~30 s without a live opponent the player may race a recording
