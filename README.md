@@ -397,6 +397,23 @@ Details, components and accessibility rules: [docs/DESIGN_SYSTEM.md](docs/DESIGN
   not a Supabase user, never staff. Unset the variable to switch it off.
 - **Password sign-in:** `/auth/password` also accepts Supabase Auth users
   that have a password.
+- **Demo accounts on the live Supabase project `fastora`** (created
+  2026-10-09; real Supabase Auth users, email pre-confirmed, sign in with
+  "Sign in with a password"):
+
+  | Email | Display name | Role |
+  |---|---|---|
+  | `demo.player1@fastora.africa` | Demo Amara | player |
+  | `demo.player2@fastora.africa` | Demo Kwame | player |
+  | `demo.player3@fastora.africa` | Demo Zawadi | player |
+  | `demo.admin@fastora.africa` | Demo Admin | **admin** |
+  | `demo@fastora.africa` | Demo Player | player (built-in shared login, `DEMO_ACCOUNT_PASSWORD` on Vercel) |
+
+  Passwords are **not stored in this repository**; they were handed to the
+  owner privately. To reset one: Supabase → Authentication → Users → the
+  user → *Reset password* (or run `update auth.users set encrypted_password =
+  extensions.crypt('<new>', extensions.gen_salt('bf')) where email = '…'`).
+  Remove `demo.admin` (or its row in `staff_roles`) before a public launch.
 - **Accounts:** Supabase Auth: Google OAuth and email magic link. The
   callback (`/auth/callback`) links the Supabase user to a Fastora player;
   if the visitor was a guest, their history comes with them (guest-played
