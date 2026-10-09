@@ -155,7 +155,8 @@ commands).
 | Team | *abahvictor360-3017's projects* (`team_Y1PGVkrNWi7NT2b2NtLd2TUh`) |
 | Project | **`fastora-quiz`** (`prj_58P2BqUFiruxui748V3RJpzUADtY`) |
 | Git | `abahvictor360-sketch/game`, production branch `claude/youthful-ptolemy-26brkb` — **every push deploys** |
-| Env vars set | `SESSION_SECRET` (sensitive), `CRON_SECRET` (sensitive), `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `ADMIN_BOOTSTRAP_EMAILS=abahvictor360@gmail.com` |
+| Public URL | **https://fastora-africa-quiz.vercel.app** (also `fastora-quiz-abahvictor360-3017s-projects.vercel.app`) |
+| Env vars set | `SESSION_SECRET` (sensitive), `CRON_SECRET` (sensitive), `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `ADMIN_BOOTSTRAP_EMAILS=abahvictor360@gmail.com`, `NEXT_PUBLIC_SITE_URL` |
 | Cron | Daily at 22:30 UTC (Hobby plan allows daily crons only) |
 | Function region | `lhr1` (London), next to the database |
 
@@ -179,8 +180,8 @@ commands).
    Deployment Protection** → turn off *Vercel Authentication* for production
    (or add a custom domain).
 3. **Supabase Auth URLs.** Supabase → **Authentication → URL Configuration**:
-   Site URL = your production URL (e.g. `https://fastora-quiz.vercel.app`);
-   Redirect URLs: add `https://fastora-quiz.vercel.app/auth/callback` (and your
+   Site URL = your production URL (`https://fastora-africa-quiz.vercel.app`);
+   Redirect URLs: add `https://fastora-africa-quiz.vercel.app/auth/callback` (and your
    custom domain's `/auth/callback` later). Then add `NEXT_PUBLIC_SITE_URL`
    with the same URL in Vercel.
 4. **Google sign-in (optional).** Create an OAuth client in Google Cloud
