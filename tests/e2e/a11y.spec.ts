@@ -26,3 +26,22 @@ test('no serious accessibility violations during gameplay and feedback', async (
   await page.waitForTimeout(400);
   expect(await check()).toEqual([]);
 });
+
+test.describe('smallest supported phone (360px)', () => {
+  test.use({ viewport: { width: 360, height: 740 } });
+  for (const path of [...PAGES, '/versus', '/help']) {
+    test(`no horizontal scrolling on ${path}`, async ({ page }) => {
+      await page.goto(path);
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+      expect(overflow).toBeLessThanOrEqual(0);
+    });
+  }
+  test('gameplay fits and answers are at least 44px tall', async ({ page }) => {
+    await page.goto('/play/classic');
+    await page.getByRole('button', { name: 'Start game' }).click();
+    await page.waitForURL(/\/play\//);
+    await page.locator('.answer').first().waitFor();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
+    for (const h of await page.locator('.answer').evaluateAll((els) => els.map((e) => e.getBoundingClientRect().height))) expect(h).toBeGreaterThanOrEqual(44);
+  });
+});

@@ -236,7 +236,7 @@ export function GameClient({ initial }: { initial: SessionView }) {
         <Link href="/" className="btn btn-ghost btn-sm" aria-label="Leave game (your progress is saved)">
           ✕ <span className="hidden sm:inline">Exit</span>
         </Link>
-        <p className="text-center text-xs font-bold uppercase tracking-[0.18em] text-blue-100/80">
+        <p className="text-center text-eyebrow font-bold uppercase text-blue-100/80">
           {MODE_LABEL[view.mode]}
           {view.challengeDate ? ` · ${view.challengeDate}` : ''}
         </p>
@@ -254,7 +254,7 @@ export function GameClient({ initial }: { initial: SessionView }) {
           {/* Emblem + score */}
           <div className="flex items-center justify-center gap-4 sm:gap-8">
             <div className="text-center">
-              <p className="text-[11px] font-bold uppercase tracking-widest text-blue-100/70">Score</p>
+              <p className="text-eyebrow font-bold uppercase text-blue-100/70">Score</p>
               <p className="font-display text-2xl font-black tabular-nums text-gold-400" aria-live="polite">
                 <span key={view.score} className={scoreChanged ? 'anim-bump' : undefined}>
                   {view.score}
@@ -263,7 +263,7 @@ export function GameClient({ initial }: { initial: SessionView }) {
             </div>
             <TimerEmblem remainingMs={view.phase === 'question' ? remaining : q.remainingMs} durationMs={q.durationMs} paused={q.paused} done={view.phase === 'feedback'} />
             <div className="text-center">
-              <p className="text-[11px] font-bold uppercase tracking-widest text-blue-100/70">Question</p>
+              <p className="text-eyebrow font-bold uppercase text-blue-100/70">Question</p>
               <p className="font-display text-2xl font-black tabular-nums">
                 {q.position + 1}
                 <span className="text-base text-blue-100/60">/{view.totalQuestions}</span>
@@ -301,7 +301,7 @@ export function GameClient({ initial }: { initial: SessionView }) {
             <div className="railed">
               <div className="hex" style={{ ['--hex' as string]: '28px' }}>
                 <div className="hex-inner px-9 py-5 text-center">
-                  <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.2em] text-gold-300">{q.category.name}</p>
+                  <p className="mb-1 text-eyebrow font-bold uppercase text-gold-300">{q.category.name}</p>
                   <h1 id="question-text" className="text-lg font-bold leading-snug sm:text-xl">
                     {q.text}
                   </h1>
@@ -346,7 +346,7 @@ export function GameClient({ initial }: { initial: SessionView }) {
                 <h2 id="feedback-title" className={`font-display text-xl font-black ${fb.outcome === 'correct' ? 'text-emerald-700' : 'text-coral-700'}`}>
                   {fb.outcome === 'correct' ? 'Correct!' : fb.outcome === 'timeout' ? 'Time’s up' : 'Not quite'}
                 </h2>
-                <span className={`rounded-full px-3 py-1 text-sm font-black ${fb.points ? 'bg-emerald-500 text-white' : 'bg-ivory-200 text-ink-700'}`}>+{fb.points} pts</span>
+                <span className={`rounded-full px-3 py-1 text-sm font-black ${fb.points ? 'bg-emerald-700 text-white' : 'bg-ivory-200 text-ink-700'}`}>+{fb.points} pts</span>
               </div>
               <p className="mt-2 leading-relaxed text-ink-700">{fb.explanation}</p>
               {fb.sources.length ? (

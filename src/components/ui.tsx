@@ -54,6 +54,26 @@ export function Skeleton({ className = '' }: { className?: string }) {
   return <div className={`skeleton ${className}`} aria-hidden="true" />;
 }
 
+/** Placeholder matching the gameplay layout (score · timer · question · four answers). */
+export function GameSkeleton() {
+  return (
+    <div className="relative z-10 mx-auto flex max-w-3xl flex-col items-center gap-4 px-4 pt-14" aria-busy="true" aria-label="Loading the game">
+      <div className="flex items-center gap-6">
+        <Skeleton className="h-10 w-14" />
+        <Skeleton className="h-24 w-24 rounded-full" />
+        <Skeleton className="h-10 w-14" />
+      </div>
+      <Skeleton className="h-8 w-40 rounded-full" />
+      <Skeleton className="h-24 w-full" />
+      <div className="grid w-full gap-3 sm:grid-cols-2">
+        {[0, 1, 2, 3].map((i) => (
+          <Skeleton key={i} className="h-14 w-full" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function Tabs({ items }: { items: { href: string; label: string; active: boolean }[] }) {
   return (
     <nav aria-label="Views" className="mx-auto mb-5 flex w-fit gap-1 rounded-full bg-stage-900/80 p-1 ring-1 ring-rail/40">
@@ -97,5 +117,26 @@ export function ResultGrid({ grid, size = 'md' }: { grid: ('correct' | 'incorrec
         </li>
       ))}
     </ol>
+  );
+}
+
+/** CSS-only celebration (no script). Hidden entirely for prefers-reduced-motion. */
+export function Confetti({ pieces = 36 }: { pieces?: number }) {
+  const colors = ['var(--color-gold-400)', 'var(--color-emerald-400)', 'var(--color-coral-400)', 'var(--color-stage-500)', '#fff'];
+  return (
+    <div className="confetti" aria-hidden="true">
+      {Array.from({ length: pieces }, (_, i) => (
+        <i
+          key={i}
+          style={{
+            left: `${(i * 37) % 100}%`,
+            background: colors[i % colors.length],
+            animationDuration: `${2.4 + ((i * 7) % 10) / 6}s`,
+            animationDelay: `${((i * 13) % 10) / 12}s`,
+            transform: `rotate(${(i * 47) % 360}deg)`,
+          }}
+        />
+      ))}
+    </div>
   );
 }

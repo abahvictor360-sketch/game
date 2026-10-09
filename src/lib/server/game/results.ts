@@ -4,6 +4,7 @@ import type { Queryable } from '../db';
 import { gridFor } from './daily';
 import { classicRankFor, dailyRankFor } from './leaderboard';
 import { isUuid } from './sessions';
+import { BRAND } from '@/lib/shared/brand';
 
 /**
  * Public-safe summary of a finished game: score and outcome grid only —
@@ -99,7 +100,7 @@ export function shareText(r: ResultSummary): string {
   const grid = r.grid.map((g) => (g === 'correct' ? '🟩' : g ? '🟥' : '⬜')).join('');
   const head =
     r.mode === 'daily'
-      ? `Fastora Daily ${r.challengeDate} — ${r.correctCount}/${r.totalQuestions}`
-      : `Fastora ${r.mode === 'classic' ? 'Classic' : 'Quiz'} — ${r.score} points (${r.correctCount}/${r.totalQuestions})`;
+      ? `${BRAND.name} Daily ${r.challengeDate} — ${r.correctCount}/${r.totalQuestions}`
+      : `${BRAND.name} ${r.mode === 'classic' ? 'Classic' : 'Quiz'} — ${r.score} points (${r.correctCount}/${r.totalQuestions})`;
   return `${head}\n${grid}\nHow well do you know Africa?`;
 }

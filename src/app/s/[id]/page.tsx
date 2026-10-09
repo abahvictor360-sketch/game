@@ -6,6 +6,7 @@ import { BrandWordmark } from '@/components/Brand';
 import { HexBar, ResultGrid } from '@/components/ui';
 import { ensureReady } from '@/lib/server/bootstrap';
 import { getResultSummary } from '@/lib/server/game/results';
+import { BRAND } from '@/lib/shared/brand';
 
 // Public share page: score and grid only — never questions or answers.
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
@@ -13,7 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const db = await ensureReady();
   const r = await getResultSummary(db, id);
   if (!r) return { title: 'Result not found' };
-  const title = `${r.playerName} scored ${r.score} on Fastora`;
+  const title = `${r.playerName} scored ${r.score} on ${BRAND.name}`;
   return {
     title,
     description: `${r.correctCount}/${r.totalQuestions} correct. How well do you know Africa? Play free.`,
@@ -31,7 +32,7 @@ export default async function SharePage({ params }: { params: Promise<{ id: stri
     <main id="main" className="relative z-10 mx-auto flex min-h-dvh max-w-md flex-col items-center justify-center px-4 py-10 text-center">
       <BrandWordmark />
       <HexBar railed className="mt-8 w-full" innerClassName="px-8 py-3">
-        <p className="font-display text-lg font-black">{r.mode === 'daily' ? `Daily Challenge · ${r.challengeDate}` : 'Fastora Classic'}</p>
+        <p className="font-display text-lg font-black">{r.mode === 'daily' ? `Daily Challenge · ${r.challengeDate}` : `${BRAND.name} Classic`}</p>
       </HexBar>
       <div className="mt-6 flex items-center gap-3">
         <Avatar name={r.avatarKey} size={44} />

@@ -26,7 +26,7 @@ export default async function ClassicSetup({ searchParams }: { searchParams: Pro
         <dl className="grid grid-cols-3 gap-3 text-center">
           {(['easy', 'medium', 'hard'] as const).map((d) => (
             <div key={d} className="rounded-xl bg-white/5 p-3">
-              <dt className="text-xs font-bold uppercase tracking-wider text-blue-100/70">{d}</dt>
+              <dt className="text-label font-bold uppercase text-blue-100/70">{d}</dt>
               <dd className="font-display text-2xl font-black text-gold-400">{r.points[d]}</dd>
               <dd className="text-xs text-blue-100/80">
                 {r.classic.distribution[d]} questions · {r.timersMs[d] / 1000}s

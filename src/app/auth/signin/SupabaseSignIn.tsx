@@ -1,6 +1,7 @@
 'use client';
 import { createBrowserClient } from '@supabase/ssr';
 import { useMemo, useState } from 'react';
+import { BRAND } from '@/lib/shared/brand';
 
 export function SupabaseSignIn({ url, anonKey, next }: { url: string; anonKey: string; next: string }) {
   const supabase = useMemo(() => createBrowserClient(url, anonKey), [url, anonKey]);
@@ -45,7 +46,7 @@ export function SupabaseSignIn({ url, anonKey, next }: { url: string; anonKey: s
       </div>
       {state === 'sent' ? (
         <div role="status" className="rounded-lg bg-emerald-500/20 px-3 py-3 text-sm">
-          Check your inbox for a sign-in link from Fastora. It may take a minute — look in spam too. Didn’t get it?{' '}
+          Check your inbox for a sign-in link from {BRAND.name}. It may take a minute — look in spam too. Didn’t get it?{' '}
           <button type="button" className="underline" onClick={() => setState('idle')}>
             Send another
           </button>

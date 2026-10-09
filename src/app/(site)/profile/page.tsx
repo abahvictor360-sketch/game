@@ -63,7 +63,7 @@ export default async function ProfilePage() {
           ['Dailies', stats.dailies],
         ].map(([k, v]) => (
           <div key={k} className="panel p-3 text-center">
-            <dt className="text-xs font-bold uppercase tracking-wider text-blue-100/60">{k}</dt>
+            <dt className="text-label font-bold uppercase text-blue-100/60">{k}</dt>
             <dd className="font-display text-2xl font-black text-gold-400">{v}</dd>
           </div>
         ))}

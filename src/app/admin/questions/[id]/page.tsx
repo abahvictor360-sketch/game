@@ -115,7 +115,7 @@ export default async function QuestionDetailPage({ params, searchParams }: { par
 
       <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
         <Card>
-          <p className="text-xs font-bold uppercase tracking-wider text-ink-500">
+          <p className="text-label font-bold uppercase text-ink-500">
             Latest version v{latest.version} · <Status value={latest.state} /> {live && live.id !== latest.id ? <> · live is v{live.version}</> : null}
           </p>
           <h2 className="mt-2 text-lg font-bold">{latest.text}</h2>

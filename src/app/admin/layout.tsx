@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import { BrandMark } from '@/components/Brand';
 import { requireStaff } from '@/lib/server/staff';
+import { BRAND } from '@/lib/shared/brand';
 
-export const metadata = { title: { default: 'Admin', template: '%s · Fastora Admin' }, robots: { index: false } };
+export const metadata = { title: { default: 'Admin', template: `%s · ${BRAND.name} Admin` }, robots: { index: false } };
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const staff = await requireStaff();
@@ -18,7 +19,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <header className="border-b border-ivory-200 bg-stage-900 text-white">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-4 px-4 py-3">
           <Link href="/admin" className="flex items-center gap-2 font-display font-black">
-            <BrandMark size={30} /> Fastora Admin
+            <BrandMark size={30} /> {BRAND.name} Admin
           </Link>
           <nav aria-label="Admin" className="flex flex-wrap gap-1 text-sm font-semibold">
             {links.map(([href, label]) => (

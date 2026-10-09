@@ -68,7 +68,7 @@ export function HelperClient() {
   return (
     <Panel>
       <div className="flex items-center justify-between gap-2">
-        <p className="text-xs font-bold uppercase tracking-widest text-gold-300">A player needs your help</p>
+        <p className="text-label font-bold uppercase text-gold-300">A player needs your help</p>
         <span role="timer" aria-label={`${secondsLeft} seconds left to vote`} className="font-display text-lg font-black tabular-nums text-gold-400">
           {secondsLeft}s
         </span>

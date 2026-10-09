@@ -222,7 +222,7 @@ export function MatchClient({ initial, supabase }: { initial: MatchView; supabas
         <button type="button" className="btn btn-ghost btn-sm" onClick={() => setConfirmLeave(true)}>
           Leave
         </button>
-        <p className="text-xs font-bold uppercase tracking-[0.18em] text-blue-100/80">Live match</p>
+        <p className="text-eyebrow font-bold uppercase text-blue-100/80">Live match</p>
         <MuteButton muted={muted} onToggle={toggle} />
       </header>
       {offlineSince ? (
@@ -260,7 +260,7 @@ export function MatchClient({ initial, supabase }: { initial: MatchView; supabas
           <div className="mt-4 railed">
             <div className="hex" style={{ ['--hex' as string]: '28px' }}>
               <div className="hex-inner px-9 py-5 text-center">
-                <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.2em] text-gold-300">{q.category}</p>
+                <p className="mb-1 text-eyebrow font-bold uppercase text-gold-300">{q.category}</p>
                 <h1 className="text-lg font-bold">{q.text}</h1>
               </div>
             </div>

@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { BRAND, WHATSAPP_GREEN } from '@/lib/shared/brand';
 
 /**
  * Sharing: native share sheet where available, WhatsApp link, copy, and a
@@ -15,7 +16,7 @@ export function ShareActions({ text, url, imageUrl, sessionId }: { text: string;
   async function nativeShare() {
     try {
       if (navigator.share) {
-        await navigator.share({ title: 'My Fastora result', text, url });
+        await navigator.share({ title: `My ${BRAND.name} result`, text, url });
         log('native');
         return;
       }
@@ -39,7 +40,7 @@ export function ShareActions({ text, url, imageUrl, sessionId }: { text: string;
       <button type="button" className="btn btn-gold" onClick={nativeShare}>
         Share result
       </button>
-      <a className="btn text-white" style={{ background: '#1f9d55' }} href={`https://wa.me/?text=${encodeURIComponent(full)}`} target="_blank" rel="noopener noreferrer" onClick={() => log('whatsapp')}>
+      <a className="btn text-white" style={{ background: WHATSAPP_GREEN }} href={`https://wa.me/?text=${encodeURIComponent(full)}`} target="_blank" rel="noopener noreferrer" onClick={() => log('whatsapp')}>
         Share on WhatsApp
       </a>
       <button type="button" className="btn btn-ghost" onClick={copy} aria-live="polite">

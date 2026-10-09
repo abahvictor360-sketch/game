@@ -24,7 +24,7 @@ export default defineConfig({
       ALLOW_DEV_AUTH: 'true',
       INSECURE_COOKIES: 'true',
       ADMIN_BOOTSTRAP_EMAILS: 'admin@fastora.test',
-      FEATURE_FLAGS: 'multiplayer,ghostOpponents,friendChallenges',
+      FEATURE_FLAGS: 'multiplayer,ghostOpponents,friendChallenges,askAudience',
       CRON_SECRET: 'e2e-cron',
     },
   },

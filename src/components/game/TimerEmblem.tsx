@@ -16,7 +16,7 @@ export function TimerEmblem({ remainingMs, durationMs, paused, done, label }: { 
       </svg>
       <div className="relative text-center">
         {paused ? (
-          <span className="block text-xs font-bold uppercase tracking-widest text-gold-300">Paused</span>
+          <span className="block text-label font-bold uppercase text-gold-300">Paused</span>
         ) : (
           <span className={`font-display text-4xl font-black tabular-nums ${urgent ? 'text-coral-400' : 'text-white'}`} aria-hidden="true">
             {done ? '✓' : secs}

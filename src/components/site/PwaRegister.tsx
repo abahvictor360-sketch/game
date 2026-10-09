@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import { BRAND } from '@/lib/shared/brand';
 
 /** Registers the service worker and offers a reload when an update is ready. */
 export function PwaRegister() {
@@ -30,7 +31,7 @@ export function PwaRegister() {
   if (!waiting) return null;
   return (
     <div role="status" className="fixed inset-x-4 bottom-4 z-50 mx-auto flex max-w-md items-center justify-between gap-3 rounded-xl bg-stage-900 px-4 py-3 text-sm text-white shadow-xl ring-1 ring-rail">
-      A new version of Fastora is ready.
+      A new version of {BRAND.name} is ready.
       <button type="button" className="btn btn-gold btn-sm" onClick={() => {
           updateRequested.current = true;
           waiting.postMessage({ type: 'SKIP_WAITING' });

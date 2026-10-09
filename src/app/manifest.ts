@@ -1,16 +1,17 @@
 import type { MetadataRoute } from 'next';
+import { BRAND } from '@/lib/shared/brand';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Fastora African Quiz Game',
-    short_name: 'Fastora',
+    name: BRAND.fullName,
+    short_name: BRAND.name,
     description: 'How well do you know Africa? A fast, fun quiz with a Daily Challenge.',
     start_url: '/?source=pwa',
     scope: '/',
     display: 'standalone',
     orientation: 'portrait',
-    background_color: '#04103a',
-    theme_color: '#0d3a92',
+    background_color: BRAND.colors.stage950,
+    theme_color: BRAND.colors.stage800,
     categories: ['games', 'education', 'trivia'],
     icons: [
       { src: '/icons/192', sizes: '192x192', type: 'image/png' },

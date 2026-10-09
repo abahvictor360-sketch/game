@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ShareActions } from '@/components/results/ShareActions';
 import { FriendChallengeButton } from '@/components/results/FriendChallengeButton';
-import { Badge, HexBar, Panel, ResultGrid } from '@/components/ui';
+import { Badge, Confetti, HexBar, Panel, ResultGrid } from '@/components/ui';
 import { DailyCountdown } from '@/components/site/DailyCountdown';
 import { ensureReady } from '@/lib/server/bootstrap';
 import { getActiveConfig } from '@/lib/server/config';
@@ -49,8 +49,9 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
+      {summary.accuracy >= 70 || (versus && summary.score > versus.theirs) || (summary.mode === 'ghost' && (vs.ghost_score ?? Infinity) < summary.score) ? <Confetti /> : null}
       <section className="text-center anim-pop">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-blue-100/70">
+        <p className="text-eyebrow font-bold uppercase text-blue-100/70">
           {summary.mode === 'daily' ? `Daily Challenge · ${summary.challengeDate}` : summary.mode === 'friend' ? 'Friend Challenge' : summary.mode === 'ghost' ? 'Versus' : 'Classic'}
         </p>
         <HexBar railed className="mx-auto mt-3 max-w-sm" innerClassName="px-8 py-3">
@@ -59,7 +60,7 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
         <div className="emblem mx-auto mt-6 grid h-40 w-40 place-items-center">
           <div>
             <p className="font-display text-5xl font-black tabular-nums text-gold-400">{summary.score}</p>
-            <p className="text-xs font-bold uppercase tracking-widest text-blue-100/80">points</p>
+            <p className="text-label font-bold uppercase text-blue-100/80">points</p>
           </div>
         </div>
         <p className="mt-4 text-blue-100/90">
@@ -141,7 +142,7 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
         <ol className="space-y-3">
           {review.map((r) => (
             <li key={r.position} className="ivory rounded-2xl p-4">
-              <div className="flex items-center justify-between gap-2 text-xs font-bold uppercase tracking-wider text-ink-500">
+              <div className="flex items-center justify-between gap-2 text-label font-bold uppercase text-ink-500">
                 <span>
                   Q{r.position + 1} · {r.category} · {r.difficulty}
                 </span>

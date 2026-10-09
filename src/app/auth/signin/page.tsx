@@ -4,6 +4,7 @@ import { HexBar, Panel } from '@/components/ui';
 import { authProvider } from '@/lib/server/auth-provider';
 import { currentPlayer } from '@/lib/server/identity';
 import { SupabaseSignIn } from './SupabaseSignIn';
+import { BRAND } from '@/lib/shared/brand';
 
 export const metadata = { title: 'Sign in' };
 
@@ -21,7 +22,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
   return (
     <main id="main" className="relative z-10 mx-auto max-w-md px-4 py-10">
       <div className="text-center">
-        <Link href="/" aria-label="Fastora home">
+        <Link href="/" aria-label={`${BRAND.name} home`}>
           <BrandWordmark />
         </Link>
       </div>
