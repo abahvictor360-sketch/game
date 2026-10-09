@@ -137,8 +137,8 @@ type GlobalWithDb = typeof globalThis & { __fastoraDb?: Promise<Db> };
 export function resolveDbTarget(): { kind: 'postgres'; url: string } | { kind: 'pglite'; dir: string } {
   const url = process.env.DATABASE_URL;
   if (url) return { kind: 'postgres', url };
-  if (process.env.VERCEL_ENV === 'production') {
-    throw new Error('DATABASE_URL is required in production; the embedded database is for development only.');
+  if (process.env.VERCEL || process.env.VERCEL_ENV === 'production') {
+    throw new Error('DATABASE_URL is required on Vercel; the embedded database is for local development only.');
   }
   return { kind: 'pglite', dir: process.env.PGLITE_DIR ?? path.join(process.cwd(), '.data', 'pglite') };
 }
