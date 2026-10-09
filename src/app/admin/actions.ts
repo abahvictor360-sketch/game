@@ -185,6 +185,7 @@ export async function saveSettings(_prev: SettingsState, form: FormData): Promis
   draft.timersMs = { easy: sec('timer_easy'), medium: sec('timer_medium'), hard: sec('timer_hard') };
   draft.points = { easy: num('points_easy'), medium: num('points_medium'), hard: num('points_hard') };
   draft.latencyGraceMs = sec('grace');
+  draft.timeoutPenaltyFactor = Math.min(100, Math.max(0, num('timeout_penalty'))) / 100;
   draft.classic.distribution = { easy: num('classic_easy'), medium: num('classic_medium'), hard: num('classic_hard') };
   draft.classic.questionCount = draft.classic.distribution.easy + draft.classic.distribution.medium + draft.classic.distribution.hard;
   draft.classic.endOnWrongAnswer = form.get('endOnWrongAnswer') === 'on';

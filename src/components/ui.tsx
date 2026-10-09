@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
+import { Icon } from '@/components/Icon';
 
 export function Panel({ children, className = '' }: { children: ReactNode; className?: string }) {
   return <section className={`panel p-5 ${className}`}>{children}</section>;
@@ -31,7 +32,7 @@ export function EmptyState({ title, children, action }: { title: string; childre
   return (
     <div className="panel px-5 py-10 text-center">
       <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-full bg-stage-700 text-gold-400" aria-hidden="true">
-        ★
+        <Icon name="star" size={22} />
       </div>
       <h2 className="font-display text-lg font-extrabold">{title}</h2>
       {children ? <div className="mx-auto mt-2 max-w-prose text-sm text-blue-100/80">{children}</div> : null}

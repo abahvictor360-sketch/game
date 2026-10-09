@@ -76,7 +76,9 @@ describe('Classic mode', () => {
     view = await db.tx((q) => getSessionView(q, p.id, id));
     expect(view.phase).toBe('feedback');
     expect(view.feedback!.outcome).toBe('timeout');
-    expect(view.feedback!.points).toBe(0);
+    // Time-out penalty (default 50%): an easy question costs 50 of the 100 earned.
+    expect(view.feedback!.points).toBe(-50);
+    expect(view.score).toBe(50);
     // A late answer cannot overwrite the timeout.
     const late = await correctOption(db, view.question!.issuedId);
     await expect(db.tx((q) => submitAnswer(q, p.id, id, { issuedId: view.question!.issuedId, optionId: late, submissionKey: key() }))).rejects.toMatchObject({ reason: 'already_answered' });
@@ -90,6 +92,8 @@ describe('Classic mode', () => {
     const opt = await correctOption(db, view.question!.issuedId);
     const after = await db.tx((q) => submitAnswer(q, p.id, id, { issuedId: view.question!.issuedId, optionId: opt, submissionKey: key() }));
     expect(after.feedback!.outcome).toBe('timeout');
+    // The penalty never takes a score below zero.
+    expect(after.feedback!.points).toBe(0);
     expect(after.score).toBe(0);
   });
 

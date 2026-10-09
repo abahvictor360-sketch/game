@@ -6,6 +6,8 @@ export type Outcome = 'correct' | 'incorrect' | 'timeout';
  * Points for one answer. Classic and Daily use difficulty points only
  * (speedBonusFactor 0); versus modes add a speed bonus:
  *   speedBonus = floor(base × factor × remaining / duration)
+ * A timeout can cost points: -floor(base × timeoutPenaltyFactor). Callers cap
+ * the loss with `currentScore` so a game's score never goes below zero.
  */
 export function scoreAnswer(args: {
   outcome: Outcome;
@@ -14,7 +16,14 @@ export function scoreAnswer(args: {
   speedBonusFactor: number;
   remainingMs: number;
   durationMs: number;
+  timeoutPenaltyFactor?: number;
+  currentScore?: number;
 }): number {
+  if (args.outcome === 'timeout') {
+    const penalty = Math.floor(args.points[args.difficulty] * (args.timeoutPenaltyFactor ?? 0));
+    const loss = Math.min(penalty, Math.max(0, args.currentScore ?? penalty));
+    return loss > 0 ? -loss : 0;
+  }
   if (args.outcome !== 'correct') return 0;
   const base = args.points[args.difficulty];
   if (args.speedBonusFactor <= 0) return base;

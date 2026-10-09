@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Card, H1, Status, btnPrimary, btnQuiet } from '@/components/admin/ui';
 import { ensureReady } from '@/lib/server/bootstrap';
+import { Icon } from '@/components/Icon';
 
 const PAGE = 30;
 
@@ -132,11 +133,11 @@ export default async function QuestionsList({ searchParams }: { searchParams: Pr
         </table>
       </Card>
       <nav aria-label="Pages" className="mt-3 flex items-center justify-between text-sm">
-        {page > 1 ? <Link className={btnQuiet} href={qs(page - 1)}>← Previous</Link> : <span />}
+        {page > 1 ? <Link className={btnQuiet} href={qs(page - 1)}><Icon name="arrow-left" size={16} /> Previous</Link> : <span />}
         <span className="text-ink-500">
           {n} questions · page {page} of {Math.max(1, Math.ceil(n / PAGE))}
         </span>
-        {page * PAGE < n ? <Link className={btnQuiet} href={qs(page + 1)}>Next →</Link> : <span />}
+        {page * PAGE < n ? <Link className={btnQuiet} href={qs(page + 1)}>Next <Icon name="arrow-right" size={16} /></Link> : <span />}
       </nav>
     </div>
   );

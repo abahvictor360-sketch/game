@@ -25,6 +25,11 @@ export const RulesSchema = z.object({
   points: perDifficulty.refine((p) => Object.values(p).every((v) => v >= 0 && v <= 10000)),
   /** Allowance for network latency when judging whether an answer was timely. */
   latencyGraceMs: z.number().int().min(0).max(5000),
+  /**
+   * Running out of time costs this share of the question's points (Classic,
+   * Daily and friend challenges). 0 = no penalty. A score never goes below 0.
+   */
+  timeoutPenaltyFactor: z.number().min(0).max(1),
   classic: z.object({
     questionCount: z.number().int().min(3).max(30),
     distribution: perDifficulty,
@@ -85,6 +90,7 @@ export const DEFAULT_RULES: Rules = {
   timersMs: { easy: 20000, medium: 18000, hard: 15000 },
   points: { easy: 100, medium: 200, hard: 300 },
   latencyGraceMs: 1000,
+  timeoutPenaltyFactor: 0.5,
   classic: {
     questionCount: 15,
     distribution: { easy: 5, medium: 5, hard: 5 },
@@ -161,6 +167,8 @@ export type ModeRules = {
   timerMs: (d: Difficulty) => number;
   points: Record<Difficulty, number>;
   speedBonusFactor: number;
+  /** Share of the question's points lost on a timeout (0 = none). */
+  timeoutPenaltyFactor: number;
   lifelines: Record<Lifeline, boolean>;
   endOnWrongAnswer: boolean;
 };
@@ -178,6 +186,7 @@ export function modeRules(mode: GameMode, rules: Rules, flags: Flags): ModeRules
         timerMs: (d) => rules.timersMs[d],
         points: rules.points,
         speedBonusFactor: rules.classic.speedBonusFactor,
+        timeoutPenaltyFactor: rules.timeoutPenaltyFactor,
         lifelines: {
           fifty_fifty: rules.classic.lifelines.fifty_fifty,
           change_question: rules.classic.lifelines.change_question,
@@ -193,6 +202,7 @@ export function modeRules(mode: GameMode, rules: Rules, flags: Flags): ModeRules
         timerMs: () => rules.daily.timerMs,
         points: rules.points,
         speedBonusFactor: 0,
+        timeoutPenaltyFactor: rules.timeoutPenaltyFactor,
         lifelines: NO_LIFELINES,
         endOnWrongAnswer: false,
       };
@@ -214,6 +224,8 @@ export function modeRules(mode: GameMode, rules: Rules, flags: Flags): ModeRules
         timerMs: (d) => rules.timersMs[d],
         points: rules.points,
         speedBonusFactor: rules.versus.speedBonusFactor,
+        // Versus already rewards speed with a bonus; no timeout penalty there.
+        timeoutPenaltyFactor: 0,
         lifelines: NO_LIFELINES,
         endOnWrongAnswer: false,
       };
@@ -234,6 +246,7 @@ export function scoringKey(mode: GameMode, rules: Rules, flags: Flags): string {
     t: m.ladder.map((d) => m.timerMs(d)),
     p: m.points,
     s: m.speedBonusFactor,
+    tp: m.timeoutPenaltyFactor,
     e: m.endOnWrongAnswer,
     lf: base === 'classic' ? rules.classic.lifelines : null,
   });

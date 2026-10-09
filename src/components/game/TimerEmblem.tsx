@@ -1,5 +1,6 @@
 'use client';
 
+import { Icon } from '@/components/Icon';
 /** Circular emblem with a countdown ring. The server owns the real deadline. */
 export function TimerEmblem({ remainingMs, durationMs, paused, done, label }: { remainingMs: number; durationMs: number; paused?: boolean; done?: boolean; label?: string }) {
   const r = 44;
@@ -19,7 +20,7 @@ export function TimerEmblem({ remainingMs, durationMs, paused, done, label }: { 
           <span className="block text-label font-bold uppercase text-gold-300">Paused</span>
         ) : (
           <span className={`font-display text-4xl font-black tabular-nums ${urgent ? 'text-coral-400' : 'text-white'}`} aria-hidden="true">
-            {done ? '✓' : secs}
+            {done ? <Icon name="check" size={36} strokeWidth={3} /> : secs}
           </span>
         )}
       </div>

@@ -435,6 +435,23 @@ body {
   animation: confetti-fall linear forwards;
 }
 
+/* Rule lists: a small gold bead (diamond) instead of a typed bullet. */
+.dot-list > li {
+  position: relative;
+  padding-left: 1.1rem;
+}
+.dot-list > li::before {
+  content: '';
+  position: absolute;
+  left: 0.15rem;
+  top: 0.62em;
+  width: 0.42rem;
+  height: 0.42rem;
+  background: var(--color-gold-400);
+  transform: rotate(45deg);
+  border-radius: 1px;
+}
+
 /* ==========================================================================
    Motion & interaction
    One rule: movement explains what happened (a pick, a reveal, a score).

@@ -1,6 +1,7 @@
 'use client';
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { useSound } from '@/lib/client/sound';
+import { Icon } from '@/components/Icon';
 
 export type ToastTone = 'error' | 'info' | 'success';
 export type ToastMessage = { text: string; tone: ToastTone };
@@ -33,7 +34,7 @@ export function Toast({ toast, onDismiss }: { toast: ToastMessage | null; onDism
       <span>{toast.text}</span>
       {onDismiss ? (
         <button type="button" onClick={onDismiss} className="-my-2 -mr-2 grid min-h-11 min-w-11 place-items-center rounded-lg hover:bg-white/10" aria-label="Dismiss">
-          ✕
+          <Icon name="x" size={18} />
         </button>
       ) : null}
     </div>
@@ -97,7 +98,7 @@ export function ConfirmDialog({
 export function MuteButton({ muted, onToggle }: { muted: boolean; onToggle: () => void }) {
   return (
     <button type="button" onClick={onToggle} className="btn btn-ghost btn-sm" aria-pressed={!muted} aria-label={muted ? 'Sound off. Turn sound on' : 'Sound on. Turn sound off'}>
-      <span aria-hidden="true">{muted ? '🔇' : '🔊'}</span>
+      <Icon name={muted ? 'volume-off' : 'volume-on'} size={20} />
     </button>
   );
 }

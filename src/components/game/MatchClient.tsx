@@ -10,6 +10,7 @@ import { ConfirmDialog, MuteButton, Toast, useOnline, useSound, useToast } from 
 import { ResultGrid } from '../ui';
 import { AnswerButton, type AnswerState } from './AnswerButton';
 import { TimerEmblem } from './TimerEmblem';
+import { Icon } from '@/components/Icon';
 
 /**
  * Live match screen. The server is authoritative; this client polls (and,
@@ -173,7 +174,11 @@ export function MatchClient({ initial, supabase }: { initial: MatchView; supabas
     const r = view.result!;
     return (
       <main id="main" className="relative z-10 mx-auto max-w-md px-4 py-10 text-center">
-        <h1 className="font-display text-3xl font-black">{r.outcome === 'win' ? 'You won! 🏆' : r.outcome === 'loss' ? `${view.opponent.name} won` : r.outcome === 'draw' ? 'It’s a draw' : 'Match cancelled'}</h1>
+        <h1 className="font-display text-3xl font-black">{r.outcome === 'win' ? (
+            <span className="inline-flex items-center gap-2">
+              You won! <Icon name="trophy" size={30} className="text-gold-400" />
+            </span>
+          ) : r.outcome === 'loss' ? `${view.opponent.name} won` : r.outcome === 'draw' ? 'It’s a draw' : 'Match cancelled'}</h1>
         <p className="mt-2 text-blue-100/80">
           {r.reason === 'forfeit' ? (r.outcome === 'win' ? 'Your opponent left the match.' : 'You left the match.') : r.reason === 'both_disconnected' || r.reason === 'opponent_missing' ? 'The match couldn’t be completed fairly, so no result was recorded.' : ''}
         </p>
@@ -302,7 +307,15 @@ export function MatchClient({ initial, supabase }: { initial: MatchView; supabas
             ].map((p) => (
               <li key={p.name} className="panel flex items-center justify-between px-4 py-2">
                 <span className="font-bold">{p.name}</span>
-                <span className={p.status === 'connected' ? 'text-emerald-400' : 'text-coral-400'}>{p.status === 'connected' ? '✓ Ready' : 'Connecting…'}</span>
+                <span className={`inline-flex items-center gap-1 ${p.status === 'connected' ? 'text-emerald-400' : 'text-coral-400'}`}>
+                  {p.status === 'connected' ? (
+                    <>
+                      <Icon name="check" size={16} /> Ready
+                    </>
+                  ) : (
+                    'Connecting…'
+                  )}
+                </span>
               </li>
             ))}
           </ul>

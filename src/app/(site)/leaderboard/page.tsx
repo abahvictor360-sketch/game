@@ -7,6 +7,7 @@ import { clock } from '@/lib/server/clock';
 import { getActiveConfig } from '@/lib/server/config';
 import { classicLeaderboard, dailyLeaderboard } from '@/lib/server/game/leaderboard';
 import { currentPlayer } from '@/lib/server/identity';
+import { Icon } from '@/components/Icon';
 
 export const metadata = { title: 'Leaderboards' };
 const PAGE = 25;
@@ -36,7 +37,7 @@ export default async function LeaderboardPage({ searchParams }: { searchParams: 
       {view === 'daily' ? (
         <nav aria-label="Challenge day" className="mb-4 flex flex-wrap items-center justify-center gap-2">
           <Link className="btn btn-ghost btn-sm" href={`/leaderboard?view=daily&date=${addDays(date, -1)}`}>
-            ← <span className="sr-only">Previous day,</span> {addDays(date, -1).slice(5)}
+            <Icon name="arrow-left" size={16} /> <span className="sr-only">Previous day,</span> {addDays(date, -1).slice(5)}
           </Link>
           <form action="/leaderboard" className="flex items-center gap-2">
             <input type="hidden" name="view" value="daily" />
@@ -48,7 +49,7 @@ export default async function LeaderboardPage({ searchParams }: { searchParams: 
           </form>
           {date < today ? (
             <Link className="btn btn-ghost btn-sm" href={`/leaderboard?view=daily&date=${addDays(date, 1)}`}>
-              <span className="sr-only">Next day,</span> {addDays(date, 1).slice(5)} →
+              <span className="sr-only">Next day,</span> {addDays(date, 1).slice(5)} <Icon name="arrow-right" size={16} />
             </Link>
           ) : (
             <span className="w-20" aria-hidden="true" />
@@ -59,7 +60,7 @@ export default async function LeaderboardPage({ searchParams }: { searchParams: 
       <nav aria-label="Pages" className="mt-4 flex items-center justify-between text-sm">
         {page > 1 ? (
           <Link className="btn btn-ghost btn-sm" href={href(page - 1)}>
-            ← Previous
+            <Icon name="arrow-left" size={16} /> Previous
           </Link>
         ) : (
           <span />
@@ -69,7 +70,7 @@ export default async function LeaderboardPage({ searchParams }: { searchParams: 
         </span>
         {page < pages ? (
           <Link className="btn btn-ghost btn-sm" href={href(page + 1)}>
-            Next →
+            Next <Icon name="arrow-right" size={16} />
           </Link>
         ) : (
           <span />

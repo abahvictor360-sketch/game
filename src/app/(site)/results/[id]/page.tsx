@@ -10,6 +10,7 @@ import { getActiveConfig } from '@/lib/server/config';
 import { getDailyStatus } from '@/lib/server/game/daily';
 import { getOwnerReview, getResultSummary, rankFor, shareText } from '@/lib/server/game/results';
 import { currentPlayer } from '@/lib/server/identity';
+import { Icon } from '@/components/Icon';
 
 export const metadata = { title: 'Results', robots: { index: false } };
 
@@ -197,7 +198,7 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
                   Q{r.position + 1} · {r.category} · {r.difficulty}
                 </span>
                 <span className={r.outcome === 'correct' ? 'text-emerald-700' : 'text-coral-700'}>
-                  {r.outcome === 'correct' ? `+${r.points}` : r.outcome === 'timeout' ? 'Time up' : 'Wrong'}
+                  {r.outcome === 'correct' ? `+${r.points}` : r.outcome === 'timeout' ? (r.points < 0 ? `Time up −${-r.points}` : 'Time up') : 'Wrong'}
                 </span>
               </div>
               <p className="mt-1 font-semibold">{r.text}</p>
@@ -215,6 +216,10 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
 }
 
 function outcomeLabel(mine: number, theirs: number) {
-  return mine > theirs ? 'You won! 🏆' : mine < theirs ? 'They won this time' : 'It’s a draw';
+  return mine > theirs ? (
+    <span className="inline-flex items-center gap-2">
+      You won! <Icon name="trophy" size={26} className="text-gold-400" />
+    </span>
+  ) : mine < theirs ? 'They won this time' : 'It’s a draw';
 }
 

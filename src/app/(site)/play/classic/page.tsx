@@ -35,10 +35,15 @@ export default async function ClassicSetup({ searchParams }: { searchParams: Pro
             </div>
           ))}
         </dl>
-        <ul className="mt-4 space-y-1 text-sm text-blue-100/85">
-          <li>• {mr.questionCount} questions, four options each, one correct answer.</li>
-          <li>• {r.classic.endOnWrongAnswer ? 'A wrong answer ends the game.' : 'A wrong answer or timeout scores zero, but you keep playing.'}</li>
-          <li>• Lifelines (once each): {[mr.lifelines.fifty_fifty && '50:50', mr.lifelines.change_question && 'Change Question', mr.lifelines.ask_audience && 'Ask the Audience'].filter(Boolean).join(', ')}.</li>
+        <ul className="dot-list mt-4 space-y-1 text-sm text-blue-100/85">
+          <li>{mr.questionCount} questions, four options each, one correct answer.</li>
+          <li>{r.classic.endOnWrongAnswer ? 'A wrong answer ends the game.' : 'A wrong answer scores zero, but you keep playing.'}</li>
+          {r.timeoutPenaltyFactor > 0 ? (
+            <li>
+              Beat the clock: running out of time costs {Math.round(r.timeoutPenaltyFactor * 100)}% of the question’s points. Your score never goes below zero.
+            </li>
+          ) : null}
+          <li>Lifelines (once each): {[mr.lifelines.fifty_fifty && '50:50', mr.lifelines.change_question && 'Change Question', mr.lifelines.ask_audience && 'Ask the Audience'].filter(Boolean).join(', ')}.</li>
         </ul>
         {account ? (
           <form action="/api/play/classic" method="post" className="mt-6">

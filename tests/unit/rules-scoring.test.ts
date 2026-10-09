@@ -12,6 +12,14 @@ describe('scoring', () => {
     expect(scoreAnswer({ outcome: 'incorrect', difficulty: 'hard', points: pts, speedBonusFactor: 0.25, remainingMs: 15000, durationMs: 15000 })).toBe(0);
     expect(scoreAnswer({ outcome: 'timeout', difficulty: 'easy', points: pts, speedBonusFactor: 0.25, remainingMs: 0, durationMs: 20000 })).toBe(0);
   });
+  it('a timeout costs a share of the points, never taking the score below zero', () => {
+    const base = { outcome: 'timeout' as const, points: pts, speedBonusFactor: 0, remainingMs: 0, durationMs: 15000, timeoutPenaltyFactor: 0.5 };
+    expect(scoreAnswer({ ...base, difficulty: 'hard', currentScore: 1000 })).toBe(-150);
+    expect(scoreAnswer({ ...base, difficulty: 'medium', currentScore: 1000 })).toBe(-100);
+    expect(scoreAnswer({ ...base, difficulty: 'hard', currentScore: 40 })).toBe(-40);
+    expect(scoreAnswer({ ...base, difficulty: 'hard', currentScore: 0 })).toBe(0);
+    expect(scoreAnswer({ ...base, difficulty: 'hard', currentScore: 1000, timeoutPenaltyFactor: 0 })).toBe(0);
+  });
   it('applies the competitive speed bonus formula', () => {
     // floor(200 × 0.25 × 9000 / 18000) = 25
     expect(scoreAnswer({ outcome: 'correct', difficulty: 'medium', points: pts, speedBonusFactor: 0.25, remainingMs: 9000, durationMs: 18000 })).toBe(225);

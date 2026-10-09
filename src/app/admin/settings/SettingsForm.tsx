@@ -40,6 +40,7 @@ export function SettingsForm({ rules: r, flags, envFlags }: { rules: Rules; flag
           <Num name="points_medium" label="Medium points" value={r.points.medium} />
           <Num name="points_hard" label="Hard points" value={r.points.hard} />
           <Num name="freshness_days" label="Freshness window (days)" value={r.freshness.recentWindowDays} />
+          <Num name="timeout_penalty" label="Time-out penalty (% of points)" value={Math.round(r.timeoutPenaltyFactor * 100)} />
         </div>
       </Card>
       <Card>

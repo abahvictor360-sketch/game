@@ -33,12 +33,12 @@ export default async function DailyPage({ searchParams }: { searchParams: Promis
 
       {status.available && !a ? (
         <Panel className="text-center">
-          <ul className="mx-auto max-w-sm space-y-1 text-left text-sm text-blue-100/90">
+          <ul className="dot-list mx-auto max-w-sm space-y-1 text-left text-sm text-blue-100/90">
             <li>
-              • {status.questionCount} questions, {cfg.rules.daily.timerMs / 1000} seconds each, rising difficulty.
+              {status.questionCount} questions, {cfg.rules.daily.timerMs / 1000} seconds each, rising difficulty.
             </li>
-            <li>• One attempt per day. No lifelines.</li>
-            <li>• Refreshing resumes your attempt; it won’t reset the clock.</li>
+            <li>One attempt per day. No lifelines.</li>
+            <li>Refreshing resumes your attempt; it won’t reset the clock.</li>
           </ul>
           <p className="mt-4 text-sm text-blue-100/80">
             Today’s challenge closes in <DailyCountdown resetAt={status.resetAt} />

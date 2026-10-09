@@ -12,7 +12,8 @@ changing settings never changes a game already underway.
 | Answer format | 4 options, 1 correct | schema |
 | Timers | easy 20 s · medium 18 s · hard 15 s | `rules.timersMs` |
 | Points | easy 100 · medium 200 · hard 300 | `rules.points` |
-| Wrong answer / timeout | 0 points | engine |
+| Wrong answer | 0 points | engine |
+| Timeout (Classic, Daily, friend challenges) | Lose 50% of the question's points (50 / 100 / 150); a score never drops below 0. Versus: 0 (it has a speed bonus instead) | Admin → Settings: "Time-out penalty (% of points)" |
 | Classic progression | continue through all questions | `rules.classic.endOnWrongAnswer = false` |
 | Latency grace | 1 s after the deadline | `rules.latencyGraceMs` |
 | Daily length | 10 questions (4 easy, 3 medium, 3 hard) | `rules.daily.distribution` |

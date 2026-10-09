@@ -70,6 +70,6 @@ test('leaving a live match forfeits: the leaver sees it at once, the opponent wi
     await btn.waitFor({ timeout: 20000 });
     await btn.click();
   }
-  await expect(p2.getByRole('heading', { name: 'You won! 🏆' })).toBeVisible({ timeout: 20000 });
+  await expect(p2.getByRole('heading', { name: 'You won!' })).toBeVisible({ timeout: 20000 });
   await expect(p2.getByText('Your opponent left the match.')).toBeVisible();
 });

@@ -14,6 +14,7 @@ import { Ladder } from './Ladder';
 import { Lifelines } from './Lifelines';
 import { ReportDialog } from './ReportDialog';
 import { TimerEmblem } from './TimerEmblem';
+import { Icon } from '@/components/Icon';
 
 const MODE_LABEL: Record<SessionView['mode'], string> = {
   classic: 'Classic',
@@ -201,7 +202,7 @@ export function GameClient({ initial }: { initial: SessionView }) {
   // Screen-reader announcement of results.
   let liveText = '';
   if (fb) {
-    liveText = fb.outcome === 'correct' ? `Correct! Plus ${fb.points} points.` : fb.outcome === 'timeout' ? 'Time is up.' : 'Not quite.';
+    liveText = fb.outcome === 'correct' ? `Correct! Plus ${fb.points} points.` : fb.outcome === 'timeout' ? (fb.points < 0 ? `Time is up. Minus ${-fb.points} points.` : 'Time is up.') : 'Not quite.';
     const correct = q?.options.find((o) => o.id === fb.correctOptionId);
     if (fb.outcome !== 'correct' && correct) liveText += ` The answer was ${correct.label}: ${correct.text}.`;
   }
@@ -229,7 +230,7 @@ export function GameClient({ initial }: { initial: SessionView }) {
       {/* Top bar */}
       <header className="flex items-center justify-between gap-2">
         <Link href="/" className="btn btn-ghost btn-sm" aria-label="Leave game (your progress is saved)">
-          ✕ <span className="hidden sm:inline">Exit</span>
+          <Icon name="x" size={18} /> <span className="hidden sm:inline">Exit</span>
         </Link>
         <p className="text-center text-eyebrow font-bold uppercase text-blue-100/80">
           {MODE_LABEL[view.mode]}
@@ -340,7 +341,9 @@ export function GameClient({ initial }: { initial: SessionView }) {
                 <h2 id="feedback-title" className={`font-display text-xl font-black ${fb.outcome === 'correct' ? 'text-emerald-700' : 'text-coral-700'}`}>
                   {fb.outcome === 'correct' ? 'Correct!' : fb.outcome === 'timeout' ? 'Time’s up' : 'Not quite'}
                 </h2>
-                <span className={`rounded-full px-3 py-1 text-sm font-black ${fb.points ? 'bg-emerald-700 text-white' : 'bg-ivory-200 text-ink-700'}`}>+{fb.points} pts</span>
+                <span className={`rounded-full px-3 py-1 text-sm font-black ${fb.points > 0 ? 'bg-emerald-700 text-white' : fb.points < 0 ? 'bg-coral-700 text-white' : 'bg-ivory-200 text-ink-700'}`}>
+                  {fb.points < 0 ? `−${-fb.points}` : `+${fb.points}`} pts
+                </span>
               </div>
               <p className="mt-2 leading-relaxed text-ink-700">{fb.explanation}</p>
               {fb.sources.length ? (
@@ -358,7 +361,7 @@ export function GameClient({ initial }: { initial: SessionView }) {
                   Report a problem with this question
                 </button>
                 <button ref={continueRef} type="button" className="btn btn-gold" onClick={next}>
-                  {view.position + 1 >= view.totalQuestions ? 'See results' : 'Next question'} →
+                  {view.position + 1 >= view.totalQuestions ? 'See results' : 'Next question'} <Icon name="arrow-right" size={18} />
                 </button>
               </div>
             </section>

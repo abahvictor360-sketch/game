@@ -9,6 +9,7 @@ import { getActiveConfig } from '@/lib/server/config';
 import { getDailyStatus } from '@/lib/server/game/daily';
 import { classicLeaderboard } from '@/lib/server/game/leaderboard';
 import { currentPlayer } from '@/lib/server/identity';
+import { Icon } from '@/components/Icon';
 
 export default async function HomePage() {
   const db = await ensureReady();
@@ -41,7 +42,7 @@ export default async function HomePage() {
         <h1 className="font-display mt-5 text-3xl font-black tracking-tight sm:text-4xl">{BRAND.tagline}</h1>
         <p className="mx-auto mt-2 max-w-md text-blue-100/85">{r.classic.questionCount} questions. Rising difficulty. Learn something new with every answer.</p>
         <Link href="/play/classic" className="btn btn-gold mt-6 min-h-14 px-10 text-lg">
-          ▶ Play Classic
+          <Icon name="play" size={20} /> Play Classic
         </Link>
         <p className="mt-2 text-xs text-blue-100/70">Free account required. Sign in or sign up in seconds.</p>
       </section>

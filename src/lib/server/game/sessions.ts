@@ -223,7 +223,18 @@ export async function startClassic(q: Queryable, player: { id: string; kind: str
 export async function resolveIfExpired(q: Queryable, s: SessionRow, iq: IssuedRow, cfg: ConfigVersion, now: Date): Promise<boolean> {
   if (iq.outcome !== 'pending' || iq.paused_at) return false;
   if (now.getTime() <= iq.deadline_at.getTime() + cfg.rules.latencyGraceMs) return false;
-  await recordOutcome(q, s, iq, { outcome: 'timeout', optionId: null, points: 0, responseMs: iq.duration_ms, at: iq.deadline_at, key: null });
+  const mr = modeRules(s.mode, cfg.rules, cfg.flags);
+  const points = scoreAnswer({
+    outcome: 'timeout',
+    difficulty: iq.difficulty,
+    points: mr.points,
+    speedBonusFactor: mr.speedBonusFactor,
+    remainingMs: 0,
+    durationMs: iq.duration_ms,
+    timeoutPenaltyFactor: mr.timeoutPenaltyFactor,
+    currentScore: s.score,
+  });
+  await recordOutcome(q, s, iq, { outcome: 'timeout', optionId: null, points, responseMs: iq.duration_ms, at: iq.deadline_at, key: null });
   return true;
 }
 
