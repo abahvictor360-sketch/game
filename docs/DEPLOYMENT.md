@@ -34,6 +34,10 @@ Commands:
 
 ## Production (Supabase + Vercel)
 
+> Already provisioned: Supabase project `fastora` (`tsfhuyxvznpzbmwcswkq`,
+> schema applied) and Vercel project `fastora-quiz` (linked, env vars set).
+> See README §3 for the remaining manual steps.
+
 1. **Supabase project**
    - Run migrations with the *session* connection string:
      `DATABASE_URL="postgresql://postgres:…@db.<ref>.supabase.co:5432/postgres" npm run db:migrate`
@@ -49,11 +53,11 @@ Commands:
    `ADMIN_BOOTSTRAP_EMAILS`, `CRON_SECRET`, optionally `POSTHOG_KEY`,
    `SENTRY_DSN`. Do **not** set `ALLOW_DEV_AUTH`, `SEED_FIXTURES`,
    `FEATURE_FLAGS` or `INSECURE_COOKIES` in production.
-3. **Cron** — `vercel.json` runs `/api/cron/tick` every minute (requires a
-   Vercel plan with per-minute crons; on Hobby, point any external scheduler
-   at the endpoint with `Authorization: Bearer $CRON_SECRET`). It publishes
-   today’s and tomorrow’s Daily Challenge, advances live matches, settles
-   audience votes and abandons idle sessions.
+3. **Cron** — `vercel.json` runs `/api/cron/tick` daily at 22:30 UTC (the
+   Hobby plan allows daily crons only). It publishes today’s and tomorrow’s
+   Daily Challenge, advances live matches, settles audience votes and abandons
+   idle sessions. Matches, timeouts and votes are also advanced on every
+   request, so daily is sufficient; on Pro you may use `* * * * *`.
 4. **Content** — import and approve the verified question bank; archive the
    development fixtures if they were ever loaded.
 5. **Phase 2** — features stay hidden until switched on in Admin → Settings.

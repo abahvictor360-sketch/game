@@ -22,7 +22,7 @@ Audience, all behind feature flags.
 
 1. [Project status at a glance](#1-project-status-at-a-glance)
 2. [Continue from here (step by step)](#2-continue-from-here-step-by-step)
-3. [Supabase status](#3-supabase-status)
+3. [Supabase and Vercel status](#3-supabase-and-vercel-status)
 4. [Tech stack and versions](#4-tech-stack-and-versions)
 5. [Repository map](#5-repository-map)
 6. [How the game works (architecture)](#6-how-the-game-works-architecture)
@@ -51,7 +51,8 @@ Audience, all behind feature flags.
 | **Phase 2** (friend challenges, ghost opponents, live matches, Ask the Audience) | ✅ Built and tested, **switched off** by default |
 | Unit + integration tests (57) | ✅ Pass on embedded Postgres **and** real PostgreSQL 16 |
 | End-to-end tests (14, incl. two-browser live match and accessibility scans) | ✅ Pass |
-| Production deployment | ❌ Not deployed yet — needs a dedicated Supabase project and Vercel project (see §3, §15) |
+| Supabase | ✅ Dedicated project **`fastora`** created, schema + RLS + Realtime policy applied (see §3) |
+| Vercel | ✅ Project **`fastora-quiz`** linked to this repo, env vars set — ⚠️ needs `DATABASE_URL` before it can serve (see §3) |
 | Verified question bank | ❌ Not supplied — only 72 **unverified development fixtures** exist |
 | Final branding (logo, palette from fastora.africa) | ❌ Pending — palette taken from reference screenshots |
 | Pull request | ❌ Not opened — the GitHub repo has no `main` branch yet (see §2) |
@@ -115,8 +116,9 @@ New work should then go on feature branches with PRs into `main`.
 ### 2.4 Pick up the backlog
 
 The prioritised list of what is left is in [§18](#18-what-is-left-to-do-backlog).
-The single most important launch items are: a **dedicated Supabase project**,
-the **verified question bank**, and **final branding**.
+The single most important launch items are: finishing the **manual
+Supabase/Vercel steps in §3**, the **verified question bank**, and **final
+branding**.
 
 ### 2.5 If you are a new Claude Code session
 
@@ -127,25 +129,66 @@ commands).
 
 ---
 
-## 3. Supabase status
+## 3. Supabase and Vercel status
 
-Checked on 2026-10-09 through the Supabase connector:
+### Supabase — project `fastora` ✅
 
-- **The Supabase account is connected** (organisation
-  *"xpelbeauty001@gmail.com's Org"*).
-- It contains **one project, "Xtend"** (`jxbugdxeofbjspdcnvmx`, eu-west-1,
-  Postgres 17). **This is a different, live application** (stores, POS sales,
-  staff, notifications) with real data. It already has a table named
-  `staff_roles`, which would clash with Fastora's schema.
-- **Nothing was installed into Xtend, and Fastora must not be deployed there.**
-- **No Fastora Supabase project exists yet.**
+| | |
+|---|---|
+| Organisation | *xpelbeauty001@gmail.com's Org* |
+| Project | **`fastora`** — ref `tsfhuyxvznpzbmwcswkq`, region `eu-west-2` (London) |
+| API URL | `https://tsfhuyxvznpzbmwcswkq.supabase.co` |
+| Dashboard | https://supabase.com/dashboard/project/tsfhuyxvznpzbmwcswkq |
+| Schema | Migrations `0001`–`0003` applied (31 public + 3 private tables, RLS on all) and recorded in `private.app_migrations`, so `npm run db:migrate` will skip them |
+| Realtime | `db/supabase/realtime_policies.sql` applied |
+| Security advisor | Only "RLS enabled, no policy" notices — intentional: browsers get no direct access; the server reads/writes |
+| Data | Empty. Default rules and categories are created automatically on the first request. No dev fixtures (they never go to Supabase). |
 
-**Next step:** create a new Supabase project named e.g. `fastora`
-(region close to West Africa / Europe, e.g. `eu-west-2` or `eu-central-1`),
-then follow [§15 Deployment](#15-deployment). Creating a project may have a
-cost on your Supabase plan, so this was left for you to decide.
+> The other Supabase project in the same organisation, **"Xtend"**
+> (`jxbugdxeofbjspdcnvmx`), is a **separate live app** — do not deploy Fastora
+> there or run these migrations against it.
 
----
+### Vercel — project `fastora-quiz` ✅ (one manual step left)
+
+| | |
+|---|---|
+| Team | *abahvictor360-3017's projects* (`team_Y1PGVkrNWi7NT2b2NtLd2TUh`) |
+| Project | **`fastora-quiz`** (`prj_58P2BqUFiruxui748V3RJpzUADtY`) |
+| Git | `abahvictor360-sketch/game`, production branch `claude/youthful-ptolemy-26brkb` — **every push deploys** |
+| Env vars set | `SESSION_SECRET` (sensitive), `CRON_SECRET` (sensitive), `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `ADMIN_BOOTSTRAP_EMAILS=abahvictor360@gmail.com` |
+| Cron | Daily at 22:30 UTC (Hobby plan allows daily crons only) |
+
+> A different, older Vercel project named **`fastora`** exists in the same team
+> (linked to another repository). It was deliberately left untouched.
+
+### ⚠️ Remaining manual steps (only you can do these)
+
+1. **Database connection string → Vercel.** A new Supabase project gets a
+   random database password that nobody can read back, so:
+   - Supabase dashboard → **Project Settings → Database → Reset database password** (save it).
+   - Supabase dashboard → **Connect** → *Transaction pooler* → copy the URI
+     (`postgresql://postgres.tsfhuyxvznpzbmwcswkq:[YOUR-PASSWORD]@aws-…pooler.supabase.com:6543/postgres`).
+   - Vercel → `fastora-quiz` → **Settings → Environment Variables** → add
+     `DATABASE_URL` (Production + Preview, *Sensitive*) → **Redeploy**.
+   - Alternative: install the **Supabase integration** from the Vercel
+     Marketplace and connect `fastora-quiz` to `fastora`; it sets `POSTGRES_URL`,
+     which the app also accepts.
+2. **Make the site public.** Vercel enabled *Deployment Protection* (Vercel
+   login required) by default. Vercel → `fastora-quiz` → **Settings →
+   Deployment Protection** → turn off *Vercel Authentication* for production
+   (or add a custom domain).
+3. **Supabase Auth URLs.** Supabase → **Authentication → URL Configuration**:
+   Site URL = your production URL (e.g. `https://fastora-quiz.vercel.app`);
+   Redirect URLs: add `https://fastora-quiz.vercel.app/auth/callback` (and your
+   custom domain's `/auth/callback` later). Then add `NEXT_PUBLIC_SITE_URL`
+   with the same URL in Vercel.
+4. **Google sign-in (optional).** Create an OAuth client in Google Cloud
+   (redirect URI `https://tsfhuyxvznpzbmwcswkq.supabase.co/auth/v1/callback`),
+   then Supabase → Authentication → Providers → Google. Email magic links work
+   without this (Supabase's built-in mailer is rate-limited — add custom SMTP
+   before launch).
+5. Sign in on the live site with **abahvictor360@gmail.com** → you become
+   admin → import questions in **/admin/import**.
 
 ## 4. Tech stack and versions
 
@@ -229,7 +272,7 @@ unless you intend to upgrade.
 │   ├── e2e/                     Playwright journeys + axe accessibility
 │   └── support/                 test DB factory, fake clock, helpers
 ├── playwright.config.ts, vitest.config.ts, next.config.ts, postcss.config.mjs, tsconfig.json
-├── vercel.json                  cron: /api/cron/tick every minute
+├── vercel.json                  cron: /api/cron/tick daily 22:30 UTC
 └── .env.example                 every environment variable, documented
 ```
 
@@ -378,7 +421,7 @@ Full list with comments: [`.env.example`](.env.example). Summary:
 |---|---|---|
 | `NEXT_PUBLIC_SITE_URL` | optional | **required** (share links, OG images) |
 | `SESSION_SECRET` | optional (insecure default + warning) | **required**, ≥32 chars (`openssl rand -base64 48`) |
-| `DATABASE_URL` | empty → embedded DB | **required**: Supabase transaction pooler (port 6543) |
+| `DATABASE_URL` (or `POSTGRES_URL` from the Supabase integration) | empty → embedded DB | **required**: Supabase transaction pooler (port 6543); SSL is enabled automatically |
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` | empty → dev sign-in | **required** for sign-in |
 | `SUPABASE_SERVICE_ROLE_KEY` | — | optional, server only (Realtime pings) |
 | `ADMIN_BOOTSTRAP_EMAILS` | your email | first admin(s) |
@@ -431,24 +474,22 @@ Full report with measured numbers: [docs/TESTING.md](docs/TESTING.md).
 
 ## 15. Deployment
 
-Step-by-step: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Short version:
+Current state and remaining manual steps: **§3**. Full guide:
+[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). How it is wired:
 
-1. **Create a new Supabase project for Fastora** (do not reuse "Xtend" — see §3).
-2. Run migrations with the *session* connection string (port 5432):
-   `DATABASE_URL="postgresql://postgres:<pw>@db.<ref>.supabase.co:5432/postgres" npm run db:migrate`
-3. In the Supabase SQL editor run `db/supabase/realtime_policies.sql`.
-4. Supabase Auth: enable Email (magic link) and Google; set the site URL and
-   redirect `https://<domain>/auth/callback`.
-5. Create a Vercel project from this repo; set env vars from §12
-   (`DATABASE_URL` = transaction pooler, port 6543).
-6. Cron: `vercel.json` calls `/api/cron/tick` every minute (needs a Vercel plan
-   with per-minute crons, or any external scheduler with
-   `Authorization: Bearer $CRON_SECRET`).
-7. Sign in with an `ADMIN_BOOTSTRAP_EMAILS` address → import and approve the
-   verified question bank in **Admin → Import**.
-8. Turn on Phase 2 features in **Admin → Settings** when ready.
-
----
+- **Database:** Supabase project `fastora`. Future schema changes: add
+  `db/migrations/000N_*.sql`, then run
+  `DATABASE_URL="<session pooler or direct URL, port 5432>" npm run db:migrate`
+  (or apply the SQL in the Supabase SQL editor and insert the filename into
+  `private.app_migrations`).
+- **Hosting:** Vercel project `fastora-quiz`, auto-deploys on every push to
+  `claude/youthful-ptolemy-26brkb` (change the production branch in Vercel →
+  Settings → Git if you create `main`).
+- **Cron:** `vercel.json` runs `/api/cron/tick` daily at 22:30 UTC (Hobby plan
+  limit). It publishes the next Daily Challenge; live matches, timeouts and
+  audience votes are also advanced on every request, so the daily cron is
+  enough. On a Pro plan you can change it to every minute (`* * * * *`).
+- **Phase 2:** switch features on in **Admin → Settings** when ready.
 
 ## 16. Content (questions)
 
@@ -513,10 +554,10 @@ Full guide (fields, CSV format, moderation, calibration):
 Ordered by priority.
 
 **Launch blockers**
-1. Create a **dedicated Fastora Supabase project**, run migrations + realtime
-   policies, configure Google and email auth (§15).
-2. Create the **Vercel project**, set env vars, connect the domain, confirm
-   the cron runs.
+1. ~~Create a dedicated Supabase project~~ ✅ and ~~Vercel project~~ ✅ —
+   finish the **manual steps in §3** (DATABASE_URL, deployment protection,
+   auth URLs, Google OAuth, custom SMTP), then confirm the cron runs.
+2. Connect a **custom domain** in Vercel and add it to Supabase Auth redirect URLs.
 3. Import and approve the **verified question bank**; archive the 72 dev
    fixtures.
 4. Apply the **official Fastora branding** (palette from fastora.africa, logo)
@@ -589,7 +630,9 @@ Commits on `claude/youthful-ptolemy-26brkb` (oldest first):
 6. Service-worker reload fix; e2e tests, scripts and docs
 7. Real-Postgres testing; fixes for driver JSON encoding, calibration starvation, colour contrast
 8. UI screenshots
-9. Full handover README (Supabase status, continuation guide, backlog)
+9. Full handover README (continuation guide, backlog)
+10. Vercel-safe config (daily cron, no embedded DB on Vercel, `POSTGRES_URL` + SSL support)
+11. Infrastructure: Supabase project `fastora` (schema applied) and Vercel project `fastora-quiz` (linked, env vars)
 
 Bugs found and fixed during testing are listed in
 [docs/TESTING.md](docs/TESTING.md#bugs-found-by-testing-fixed).

@@ -35,9 +35,24 @@ export function pgJson(value: unknown): string {
   return JSON.stringify(value ?? null);
 }
 
-async function createPostgresDb(url: string): Promise<Db> {
+/**
+ * Accept connection strings from the Supabase dashboard or the Supabase ↔
+ * Vercel integration. Strips query parameters postgres.js would forward to the
+ * server as settings (e.g. `supa=base-pooler.x`, `sslmode`) and decides SSL.
+ */
+export function normaliseDbUrl(raw: string): { url: string; ssl: false | 'require' } {
+  const u = new URL(raw);
+  const sslmode = u.searchParams.get('sslmode');
+  for (const k of [...u.searchParams.keys()]) if (k !== 'application_name') u.searchParams.delete(k);
+  const local = ['localhost', '127.0.0.1', '::1'].includes(u.hostname);
+  return { url: u.toString(), ssl: local || sslmode === 'disable' ? false : 'require' };
+}
+
+async function createPostgresDb(raw: string): Promise<Db> {
   const { default: postgres } = await import('postgres');
+  const { url, ssl } = normaliseDbUrl(raw);
   const sql = postgres(url, {
+    ssl,
     // Supabase's transaction pooler does not support prepared statements.
     prepare: false,
     max: Number(process.env.DATABASE_POOL_SIZE ?? 5),
@@ -135,7 +150,8 @@ export async function runMigrations(db: Db, dir = path.join(process.cwd(), 'db',
 type GlobalWithDb = typeof globalThis & { __fastoraDb?: Promise<Db> };
 
 export function resolveDbTarget(): { kind: 'postgres'; url: string } | { kind: 'pglite'; dir: string } {
-  const url = process.env.DATABASE_URL;
+  // DATABASE_URL, or POSTGRES_URL as set by the Supabase ↔ Vercel integration.
+  const url = process.env.DATABASE_URL || process.env.POSTGRES_URL;
   if (url) return { kind: 'postgres', url };
   if (process.env.VERCEL || process.env.VERCEL_ENV === 'production') {
     throw new Error('DATABASE_URL is required on Vercel; the embedded database is for local development only.');
