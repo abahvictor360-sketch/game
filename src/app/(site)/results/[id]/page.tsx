@@ -98,7 +98,7 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
         </div>
       </section>
 
-      <figure className="mx-auto max-w-md text-center">
+      <figure className="glyph-frame mx-auto max-w-md text-center">
         <blockquote className="font-display text-lg font-bold text-gold-300 [text-wrap:balance]">“{proverbFor(id)}”</blockquote>
         <figcaption className="mt-1 text-label font-bold uppercase text-blue-100/60">African proverb</figcaption>
       </figure>

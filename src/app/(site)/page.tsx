@@ -3,6 +3,7 @@ import { BRAND, BrandMark } from '@/components/Brand';
 import { Avatar } from '@/components/Avatar';
 import { HexBar, Panel, ResultGrid } from '@/components/ui';
 import { DailyCountdown } from '@/components/site/DailyCountdown';
+import { HeroArt } from '@/components/motion/HeroArt';
 import { TiltEmblem } from '@/components/motion/TiltEmblem';
 import { ensureReady } from '@/lib/server/bootstrap';
 import { getActiveConfig } from '@/lib/server/config';
@@ -35,7 +36,7 @@ export default async function HomePage() {
   if (lifelines.length) rules.push([`${NUM[lifelines.length] ?? lifelines.length} lifeline${lifelines.length > 1 ? 's' : ''}`, `${lifelines.join(', ').replace(/^./, (c) => c.toUpperCase())}: once each per game.`]);
   return (
     <div className="stagger space-y-8 pt-2">
-      <section className="text-center">
+      <HeroArt>
         <TiltEmblem className="emblem grid h-36 w-36 place-items-center sm:h-44 sm:w-44">
           <BrandMark size={108} />
         </TiltEmblem>
@@ -45,10 +46,10 @@ export default async function HomePage() {
           <Icon name="play" size={20} /> Play Classic
         </Link>
         <p className="mt-2 text-xs text-blue-100/70">Free account required. Sign in or sign up in seconds.</p>
-      </section>
+      </HeroArt>
 
       <div className="stagger grid gap-5 md:grid-cols-2">
-        <Panel className="lift">
+        <Panel className="lift glyph-frame">
           <div className="flex items-center justify-between gap-3">
             <h2 className="font-display text-xl font-black">Daily Challenge</h2>
             <span className="rounded-full bg-flame-500 px-3 py-1 text-xs font-black uppercase tracking-wider text-white">{daily.date}</span>

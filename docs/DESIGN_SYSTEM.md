@@ -39,6 +39,13 @@ Contrast: white on stage blues ≥ 6:1; gold on bar ≥ 9:1; ink on ivory ≥ 12
   dots, crosses and diamonds over the stage blue (`body` in `globals.css`).
 - **Kente band** (`.kente`): woven-stripe band at the top of every page and
   the bottom bar; also on share images (`src/lib/shared/share-art.tsx`).
+- **Glyph bands** (`.glyph-band`, `.glyph-band-sm`, `.glyph-frame`): strips of
+  hand-cut symbols (crosses, arcs, diamonds, triangles, bars, zigzags)
+  inspired by Adinkra and mud-cloth motifs, at the top of pages, above the
+  bottom bar, and framing the Daily card and the results proverb.
+- **Brush squiggles** (`src/components/motion/HeroArt.tsx`): bold red, green,
+  cyan and gold strokes around the home emblem that draw in on load and
+  drift with the pointer. Palette tokens `cyan-400`, `red-500`, `cream-100`.
 - **Beadwork ring** (`.emblem::before`): coloured beads around the timer and
   the home emblem, after Maasai and Ndebele beadwork.
 - **Proverbs** on the results screen (`src/lib/shared/proverbs.ts`), credited

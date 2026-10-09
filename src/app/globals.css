@@ -32,6 +32,9 @@
   --color-violet-500: #5b34b8;
   --color-violet-700: #321a74;
 
+  --color-cyan-400: #3cd3e6; /* from the brush-stroke palette */
+  --color-red-500: #e63b2e;
+  --color-cream-100: #f4ead2;
   --color-emerald-400: #2fdc8f;
   --color-emerald-500: #12b76a;
   --color-emerald-700: #087443;
@@ -259,6 +262,48 @@ body {
       var(--color-coral-500) 56px 74px,
       var(--color-stage-950) 74px 80px
     );
+}
+
+/* Glyph band: a strip of hand-cut symbols (crosses, arcs, diamonds,
+   triangles, bars, zigzags) inspired by Adinkra and mud-cloth motifs. */
+.glyph-band {
+  height: 28px;
+  background: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27132%27 height=%2728%27 viewBox=%270 0 132 28%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpath d=%27M5 6l12 16M17 6L5 22%27 stroke=%27%23e63b2e%27 stroke-width=%274%27 fill=%27none%27/%3E%3Cpath d=%27M24 22a8 8 0 0 1 16 0%27 stroke=%27%23f4ead2%27 stroke-width=%274%27 fill=%27none%27/%3E%3Cpath d=%27M52 4l8 10-8 10-8-10z%27 fill=%27%2312b76a%27/%3E%3Ccircle cx=%2752%27 cy=%2714%27 r=%272.4%27 fill=%27%2304103a%27/%3E%3Cpath d=%27M66 22l7-15 7 15z%27 fill=%27%23fcc81a%27/%3E%3Cpath d=%27M88 5v18M95 5v18%27 stroke=%27%233cd3e6%27 stroke-width=%274%27 fill=%27none%27/%3E%3Ccircle cx=%27105%27 cy=%2714%27 r=%273.4%27 fill=%27%23e63b2e%27/%3E%3Cpath d=%27M113 20l4-8 4 8 4-8%27 stroke=%27%23f4ead2%27 stroke-width=%273.2%27 fill=%27none%27/%3E%3C/svg%3E") repeat-x left center / 132px 28px;
+}
+.glyph-band-sm {
+  height: 18px;
+  background: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27132%27 height=%2728%27 viewBox=%270 0 132 28%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpath d=%27M5 6l12 16M17 6L5 22%27 stroke=%27%23e63b2e%27 stroke-width=%274%27 fill=%27none%27/%3E%3Cpath d=%27M24 22a8 8 0 0 1 16 0%27 stroke=%27%23f4ead2%27 stroke-width=%274%27 fill=%27none%27/%3E%3Cpath d=%27M52 4l8 10-8 10-8-10z%27 fill=%27%2312b76a%27/%3E%3Ccircle cx=%2752%27 cy=%2714%27 r=%272.4%27 fill=%27%2304103a%27/%3E%3Cpath d=%27M66 22l7-15 7 15z%27 fill=%27%23fcc81a%27/%3E%3Cpath d=%27M88 5v18M95 5v18%27 stroke=%27%233cd3e6%27 stroke-width=%274%27 fill=%27none%27/%3E%3Ccircle cx=%27105%27 cy=%2714%27 r=%273.4%27 fill=%27%23e63b2e%27/%3E%3Cpath d=%27M113 20l4-8 4 8 4-8%27 stroke=%27%23f4ead2%27 stroke-width=%273.2%27 fill=%27none%27/%3E%3C/svg%3E") repeat-x left center / 85px 18px;
+}
+/* A card framed top and bottom by glyph bands (like a framed print). */
+.glyph-frame {
+  position: relative;
+  padding-block: 30px;
+}
+.glyph-frame::before,
+.glyph-frame::after {
+  content: '';
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  height: 18px;
+  background: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27132%27 height=%2728%27 viewBox=%270 0 132 28%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpath d=%27M5 6l12 16M17 6L5 22%27 stroke=%27%23e63b2e%27 stroke-width=%274%27 fill=%27none%27/%3E%3Cpath d=%27M24 22a8 8 0 0 1 16 0%27 stroke=%27%23f4ead2%27 stroke-width=%274%27 fill=%27none%27/%3E%3Cpath d=%27M52 4l8 10-8 10-8-10z%27 fill=%27%2312b76a%27/%3E%3Ccircle cx=%2752%27 cy=%2714%27 r=%272.4%27 fill=%27%2304103a%27/%3E%3Cpath d=%27M66 22l7-15 7 15z%27 fill=%27%23fcc81a%27/%3E%3Cpath d=%27M88 5v18M95 5v18%27 stroke=%27%233cd3e6%27 stroke-width=%274%27 fill=%27none%27/%3E%3Ccircle cx=%27105%27 cy=%2714%27 r=%273.4%27 fill=%27%23e63b2e%27/%3E%3Cpath d=%27M113 20l4-8 4 8 4-8%27 stroke=%27%23f4ead2%27 stroke-width=%273.2%27 fill=%27none%27/%3E%3C/svg%3E") repeat-x center / 85px 18px;
+  pointer-events: none;
+}
+.glyph-frame::before { top: 6px; }
+.glyph-frame::after { bottom: 6px; }
+
+/* Hero brush squiggles draw themselves in, then drift with the pointer. */
+@keyframes draw-in {
+  from { stroke-dashoffset: var(--len, 600); }
+  to { stroke-dashoffset: 0; }
+}
+.squiggle path {
+  stroke-dasharray: var(--len, 600);
+  animation: draw-in 1.6s cubic-bezier(0.3, 0.7, 0.2, 1) backwards;
+}
+.squiggles {
+  transform: translate(var(--sx, 0px), var(--sy, 0px));
+  transition: transform 300ms ease-out;
 }
 
 /* ---------- Round lifeline buttons ---------------------------------------- */

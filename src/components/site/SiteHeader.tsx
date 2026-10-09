@@ -54,7 +54,7 @@ export function MobileNav() {
   ] as const;
   return (
     <nav aria-label="Quick links" className="fixed inset-x-0 bottom-0 z-20 bg-stage-950/95 pb-[env(safe-area-inset-bottom)] backdrop-blur sm:hidden">
-      <div className="kente h-[5px]" aria-hidden="true" />
+      <div className="glyph-band-sm h-[14px] bg-[length:66px_14px]" aria-hidden="true" />
       <ul className="mx-auto flex max-w-md justify-around">
         {items.map(([href, label, d]) => (
           <li key={href}>
