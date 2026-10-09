@@ -33,6 +33,23 @@ not reachable from the build environment).
 
 Contrast: white on stage blues ≥ 6:1; gold on bar ≥ 9:1; ink on ivory ≥ 12:1.
 
+## African identity
+
+- **Background:** a faint mud-cloth (bogolanfini) inspired tile of zigzags,
+  dots, crosses and diamonds over the stage blue (`body` in `globals.css`).
+- **Kente band** (`.kente`): woven-stripe band at the top of every page and
+  the bottom bar; also on share images (`src/lib/shared/share-art.tsx`).
+- **Beadwork ring** (`.emblem::before`): coloured beads around the timer and
+  the home emblem, after Maasai and Ndebele beadwork.
+- **Proverbs** on the results screen (`src/lib/shared/proverbs.ts`), credited
+  as "African proverb" because many are shared across peoples.
+- **Music** (`src/lib/client/music.ts`): original generative mbira melody
+  (A minor pentatonic) with shaker and hand drum, synthesised live in the
+  browser. No recordings, nothing to license. Off by default; toggle in the
+  game header; pauses when the tab is hidden.
+- **Sound effects:** mbira notes for right answers, a talking-drum thud for
+  wrong ones, a shaker tick for the countdown.
+
 ## Typography
 
 - **Display:** Bricolage Grotesque (variable), for headings, scores, the

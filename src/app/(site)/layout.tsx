@@ -8,6 +8,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   const versus = cfg.flags.multiplayer || cfg.flags.ghostOpponents;
   return (
     <>
+      <div className="kente relative z-10" aria-hidden="true" />
       <SiteHeader player={player} versus={versus} />
       <main id="main" className="relative z-10 mx-auto max-w-5xl px-4 pb-8">
         {children}

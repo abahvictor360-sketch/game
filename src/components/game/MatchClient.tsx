@@ -6,7 +6,7 @@ import type { MatchView } from '@/lib/server/game/matches';
 import { apiFetch, type ApiError } from '@/lib/client/api';
 import { Avatar } from '../Avatar';
 import { CountUp } from '../motion/CountUp';
-import { ConfirmDialog, MuteButton, Toast, useOnline, useSound, useToast } from '../feedback';
+import { ConfirmDialog, MusicButton, MuteButton, Toast, useOnline, useSound, useToast } from '../feedback';
 import { ResultGrid } from '../ui';
 import { AnswerButton, type AnswerState } from './AnswerButton';
 import { TimerEmblem } from './TimerEmblem';
@@ -220,7 +220,10 @@ export function MatchClient({ initial, supabase }: { initial: MatchView; supabas
           Leave
         </button>
         <p className="text-eyebrow font-bold uppercase text-blue-100/80">Live match</p>
-        <MuteButton muted={muted} onToggle={toggle} />
+        <div className="flex gap-1">
+          <MusicButton />
+          <MuteButton muted={muted} onToggle={toggle} />
+        </div>
       </header>
       {offlineSince ? (
         <div role="status" className="mt-2 rounded-xl bg-flame-500 px-3 py-2 text-center text-sm font-semibold">

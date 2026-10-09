@@ -53,7 +53,8 @@ export function MobileNav() {
     ['/profile', 'Me', 'M12 12a4 4 0 100-8 4 4 0 000 8zm-8 9a8 8 0 0116 0'],
   ] as const;
   return (
-    <nav aria-label="Quick links" className="fixed inset-x-0 bottom-0 z-20 border-t border-rail/30 bg-stage-950/95 pb-[env(safe-area-inset-bottom)] backdrop-blur sm:hidden">
+    <nav aria-label="Quick links" className="fixed inset-x-0 bottom-0 z-20 bg-stage-950/95 pb-[env(safe-area-inset-bottom)] backdrop-blur sm:hidden">
+      <div className="kente h-[5px]" aria-hidden="true" />
       <ul className="mx-auto flex max-w-md justify-around">
         {items.map(([href, label, d]) => (
           <li key={href}>

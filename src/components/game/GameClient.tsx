@@ -8,7 +8,7 @@ import { apiFetch, newKey, type ApiError } from '@/lib/client/api';
 import { prefersReducedMotion } from '@/lib/client/sound';
 import { Avatar } from '../Avatar';
 import { CountUp } from '../motion/CountUp';
-import { MuteButton, Toast, useOnline, useSound, useToast } from '../feedback';
+import { MusicButton, MuteButton, Toast, useOnline, useSound, useToast } from '../feedback';
 import { AnswerButton, type AnswerState } from './AnswerButton';
 import { Ladder } from './Ladder';
 import { Lifelines } from './Lifelines';
@@ -227,6 +227,7 @@ export function GameClient({ initial }: { initial: SessionView }) {
 
   return (
     <div className="relative z-10 mx-auto flex min-h-dvh max-w-5xl flex-col px-4 pb-6 pt-3">
+      <div className="kente fixed inset-x-0 top-0 h-[5px]" aria-hidden="true" />
       {/* Top bar */}
       <header className="flex items-center justify-between gap-2">
         <Link href="/" className="btn btn-ghost btn-sm" aria-label="Leave game (your progress is saved)">
@@ -236,7 +237,10 @@ export function GameClient({ initial }: { initial: SessionView }) {
           {MODE_LABEL[view.mode]}
           {view.challengeDate ? ` · ${view.challengeDate}` : ''}
         </p>
-        <MuteButton muted={muted} onToggle={toggle} />
+        <div className="flex gap-1">
+          <MusicButton />
+          <MuteButton muted={muted} onToggle={toggle} />
+        </div>
       </header>
 
       {offline ? (

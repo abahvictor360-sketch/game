@@ -1,5 +1,6 @@
 'use client';
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { useMusic } from '@/lib/client/music';
 import { useSound } from '@/lib/client/sound';
 import { Icon } from '@/components/Icon';
 
@@ -99,6 +100,16 @@ export function MuteButton({ muted, onToggle }: { muted: boolean; onToggle: () =
   return (
     <button type="button" onClick={onToggle} className="btn btn-ghost btn-sm" aria-pressed={!muted} aria-label={muted ? 'Sound off. Turn sound on' : 'Sound on. Turn sound off'}>
       <Icon name={muted ? 'volume-off' : 'volume-on'} size={20} />
+    </button>
+  );
+}
+
+/** Background music toggle (original generative mbira music, off by default). */
+export function MusicButton() {
+  const { on, toggle } = useMusic();
+  return (
+    <button type="button" onClick={toggle} className="btn btn-ghost btn-sm" aria-pressed={on} aria-label={on ? 'Music on. Turn music off' : 'Music off. Turn music on'}>
+      <Icon name={on ? 'music' : 'music-off'} size={20} />
     </button>
   );
 }

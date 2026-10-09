@@ -10,6 +10,7 @@ import { getActiveConfig } from '@/lib/server/config';
 import { getDailyStatus } from '@/lib/server/game/daily';
 import { getOwnerReview, getResultSummary, rankFor, shareText } from '@/lib/server/game/results';
 import { currentPlayer } from '@/lib/server/identity';
+import { proverbFor } from '@/lib/shared/proverbs';
 import { Icon } from '@/components/Icon';
 
 export const metadata = { title: 'Results', robots: { index: false } };
@@ -96,6 +97,11 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
           {!summary.leaderboardEligible && (summary.mode === 'classic' || summary.mode === 'daily') ? <Badge tone="grey">Unranked: played as a guest</Badge> : null}
         </div>
       </section>
+
+      <figure className="mx-auto max-w-md text-center">
+        <blockquote className="font-display text-lg font-bold text-gold-300 [text-wrap:balance]">“{proverbFor(id)}”</blockquote>
+        <figcaption className="mt-1 text-label font-bold uppercase text-blue-100/60">African proverb</figcaption>
+      </figure>
 
       {summary.mode === 'ghost' && vs.ghost_alias ? (
         <Panel className="text-center">
