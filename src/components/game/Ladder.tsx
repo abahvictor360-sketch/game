@@ -32,7 +32,7 @@ export function Ladder({ ladder, history, position, vertical = false }: { ladder
         return (
           <li
             key={i}
-            className={`w-3 rounded-sm sm:w-4 ${tier} ${current ? 'bg-gold-400 shadow-[0_0_10px_var(--color-gold-400)]' : h === 'correct' ? 'bg-emerald-400' : h ? 'bg-coral-500' : 'bg-white/20'}`}
+            className={`w-3 rounded-sm sm:w-4 ${tier} ${current ? 'rung-current bg-gold-400' : h === 'correct' ? 'bg-emerald-400' : h ? 'bg-coral-500' : 'bg-white/20'}`}
           >
             <span className="sr-only">
               Question {i + 1}, {step.difficulty}, {h ?? (current ? 'current' : 'upcoming')}

@@ -7,6 +7,7 @@ import type { SessionView } from '@/lib/shared/types';
 import { apiFetch, newKey, type ApiError } from '@/lib/client/api';
 import { prefersReducedMotion } from '@/lib/client/sound';
 import { Avatar } from '../Avatar';
+import { CountUp } from '../motion/CountUp';
 import { MuteButton, Toast, useOnline, useSound, useToast } from '../feedback';
 import { AnswerButton, type AnswerState } from './AnswerButton';
 import { Ladder } from './Ladder';
@@ -110,12 +111,6 @@ export function GameClient({ initial }: { initial: SessionView }) {
     setOffline(!online);
   }, [online]);
 
-  // Animate the score when points are added.
-  const lastScore = useRef(initial.score);
-  const scoreChanged = view.score !== lastScore.current;
-  useEffect(() => {
-    lastScore.current = view.score;
-  }, [view.score]);
 
   const answer = useCallback(
     async (optionId: string) => {
@@ -256,9 +251,7 @@ export function GameClient({ initial }: { initial: SessionView }) {
             <div className="text-center">
               <p className="text-eyebrow font-bold uppercase text-blue-100/70">Score</p>
               <p className="font-display text-2xl font-black tabular-nums text-gold-400" aria-live="polite">
-                <span key={view.score} className={scoreChanged ? 'anim-bump' : undefined}>
-                  {view.score}
-                </span>
+                <CountUp value={view.score} bump />
               </p>
             </div>
             <TimerEmblem remainingMs={view.phase === 'question' ? remaining : q.remainingMs} durationMs={q.durationMs} paused={q.paused} done={view.phase === 'feedback'} />
@@ -288,7 +281,7 @@ export function GameClient({ initial }: { initial: SessionView }) {
                   <span className="font-bold">{view.ghost.alias}</span> <span className="text-xs text-blue-100/70">(recorded player)</span>
                 </span>
               </span>
-              <span className="font-display font-black tabular-nums text-gold-300">{view.ghost.score}</span>
+              <CountUp value={view.ghost.score} className="font-display font-black tabular-nums text-gold-300" />
               <span className="sr-only" aria-live="polite">{ghostAnswered ? 'Opponent has answered' : 'Opponent is thinking'}</span>
               <span aria-hidden="true" className={`text-xs font-bold ${ghostAnswered ? 'text-emerald-400' : 'text-blue-100/60'}`}>
                 {ghostAnswered ? 'Answered' : '…'}
@@ -297,7 +290,7 @@ export function GameClient({ initial }: { initial: SessionView }) {
           ) : null}
 
           {/* Question */}
-          <section aria-labelledby="question-text" className="mt-5">
+          <section key={q.issuedId} aria-labelledby="question-text" className="question-enter mt-5">
             <div className="railed">
               <div className="hex" style={{ ['--hex' as string]: '28px' }}>
                 <div className="hex-inner px-9 py-5 text-center">
@@ -312,9 +305,10 @@ export function GameClient({ initial }: { initial: SessionView }) {
 
           {/* Answers */}
           <div className="mt-5 grid gap-3 sm:grid-cols-2 sm:gap-x-8" role="group" aria-label="Answers">
-            {q.options.map((o) => (
+            {q.options.map((o, i) => (
               <AnswerButton
                 key={o.id}
+                index={i}
                 label={o.label}
                 text={o.text}
                 state={stateFor(o.id)}

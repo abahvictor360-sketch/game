@@ -95,6 +95,13 @@ page sections (`space-y-8`).
 - Motion: small pop/rise animations, a score "bump" when points are added,
   confetti on strong results; all motion, confetti and spotlight beams are
   disabled under `prefers-reduced-motion`.
+- Interaction (`src/components/motion/`, motion rules at the end of
+  `globals.css`): home emblem tilts toward the pointer or finger and spins its
+  star on tap; tap ripples on buttons, answers and lifelines; answers slide in
+  one by one; the correct answer glows and bounces, a wrong pick shakes; the
+  timer throbs in the last five seconds; lifelines spring when used; scores
+  count up (`CountUp`); result squares pop in; cards lift on hover. All of it
+  is off under `prefers-reduced-motion`.
 - Connectivity: `useOnline` drives offline banners in games, live matches,
   the Versus lobby and the audience page.
 - Sound: synthesised (no downloads), **off by default**; the visible sound

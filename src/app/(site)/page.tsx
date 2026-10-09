@@ -3,6 +3,7 @@ import { BRAND, BrandMark } from '@/components/Brand';
 import { Avatar } from '@/components/Avatar';
 import { HexBar, Panel, ResultGrid } from '@/components/ui';
 import { DailyCountdown } from '@/components/site/DailyCountdown';
+import { TiltEmblem } from '@/components/motion/TiltEmblem';
 import { ensureReady } from '@/lib/server/bootstrap';
 import { getActiveConfig } from '@/lib/server/config';
 import { getDailyStatus } from '@/lib/server/game/daily';
@@ -32,11 +33,11 @@ export default async function HomePage() {
   ];
   if (lifelines.length) rules.push([`${NUM[lifelines.length] ?? lifelines.length} lifeline${lifelines.length > 1 ? 's' : ''}`, `${lifelines.join(', ').replace(/^./, (c) => c.toUpperCase())}: once each per game.`]);
   return (
-    <div className="space-y-8 pt-2">
+    <div className="stagger space-y-8 pt-2">
       <section className="text-center">
-        <div className="emblem mx-auto grid h-36 w-36 place-items-center sm:h-44 sm:w-44">
+        <TiltEmblem className="emblem grid h-36 w-36 place-items-center sm:h-44 sm:w-44">
           <BrandMark size={108} />
-        </div>
+        </TiltEmblem>
         <h1 className="font-display mt-5 text-3xl font-black tracking-tight sm:text-4xl">{BRAND.tagline}</h1>
         <p className="mx-auto mt-2 max-w-md text-blue-100/85">{r.classic.questionCount} questions. Rising difficulty. Learn something new with every answer.</p>
         <Link href="/play/classic" className="btn btn-gold mt-6 min-h-14 px-10 text-lg">
@@ -45,8 +46,8 @@ export default async function HomePage() {
         <p className="mt-2 text-xs text-blue-100/70">Free account required. Sign in or sign up in seconds.</p>
       </section>
 
-      <div className="grid gap-5 md:grid-cols-2">
-        <Panel>
+      <div className="stagger grid gap-5 md:grid-cols-2">
+        <Panel className="lift">
           <div className="flex items-center justify-between gap-3">
             <h2 className="font-display text-xl font-black">Daily Challenge</h2>
             <span className="rounded-full bg-flame-500 px-3 py-1 text-xs font-black uppercase tracking-wider text-white">{daily.date}</span>
@@ -77,7 +78,7 @@ export default async function HomePage() {
           )}
         </Panel>
 
-        <Panel>
+        <Panel className="lift">
           <div className="flex items-center justify-between">
             <h2 className="font-display text-xl font-black">Top players</h2>
             <Link href="/leaderboard" className="text-sm font-bold text-gold-300 underline">
@@ -131,7 +132,7 @@ export default async function HomePage() {
         </HexBar>
         <ul className={`mx-auto mt-5 grid max-w-3xl gap-3 text-left ${rules.length === 3 ? 'sm:grid-cols-3' : 'sm:grid-cols-2'}`}>
           {rules.map(([t, d]) => (
-            <li key={t} className="panel p-4">
+            <li key={t} className="panel lift p-4">
               <p className="font-display font-black text-gold-400">{t}</p>
               <p className="mt-1 text-sm text-blue-100/85">{d}</p>
             </li>

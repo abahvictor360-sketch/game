@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { BRAND } from '@/components/Brand';
+import { TapEffects } from '@/components/motion/TapEffects';
 import { PwaRegister } from '@/components/site/PwaRegister';
 // Self-hosted variable fonts (bundled at build time; no requests to Google).
 // Only the character subsets a page actually uses are downloaded.
@@ -35,6 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </a>
         {children}
         <PwaRegister />
+        <TapEffects />
       </body>
     </html>
   );

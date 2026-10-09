@@ -109,7 +109,8 @@ export function ResultGrid({ grid, size = 'md' }: { grid: ('correct' | 'incorrec
       {grid.map((g, i) => (
         <li
           key={i}
-          className={`${s} rounded-md ring-1 ${g === 'correct' ? 'bg-emerald-500 ring-emerald-400' : g === 'incorrect' ? 'bg-coral-500 ring-coral-400' : g === 'timeout' ? 'bg-coral-700 ring-coral-400' : 'bg-white/10 ring-white/20'}`}
+          style={{ ['--i' as string]: i }}
+          className={`cell-pop ${s} rounded-md ring-1 ${g === 'correct' ? 'bg-emerald-500 ring-emerald-400' : g === 'incorrect' ? 'bg-coral-500 ring-coral-400' : g === 'timeout' ? 'bg-coral-700 ring-coral-400' : 'bg-white/10 ring-white/20'}`}
         >
           <span className="sr-only">
             Question {i + 1}: {g === 'correct' ? 'correct' : g === 'incorrect' ? 'incorrect' : g === 'timeout' ? 'time ran out' : 'not answered'}

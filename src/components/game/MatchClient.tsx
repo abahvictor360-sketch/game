@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { MatchView } from '@/lib/server/game/matches';
 import { apiFetch, type ApiError } from '@/lib/client/api';
 import { Avatar } from '../Avatar';
+import { CountUp } from '../motion/CountUp';
 import { ConfirmDialog, MuteButton, Toast, useOnline, useSound, useToast } from '../feedback';
 import { ResultGrid } from '../ui';
 import { AnswerButton, type AnswerState } from './AnswerButton';
@@ -26,7 +27,6 @@ export function MatchClient({ initial, supabase }: { initial: MatchView; supabas
   const { muted, toggle, play } = useSound();
   const { toast, show, clear } = useToast();
   const lastReveal = useRef<number>(-1);
-  const lastScore = useRef(initial.me.score);
 
   const refresh = useCallback(async () => {
     try {
@@ -121,12 +121,6 @@ export function MatchClient({ initial, supabase }: { initial: MatchView; supabas
     return () => window.removeEventListener('keydown', onKey);
   }, [q, canAnswer, answer, confirmLeave]);
 
-  // Animate the score when it changes.
-  const scoreChanged = view.me.score !== lastScore.current;
-  useEffect(() => {
-    lastScore.current = view.me.score;
-  }, [view.me.score]);
-
   async function leave() {
     setConfirmLeave(false);
     await apiFetch(`/api/match/${view.id}/forfeit`, { json: {} }).catch(() => {});
@@ -150,9 +144,7 @@ export function MatchClient({ initial, supabase }: { initial: MatchView; supabas
       <div>
         <p className="max-w-28 truncate text-sm font-bold">{side === 'me' ? 'You' : who.name}</p>
         <p className="font-display text-xl font-black tabular-nums text-gold-400">
-          <span key={who.score} className={side === 'me' && scoreChanged ? 'anim-bump' : undefined}>
-            {who.score}
-          </span>
+          <CountUp value={who.score} bump={side === 'me'} />
         </p>
       </div>
     </div>
@@ -266,8 +258,8 @@ export function MatchClient({ initial, supabase }: { initial: MatchView; supabas
             </div>
           </div>
           <div className="mt-5 grid gap-3 sm:grid-cols-2 sm:gap-x-8">
-            {q.options.map((o) => (
-              <AnswerButton key={o.id} label={o.label} text={o.text} state={stateFor(o.id)} disabled={!canAnswer} onClick={() => answer(o.id)} />
+            {q.options.map((o, i) => (
+              <AnswerButton key={o.id} index={i} label={o.label} text={o.text} state={stateFor(o.id)} disabled={!canAnswer} onClick={() => answer(o.id)} />
             ))}
           </div>
           <p className="mt-3 text-center text-sm text-blue-100/80" role="status">

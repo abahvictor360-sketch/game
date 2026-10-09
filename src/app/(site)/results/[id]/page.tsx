@@ -4,6 +4,7 @@ import { ShareActions } from '@/components/results/ShareActions';
 import { FriendChallengeButton } from '@/components/results/FriendChallengeButton';
 import { Badge, Confetti, HexBar, Panel, ResultGrid } from '@/components/ui';
 import { DailyCountdown } from '@/components/site/DailyCountdown';
+import { CountUp } from '@/components/motion/CountUp';
 import { ensureReady } from '@/lib/server/bootstrap';
 import { getActiveConfig } from '@/lib/server/config';
 import { getDailyStatus } from '@/lib/server/game/daily';
@@ -76,7 +77,9 @@ export default async function ResultsPage({ params }: { params: Promise<{ id: st
         </HexBar>
         <div className="emblem mx-auto mt-6 grid h-40 w-40 place-items-center">
           <div>
-            <p className="font-display text-5xl font-black tabular-nums text-gold-400">{summary.score}</p>
+            <p className="font-display text-5xl font-black tabular-nums text-gold-400">
+              <CountUp value={summary.score} from={0} durationMs={1200} />
+            </p>
             <p className="text-label font-bold uppercase text-blue-100/80">points</p>
           </div>
         </div>

@@ -9,7 +9,7 @@ export function TimerEmblem({ remainingMs, durationMs, paused, done, label }: { 
   const urgent = !done && !paused && secs <= 5;
   const stroke = urgent ? 'var(--color-coral-500)' : 'var(--color-gold-400)';
   return (
-    <div className="emblem relative grid h-28 w-28 place-items-center sm:h-32 sm:w-32" role="timer" aria-label={label ?? `${secs} seconds remaining`}>
+    <div className={`emblem relative grid h-28 w-28 place-items-center sm:h-32 sm:w-32 ${urgent ? 'timer-urgent' : ''}`} role="timer" aria-label={label ?? `${secs} seconds remaining`}>
       <svg className="absolute inset-0 h-full w-full -rotate-90" viewBox="0 0 100 100" aria-hidden="true">
         <circle cx="50" cy="50" r={r} fill="none" stroke="rgb(255 255 255 / 0.12)" strokeWidth="6" />
         <circle cx="50" cy="50" r={r} fill="none" stroke={stroke} strokeWidth="6" strokeLinecap="round" strokeDasharray={c} strokeDashoffset={c * (1 - frac)} style={{ transition: 'stroke-dashoffset 250ms linear, stroke 200ms' }} />

@@ -435,6 +435,177 @@ body {
   animation: confetti-fall linear forwards;
 }
 
+/* ==========================================================================
+   Motion & interaction
+   One rule: movement explains what happened (a pick, a reveal, a score).
+   Everything here is switched off under prefers-reduced-motion (see below).
+   ========================================================================== */
+
+/* Staggered entrance for lists of cards/sections: add .stagger to a parent. */
+@keyframes enter-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.stagger > * {
+  animation: enter-up 460ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.stagger > *:nth-child(2) { animation-delay: 70ms; }
+.stagger > *:nth-child(3) { animation-delay: 140ms; }
+.stagger > *:nth-child(4) { animation-delay: 210ms; }
+.stagger > *:nth-child(5) { animation-delay: 280ms; }
+.stagger > *:nth-child(6) { animation-delay: 350ms; }
+.stagger > *:nth-child(n + 7) { animation-delay: 420ms; }
+
+/* Answers slide in one after another for each new question (--i = index). */
+.answer-enter {
+  animation: enter-up 380ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 70ms + 120ms);
+}
+.question-enter {
+  animation: enter-up 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* Reveal: the right answer glows and bounces; a wrong pick shakes. */
+@keyframes correct-pop {
+  0% { transform: scale(1); filter: drop-shadow(0 0 0 rgb(47 220 143 / 0)); }
+  40% { transform: scale(1.035); filter: drop-shadow(0 0 18px rgb(47 220 143 / 0.85)); }
+  100% { transform: scale(1); filter: drop-shadow(0 0 8px rgb(47 220 143 / 0.45)); }
+}
+@keyframes wrong-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(7px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(3px); }
+}
+@keyframes selected-breathe {
+  0%, 100% { filter: drop-shadow(0 0 4px rgb(252 200 26 / 0.35)); }
+  50% { filter: drop-shadow(0 0 14px rgb(252 200 26 / 0.75)); }
+}
+.answer[data-state='correct'] { animation: correct-pop 650ms ease-out both; }
+.answer[data-state='wrong'] { animation: wrong-shake 420ms ease-in-out both; }
+.answer[data-state='selected'] { animation: selected-breathe 900ms ease-in-out infinite; }
+.answer:not(:disabled):hover { transform: translateY(-2px); }
+
+/* Timer: the emblem throbs in the last five seconds. */
+@keyframes urgent-throb {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+.timer-urgent { animation: urgent-throb 1s ease-in-out infinite; }
+
+/* Lifelines: lift on hover, spring when used. */
+@keyframes lifeline-spring {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.18) rotate(-6deg); }
+  70% { transform: scale(0.94) rotate(3deg); }
+  100% { transform: scale(1); }
+}
+.lifeline:not(:disabled):hover { transform: translateY(-3px); }
+.lifeline[data-state='used'] { animation: lifeline-spring 520ms ease-out; }
+
+/* Ladder: the current rung glows. */
+@keyframes rung-glow {
+  0%, 100% { box-shadow: 0 0 6px var(--color-gold-400); }
+  50% { box-shadow: 0 0 16px var(--color-gold-300); }
+}
+.rung-current { animation: rung-glow 1.4s ease-in-out infinite; }
+
+/* Result grid squares pop in one by one (--i = index). */
+@keyframes cell-pop {
+  0% { opacity: 0; transform: scale(0.3) rotate(-20deg); }
+  70% { opacity: 1; transform: scale(1.15) rotate(4deg); }
+  100% { opacity: 1; transform: none; }
+}
+.cell-pop {
+  animation: cell-pop 360ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 55ms + 200ms);
+}
+
+/* Tap ripple on buttons, answers and lifelines (added by TapEffects). */
+.btn,
+.lifeline,
+.answer .hex-inner {
+  position: relative;
+  overflow: hidden;
+}
+.tap-ripple {
+  position: absolute;
+  border-radius: 999px;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0);
+  background: radial-gradient(circle, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0) 70%);
+  animation: tap-ripple 560ms ease-out forwards;
+}
+@keyframes tap-ripple {
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
+/* Primary buttons: a gold light sweep on hover/focus. */
+.btn-gold::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.55) 50%, transparent 70%);
+  transform: translateX(-120%);
+  pointer-events: none;
+}
+.btn-gold:hover::after,
+.btn-gold:focus-visible::after {
+  transition: transform 650ms ease;
+  transform: translateX(120%);
+}
+.btn:not(:disabled):hover { transform: translateY(-1px); }
+
+/* Home emblem: follows the pointer (3D tilt) and spins its star on tap. */
+.tilt {
+  transform: perspective(700px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transition: transform 180ms ease-out;
+  will-change: transform;
+}
+@keyframes float {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -8px; }
+}
+.float { animation: float 5s ease-in-out infinite; }
+@keyframes star-spin {
+  from { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(200deg) scale(1.12); }
+  to { transform: rotate(360deg) scale(1); }
+}
+.star-spin { animation: star-spin 900ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+.tilt-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  pointer-events: none;
+  background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 30%), rgb(255 255 255 / 0.28), transparent 55%);
+  mix-blend-mode: screen;
+}
+
+/* Pressing wins over hovering. */
+.btn:not(:disabled):active { transform: scale(0.97); }
+.answer:not(:disabled):active { transform: scale(0.985); }
+.lifeline:not(:disabled):active { transform: scale(0.95); }
+
+/* Interactive cards lift slightly under the pointer. */
+.lift {
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+.lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px rgb(0 0 0 / 0.35), var(--shadow-glow);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -444,8 +615,17 @@ body {
     transition-duration: 0.001ms !important;
   }
   .stage-beams,
-  .confetti {
+  .confetti,
+  .tap-ripple,
+  .tilt-glare {
     display: none;
+  }
+  .tilt,
+  .lift:hover,
+  .btn:not(:disabled):hover,
+  .answer:not(:disabled):hover,
+  .lifeline:not(:disabled):hover {
+    transform: none !important;
   }
 }
 

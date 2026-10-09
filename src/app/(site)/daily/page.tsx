@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { DailyCountdown } from '@/components/site/DailyCountdown';
+import { CountUp } from '@/components/motion/CountUp';
 import { ErrorState, PageTitle, Panel, ResultGrid, SignInRequired } from '@/components/ui';
 import { ensureReady } from '@/lib/server/bootstrap';
 import { getActiveConfig } from '@/lib/server/config';
@@ -66,7 +67,9 @@ export default async function DailyPage({ searchParams }: { searchParams: Promis
       {a && a.status === 'completed' ? (
         <Panel className="text-center">
           <p className="text-label font-bold uppercase text-blue-100/70">Your result</p>
-          <p className="font-display text-5xl font-black text-gold-400">{a.score}</p>
+          <p className="font-display text-5xl font-black tabular-nums text-gold-400">
+            <CountUp value={a.score} from={0} durationMs={1000} />
+          </p>
           <p className="text-blue-100/85">
             {a.correctCount}/{status.questionCount} correct{a.rank ? ` · rank #${a.rank}` : a.eligible ? '' : ' · unranked (guest)'}
           </p>
